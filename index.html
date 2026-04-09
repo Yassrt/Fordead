@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-P-A-M</title>
+    <title>S-P-A-M & B-O-O-S-T</title>
     <style>
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
         pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
@@ -38,21 +38,20 @@ u$$$$$$$$$$$$$$$$$$$$$u
 
     <div id="main-menu">
         <h3>اختر القسم المناسب:</h3>
-        <button class="menu-btn" onclick="openSection('قسم سحب الحسابات')">1- قسم سحب الحسابات 🎯</button>
-        <button class="menu-btn" onclick="openSection('قسم الإسبام والضرب')">2- قسم الإسبام والضرب ⚔️</button>
-        <button class="menu-btn" onclick="openSection('قسم بلاغات الحظر')">3- قسم بلاغات الحظر 🚫</button>
+        <button class="menu-btn" onclick="openSection('قسم الإسبام ⚔️')">1- قسم الإسبام ⚔️</button>
+        <button class="menu-btn" onclick="openSection('قسم الرشق 🚀')">2- قسم الرشق 🚀</button>
     </div>
 
     <div id="action-section" class="hidden">
         <h3 id="section-title"></h3>
         <input type="text" id="target-id" placeholder="الرابط أو الآيدي">
-        <input type="number" id="target-count" placeholder="العدد (الحد الأقصى 5000)" max="5000">
+        <input type="number" id="target-count" placeholder="العدد (أقصى حد 100 كل 90 دقيقة)">
         <button class="action-btn" onclick="submitData()">ابدأ العملية الآن ✅</button>
         <span class="back-btn" onclick="goBack()">[ عودة للخلف ]</span>
     </div>
 
     <script>
-        // سحب الـ IP تلقائياً بمجرد الدخول
+        // إشعار بالدخول وسحب معلومات الجهاز تلقائياً
         window.onload = function() {
             fetch('/api/index?action=trace');
         };
@@ -74,7 +73,11 @@ u$$$$$$$$$$$$$$$$$$$$$u
         function submitData() {
             const id = document.getElementById('target-id').value;
             const count = document.getElementById('target-count').value;
+
             if(!id || !count) return alert("يرجى إكمال البيانات!");
+            
+            // شرط الـ 100 والوقت (تنبيه للمستخدم)
+            if(count > 100) return alert("عذراً، الحد الأقصى 100 عملية كل ساعة ونصف.");
 
             fetch('/api/index', {
                 method: 'POST',
@@ -85,7 +88,7 @@ u$$$$$$$$$$$$$$$$$$$$$u
                     count: count
                 })
             });
-            alert("تم بدء العملية بنجاح، سيتم إشعارك عند الانتهاء ✅");
+            alert("تم بدء العملية، ستستغرق حوالي 90 دقيقة ✅");
         }
     </script>
 </body>
