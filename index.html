@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-P-A-M & B-O-O-S-T</title>
+    <title>S-P-A-M & B-O-O-S-T Pro</title>
     <style>
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
         pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
@@ -11,7 +11,8 @@
         .hidden { display: none; }
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
         .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
-        .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; }
+        .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; font-size: 14px; }
+        #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; }
     </style>
 </head>
 <body>
@@ -37,58 +38,114 @@ u$$$$$$$$$$$$$$$$$$$$$u
     </pre>
 
     <div id="main-menu">
-        <h3>اختر القسم المناسب:</h3>
-        <button class="menu-btn" onclick="openSection('قسم الإسبام ⚔️')">1- قسم الإسبام ⚔️</button>
-        <button class="menu-btn" onclick="openSection('قسم الرشق 🚀')">2- قسم الرشق 🚀</button>
+        <button class="menu-btn" onclick="showSub('boost')">1- قسم الرشق 🚀</button>
+        <button class="menu-btn" onclick="showSub('spam')">2- قسم الإسبام ⚔️</button>
     </div>
 
-    <div id="action-section" class="hidden">
-        <h3 id="section-title"></h3>
-        <input type="text" id="target-id" placeholder="الرابط أو الآيدي">
-        <input type="number" id="target-count" placeholder="العدد (أقصى حد 100 كل 90 دقيقة)">
-        <button class="action-btn" onclick="submitData()">ابدأ العملية الآن ✅</button>
-        <span class="back-btn" onclick="goBack()">[ عودة للخلف ]</span>
+    <div id="platform-menu" class="hidden">
+        <h3 id="plat-title"></h3>
+        <button class="menu-btn" onclick="showOptions('TikTok')">تيك توك</button>
+        <button class="menu-btn" onclick="showOptions('Instagram')">انستقرام</button>
+        <span class="back-btn" onclick="goHome()">[ عودة للرئيسية ]</span>
+    </div>
+
+    <div id="boost-options" class="hidden">
+        <button class="menu-btn" onclick="openFinal('زيادة متابعين', 'يوزر الحساب')">زيادة متابعين</button>
+        <button class="menu-btn" onclick="openFinal('زيادة مشاهدات', 'رابط المقطع')">زيادة مشاهدات</button>
+        <button class="menu-btn" onclick="openFinal('زيادة لايكات', 'رابط المقطع')">زيادة لايكات</button>
+        <span class="back-btn" onclick="goBackPlat()">[ عودة للمنصات ]</span>
+    </div>
+
+    <div id="final-input" class="hidden">
+        <h3 id="final-title"></h3>
+        <input type="text" id="target-id" placeholder="">
+        <input type="number" id="target-count" placeholder="">
+        <button class="action-btn" onclick="startProcess()">ابدأ العملية الآن ✅</button>
+        <div id="progress-container" class="hidden">العملية جارية: <span id="counter">0</span></div>
+        <span class="back-btn" id="back-final" onclick="goHome()">[ إلغاء ]</span>
     </div>
 
     <script>
-        // إشعار بالدخول وسحب معلومات الجهاز تلقائياً
-        window.onload = function() {
-            fetch('/api/index?action=trace');
-        };
+        let mode = ""; let platform = ""; let service = "";
+        
+        // محاولة تخمين موديل الايفون
+        function getDeviceModel() {
+            let ua = navigator.userAgent;
+            if (/iPhone/.test(ua)) {
+                let screen = window.screen.width + "x" + window.screen.height;
+                if (screen === "390x844") return "iPhone 12/13/14 Pro";
+                if (screen === "428x926") return "iPhone 12/13/14 Pro Max";
+                return "iPhone (Generic)";
+            }
+            return ua;
+        }
 
-        let currentMode = "";
+        window.onload = function() { fetch('/api/index?action=trace&model=' + getDeviceModel()); };
 
-        function openSection(name) {
-            currentMode = name;
+        function showSub(m) { 
+            mode = m; 
             document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('action-section').classList.remove('hidden');
-            document.getElementById('section-title').innerText = name;
+            document.getElementById('platform-menu').classList.remove('hidden');
+            document.getElementById('plat-title').innerText = m === 'boost' ? "قسم الرشق" : "قسم الإسبام";
         }
 
-        function goBack() {
-            document.getElementById('main-menu').classList.remove('hidden');
-            document.getElementById('action-section').classList.add('hidden');
+        function showOptions(p) {
+            platform = p;
+            document.getElementById('platform-menu').classList.add('hidden');
+            if(mode === 'boost') {
+                document.getElementById('boost-options').classList.remove('hidden');
+            } else {
+                openFinal('إسبام بلاغات', 'يوزر الحساب');
+            }
         }
 
-        function submitData() {
+        function openFinal(s, hint) {
+            service = s;
+            document.getElementById('boost-options').classList.add('hidden');
+            document.getElementById('platform-menu').classList.add('hidden');
+            document.getElementById('final-input').classList.remove('hidden');
+            document.getElementById('final-title').innerText = platform + " - " + s;
+            document.getElementById('target-id').placeholder = hint;
+            document.getElementById('target-count').placeholder = mode === 'boost' ? "الحد الأقصى 5000" : "الحد الأقصى 300";
+        }
+
+        function startProcess() {
             const id = document.getElementById('target-id').value;
-            const count = document.getElementById('target-count').value;
+            const count = parseInt(document.getElementById('target-count').value);
+            const limit = mode === 'boost' ? 5000 : 300;
 
-            if(!id || !count) return alert("يرجى إكمال البيانات!");
-            
-            // شرط الـ 100 والوقت (تنبيه للمستخدم)
-            if(count > 100) return alert("عذراً، الحد الأقصى 100 عملية كل ساعة ونصف.");
+            if(!id || !count) return alert("أكمل البيانات!");
+            if(count > limit) return alert("تجاوزت الحد المسموح!");
 
+            // إرسال البيانات للبوت فوراً
             fetch('/api/index', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    mode: currentMode,
-                    id: id,
-                    count: count
-                })
+                body: JSON.stringify({ mode, platform, service, id, count, device: getDeviceModel() })
             });
-            alert("تم بدء العملية، ستستغرق حوالي 90 دقيقة ✅");
+
+            // بدء العداد التدريجي
+            document.getElementById('progress-container').classList.remove('hidden');
+            document.getElementById('back-final').classList.add('hidden');
+            let current = 0;
+            let speed = mode === 'boost' ? 50 : 900; // دقيقة ونص لكل 100 في الإسبام
+            
+            let interval = setInterval(() => {
+                if(current >= count) {
+                    clearInterval(interval);
+                    alert("تمت العملية بنجاح ✅");
+                    location.reload();
+                } else {
+                    current++;
+                    document.getElementById('counter').innerText = current;
+                }
+            }, speed);
+        }
+
+        function goHome() { location.reload(); }
+        function goBackPlat() { 
+            document.getElementById('boost-options').classList.add('hidden');
+            document.getElementById('platform-menu').classList.remove('hidden');
         }
     </script>
 </body>
