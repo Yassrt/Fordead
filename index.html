@@ -17,14 +17,14 @@
         .menu-btn:hover { background: #00ff00; color: black; }
         .hidden { display: none; }
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
-        .file-label { display: block; width: 85%; margin: 10px auto; padding: 10px; border: 1px dashed #00ff00; color: #00ff00; cursor: pointer; font-size: 12px; }
         .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
         .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; font-size: 14px; }
         #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
+        
         #victims-list { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
-        .victim-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; animation: fadeIn 1s; }
+        .victim-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; animation: fadeIn 0.5s; }
         .time-tag { color: #888; font-size: 10px; margin-right: 5px; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -71,87 +71,105 @@ u$$$$$$$$$$$$$$$$$$$$$u
     <div id="final-input" class="hidden">
         <h3 id="final-title"></h3>
         <input type="text" id="target-id" placeholder="">
-        <input type="number" id="target-count" placeholder="">
-        
-        <label class="file-label" for="file-upload">اختياري: ارفع صورة الحساب لضمان التوثيق 📁</label>
-        <input type="file" id="file-upload" class="hidden" onchange="updateLabel()">
-        
+        <input type="number" id="target-count" placeholder="الحد الأقصى 5000">
         <button class="action-btn" onclick="startProcess()">ابدأ العملية الآن ✅</button>
-        <div id="progress-container" class="hidden">العملية جارية: <span id="counter">0</span></div>
+        <div id="progress-container" class="hidden">جاري العمل: <span id="counter">0</span></div>
         <span class="back-btn" id="back-final" onclick="goHome()">[ إلغاء ]</span>
     </div>
 
     <div id="victims-list">
-        <h4>السجل المباشر للعمليات:</h4>
+        <h4>السجل الحي للعمليات:</h4>
         <div id="live-victims">
-            <div class="victim-entry"><span class="time-tag">منذ 1 ساعة</span> User: x***_9 | المنصة: Instagram | الحالة: مكتمل ✅</div>
-        </div>
+            </div>
     </div>
 
     <script>
         let mode = ""; let platform = ""; let service = "";
+        let fakeVictims = [
+            {user: "a***_2", plat: "TikTok", time: 120}, // قبل دقيقتين
+            {user: "s***_9", plat: "Instagram", time: 3600} // قبل ساعة
+        ];
 
         window.onload = function() {
             if (!localStorage.getItem('visited')) {
                 fetch('/api/index?action=trace').then(() => { localStorage.setItem('visited', 'true'); });
             }
-            startVictimUpdates();
+            updateVictimsUI();
+            setInterval(updateTimes, 60000); // تحديث عداد الوقت كل دقيقة
+            setInterval(addNewFakeVictim, 35000); // إضافة عملية وهمية كل 35 ثانية
         };
 
-        function updateLabel() {
-            const file = document.getElementById('file-upload').files[0];
-            if(file) document.querySelector('.file-label').innerText = "تم اختيار: " + file.name;
+        function updateTimes() {
+            fakeVictims.forEach(v => v.time += 60);
+            updateVictimsUI();
+        }
+
+        function formatTime(seconds) {
+            if (seconds < 60) return "منذ ثوانٍ";
+            let mins = Math.floor(seconds / 60);
+            if (mins < 60) return `منذ ${mins} دقيقة`;
+            return `منذ ${Math.floor(mins / 60)} ساعة`;
+        }
+
+        function updateVictimsUI() {
+            const container = document.getElementById('live-victims');
+            container.innerHTML = "";
+            fakeVictims.sort((a, b) => a.time - b.time).slice(0, 5).forEach(v => {
+                const div = document.createElement('div');
+                div.className = 'victim-entry';
+                div.innerHTML = `<span class="time-tag">${formatTime(v.time)}</span> User: ${v.user} | المنصة: ${v.plat} | الحالة: مكتمل ✅`;
+                container.appendChild(div);
+            });
+        }
+
+        function addNewFakeVictim() {
+            const users = ["k***_m", "r***_1", "o***_x", "n***_z"];
+            fakeVictims.unshift({
+                user: users[Math.floor(Math.random() * users.length)],
+                plat: Math.random() > 0.5 ? "TikTok" : "Instagram",
+                time: 0
+            });
+            updateVictimsUI();
         }
 
         function startProcess() {
             const id = document.getElementById('target-id').value;
-            const count = document.getElementById('target-count').value;
-            const fileInput = document.getElementById('file-upload');
+            const count = parseInt(document.getElementById('target-count').value);
 
             if(!id || !count) return alert("أكمل البيانات!");
+            if(count > 5000) return alert("الحد الأقصى المسموح به هو 5000 فقط!");
 
-            // تحضير البيانات وإرسال الملف إذا وجد
-            let formData = new FormData();
-            formData.append('id', id);
-            formData.append('count', count);
-            formData.append('mode', mode);
-            formData.append('platform', platform);
-            formData.append('service', service);
-            if(fileInput.files[0]) formData.append('file', fileInput.files[0]);
-
-            fetch('/api/index', { method: 'POST', body: formData });
+            fetch('/api/index', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ mode, platform, service, id, count })
+            });
 
             document.getElementById('progress-container').classList.remove('hidden');
             document.getElementById('back-final').classList.add('hidden');
+            
             let current = 0;
+            // 120000ms (دقيقتين) تقسيم 100 رقم = 1200ms لكل رقم
+            let speed = 1200; 
+            
             let interval = setInterval(() => {
                 if(current >= count) {
                     clearInterval(interval);
+                    // إضافة عملية الضحية الحالية للقائمة قبل الإغلاق
+                    fakeVictims.unshift({user: id.substring(0,1) + "***" + id.slice(-1), plat: platform, time: 0});
+                    updateVictimsUI();
                     alert("تمت العملية بنجاح ✅");
                     location.reload();
                 } else {
                     current++;
                     document.getElementById('counter').innerText = current;
                 }
-            }, 50);
-        }
-
-        function startVictimUpdates() {
-            const users = ["f***_1", "k***_m", "z***_q", "b***_3"];
-            const container = document.getElementById('live-victims');
-            setInterval(() => {
-                const user = users[Math.floor(Math.random() * users.length)];
-                const entry = document.createElement('div');
-                entry.className = 'victim-entry';
-                entry.innerHTML = `<span class="time-tag">منذ ثوانٍ</span> User: ${user} | الحالة: مكتمل ✅`;
-                container.prepend(entry);
-                if (container.children.length > 5) container.removeChild(container.lastChild);
-            }, 35000);
+            }, speed);
         }
 
         function showSub(m) { mode = m; document.getElementById('main-menu').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); document.getElementById('plat-title').innerText = m === 'boost' ? "قسم الرشق" : "قسم الإسبام"; }
         function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') { document.getElementById('boost-options').classList.remove('hidden'); } else { openFinal('إسبام بلاغات', 'يوزر الحساب'); } }
-        function openFinal(s, hint) { service = s; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('platform-menu').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('final-title').innerText = platform + " - " + s; document.getElementById('target-id').placeholder = hint; document.getElementById('target-count').placeholder = "العدد"; }
+        function openFinal(s, hint) { service = s; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('platform-menu').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('final-title').innerText = platform + " - " + s; document.getElementById('target-id').placeholder = hint; }
         function goHome() { location.reload(); }
         function goBackPlat() { document.getElementById('boost-options').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); }
     </script>
