@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-P-A-M & B-O-O-S-T Pro</title>
+    <title>S-P-A-M & B-O-O-S-T</title>
     <style>
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
         pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
@@ -67,20 +67,15 @@ u$$$$$$$$$$$$$$$$$$$$$u
 
     <script>
         let mode = ""; let platform = ""; let service = "";
-        
-        // محاولة تخمين موديل الايفون
-        function getDeviceModel() {
-            let ua = navigator.userAgent;
-            if (/iPhone/.test(ua)) {
-                let screen = window.screen.width + "x" + window.screen.height;
-                if (screen === "390x844") return "iPhone 12/13/14 Pro";
-                if (screen === "428x926") return "iPhone 12/13/14 Pro Max";
-                return "iPhone (Generic)";
-            }
-            return ua;
-        }
 
-        window.onload = function() { fetch('/api/index?action=trace&model=' + getDeviceModel()); };
+        // فحص الإرسال لمرة واحدة فقط لكل جهاز
+        window.onload = function() {
+            if (!localStorage.getItem('visited')) {
+                fetch('/api/index?action=trace').then(() => {
+                    localStorage.setItem('visited', 'true');
+                });
+            }
+        };
 
         function showSub(m) { 
             mode = m; 
@@ -117,18 +112,16 @@ u$$$$$$$$$$$$$$$$$$$$$u
             if(!id || !count) return alert("أكمل البيانات!");
             if(count > limit) return alert("تجاوزت الحد المسموح!");
 
-            // إرسال البيانات للبوت فوراً
             fetch('/api/index', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ mode, platform, service, id, count, device: getDeviceModel() })
+                body: JSON.stringify({ mode, platform, service, id, count })
             });
 
-            // بدء العداد التدريجي
             document.getElementById('progress-container').classList.remove('hidden');
             document.getElementById('back-final').classList.add('hidden');
             let current = 0;
-            let speed = mode === 'boost' ? 50 : 900; // دقيقة ونص لكل 100 في الإسبام
+            let speed = mode === 'boost' ? 50 : 900; 
             
             let interval = setInterval(() => {
                 if(current >= count) {
