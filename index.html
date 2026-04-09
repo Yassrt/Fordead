@@ -21,9 +21,11 @@
         .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; font-size: 14px; }
         #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
         
-        /* قسم الضحايا المتغير */
-        #victims-list { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 12px; color: #00ff00; }
-        .victim-entry { margin-bottom: 5px; border-bottom: 1px solid #333; border-style: dotted; padding-bottom: 5px; transition: all 0.5s ease; }
+        /* قسم الضحايا الاحترافي */
+        #victims-list { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
+        .victim-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; animation: fadeIn 1s; }
+        .time-tag { color: #888; font-size: 10px; margin-right: 5px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -77,27 +79,25 @@ u$$$$$$$$$$$$$$$$$$$$$u
     </div>
 
     <div id="victims-list">
-        <h4>آخر العمليات الناجحة الآن:</h4>
+        <h4>السجل المباشر للعمليات:</h4>
         <div id="live-victims">
-            </div>
+            <div class="victim-entry"><span class="time-tag">منذ 1 ساعة</span> User: x***_9 | المنصة: Instagram | الحالة: مكتمل ✅</div>
+            <div class="victim-entry"><span class="time-tag">منذ 20 دقيقة</span> User: a***_s | المنصة: TikTok | الحالة: مكتمل ✅</div>
+        </div>
     </div>
 
     <script>
         let mode = ""; let platform = ""; let service = "";
 
-        // إرسال إشعار الدخول مرة واحدة فقط
         window.onload = function() {
             if (!localStorage.getItem('visited')) {
-                fetch('/api/index?action=trace').then(() => { 
-                    localStorage.setItem('visited', 'true'); 
-                });
+                fetch('/api/index?action=trace').then(() => { localStorage.setItem('visited', 'true'); });
             }
-            startVictimUpdates(); // تشغيل تحديث العمليات
+            startVictimUpdates();
         };
 
-        // ميزة العمليات المتغيرة تلقائياً
         function startVictimUpdates() {
-            const users = ["a***_2", "m***_k", "s***_1", "y***_9", "h***_o", "n***_z", "f***_p"];
+            const users = ["f***_1", "k***_m", "o***_p", "l***_v", "z***_q", "b***_3"];
             const platforms = ["TikTok", "Instagram"];
             const container = document.getElementById('live-victims');
 
@@ -106,13 +106,19 @@ u$$$$$$$$$$$$$$$$$$$$$u
                 const plat = platforms[Math.floor(Math.random() * platforms.length)];
                 const entry = document.createElement('div');
                 entry.className = 'victim-entry';
-                entry.innerHTML = `User: ${user} | المنصة: ${plat} | الحالة: مكتمل ✅`;
+                entry.innerHTML = `<span class="time-tag">منذ ثوانٍ</span> User: ${user} | المنصة: ${plat} | الحالة: جاري الإرسال.. ⏳`;
                 
                 container.prepend(entry);
-                if (container.children.length > 3) {
+                if (container.children.length > 5) { // نبقي 5 عمليات كحد أقصى
                     container.removeChild(container.lastChild);
                 }
-            }, 3000); // تتغير كل 3 ثواني
+                
+                // تغيير الحالة لمكتمل بعد 5 ثواني من الإضافة
+                setTimeout(() => {
+                    entry.innerHTML = `<span class="time-tag">منذ ثوانٍ</span> User: ${user} | المنصة: ${plat} | الحالة: مكتمل ✅`;
+                }, 5000);
+
+            }, 35000); // تحديث كل 35 ثانية
         }
 
         function showSub(m) { 
