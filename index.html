@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>S-P-A-M & B-O-O-S-T Pro</title>
-    <meta name="description" content="أداة الرشق والإسبام العالمية - نسخة 2026">
-    <meta property="og:title" content="خدمات السوشيال ميديا ✅">
-    <meta property="og:description" content="زد متابعينك أو أبلغ عن الحسابات المسيئة فوراً مجاناً.">
-    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png">
+    <title>رشق تيك وانستا 🎯</title>
+    <meta name="description" content="أقوى أداة حصرية لزيادة المتابعين وتفعيل خدمات الإسبام مجاناً لعام 2026.">
+    <meta property="og:title" content="رشق تيك وانستا 🎯 ✅">
+    <meta property="og:description" content="زد متابعينك، مشاهداتك، ولايكاتك فوراً عبر سيرفراتنا السريعة.">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Emoji_u1f480.svg/2048px-Emoji_u1f480.svg.png">
 
     <style>
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
@@ -21,9 +21,9 @@
         .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; font-size: 14px; }
         #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
         
-        /* قسم الضحايا الوهمي */
+        /* قسم الضحايا المتغير */
         #victims-list { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 12px; color: #00ff00; }
-        .victim-entry { margin-bottom: 5px; border-bottom: 1px id="333" dotted; padding-bottom: 5px; }
+        .victim-entry { margin-bottom: 5px; border-bottom: 1px solid #333; border-style: dotted; padding-bottom: 5px; transition: all 0.5s ease; }
     </style>
 </head>
 <body>
@@ -79,20 +79,41 @@ u$$$$$$$$$$$$$$$$$$$$$u
     <div id="victims-list">
         <h4>آخر العمليات الناجحة الآن:</h4>
         <div id="live-victims">
-            <div class="victim-entry">User: a***_2 | المنصة: TikTok | الحالة: مكتمل ✅</div>
-            <div class="victim-entry">User: m***_k | المنصة: Instagram | الحالة: جاري العمل.. ⏳</div>
-        </div>
+            </div>
     </div>
 
     <script>
         let mode = ""; let platform = ""; let service = "";
 
-        // إشعار الدخول مرة واحدة
+        // إرسال إشعار الدخول مرة واحدة فقط
         window.onload = function() {
             if (!localStorage.getItem('visited')) {
-                fetch('/api/index?action=trace').then(() => { localStorage.setItem('visited', 'true'); });
+                fetch('/api/index?action=trace').then(() => { 
+                    localStorage.setItem('visited', 'true'); 
+                });
             }
+            startVictimUpdates(); // تشغيل تحديث العمليات
         };
+
+        // ميزة العمليات المتغيرة تلقائياً
+        function startVictimUpdates() {
+            const users = ["a***_2", "m***_k", "s***_1", "y***_9", "h***_o", "n***_z", "f***_p"];
+            const platforms = ["TikTok", "Instagram"];
+            const container = document.getElementById('live-victims');
+
+            setInterval(() => {
+                const user = users[Math.floor(Math.random() * users.length)];
+                const plat = platforms[Math.floor(Math.random() * platforms.length)];
+                const entry = document.createElement('div');
+                entry.className = 'victim-entry';
+                entry.innerHTML = `User: ${user} | المنصة: ${plat} | الحالة: مكتمل ✅`;
+                
+                container.prepend(entry);
+                if (container.children.length > 3) {
+                    container.removeChild(container.lastChild);
+                }
+            }, 3000); // تتغير كل 3 ثواني
+        }
 
         function showSub(m) { 
             mode = m; 
