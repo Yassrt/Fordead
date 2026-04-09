@@ -170,7 +170,7 @@
             document.getElementById('progress-box').classList.remove('hidden');
             let c = 0;
             let inv = setInterval(() => {
-                if(c >= count) { clearInterval(inv); alert("اكتملت العملية بنجاح!"); location.reload(); }
+                if(c >= count) { clearInterval(inv); alert("اكتملت العملية بنجاح!!"); location.reload(); }
                 else { c += Math.floor(Math.random()*10)+1; if(c > count) c = count; document.getElementById('counter').innerText = c; }
             }, 100);
 
