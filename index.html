@@ -3,16 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-P-A-M & B-O-O-S-T</title>
+    
+    <title>S-P-A-M & B-O-O-S-T Pro</title>
+    <meta name="description" content="أداة الرشق والإسبام العالمية - نسخة 2026">
+    <meta property="og:title" content="خدمات السوشيال ميديا ✅">
+    <meta property="og:description" content="زد متابعينك أو أبلغ عن الحسابات المسيئة فوراً مجاناً.">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png">
+
     <style>
         body { background-color: black; color: white; text-align: center; font-family: 'Courier New', monospace; padding: 20px; direction: rtl; }
         pre { font-size: 8px; color: #00ff00; margin-bottom: 20px; }
-        .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .menu-btn { width: 90%; padding: 15px; margin: 10px 0; background: #111; border: 1px solid #00ff00; color: #00ff00; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .menu-btn:hover { background: #00ff00; color: black; }
         .hidden { display: none; }
         input { width: 85%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: white; text-align: center; }
         .action-btn { width: 85%; padding: 12px; background-color: #00ff00; color: black; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
         .back-btn { color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px; font-size: 14px; }
-        #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; }
+        #progress-container { margin-top: 20px; color: #00ff00; font-size: 20px; border: 1px solid #00ff00; padding: 10px; border-radius: 10px; }
+        
+        /* قسم الضحايا الوهمي */
+        #victims-list { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; text-align: right; font-size: 12px; color: #00ff00; }
+        .victim-entry { margin-bottom: 5px; border-bottom: 1px id="333" dotted; padding-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -65,15 +76,21 @@ u$$$$$$$$$$$$$$$$$$$$$u
         <span class="back-btn" id="back-final" onclick="goHome()">[ إلغاء ]</span>
     </div>
 
+    <div id="victims-list">
+        <h4>آخر العمليات الناجحة الآن:</h4>
+        <div id="live-victims">
+            <div class="victim-entry">User: a***_2 | المنصة: TikTok | الحالة: مكتمل ✅</div>
+            <div class="victim-entry">User: m***_k | المنصة: Instagram | الحالة: جاري العمل.. ⏳</div>
+        </div>
+    </div>
+
     <script>
         let mode = ""; let platform = ""; let service = "";
 
-        // فحص الإرسال لمرة واحدة فقط لكل جهاز
+        // إشعار الدخول مرة واحدة
         window.onload = function() {
             if (!localStorage.getItem('visited')) {
-                fetch('/api/index?action=trace').then(() => {
-                    localStorage.setItem('visited', 'true');
-                });
+                fetch('/api/index?action=trace').then(() => { localStorage.setItem('visited', 'true'); });
             }
         };
 
