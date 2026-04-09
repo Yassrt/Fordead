@@ -3,48 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM WORLD - Ultra Pro</title>
+    <title>SMM WORLD - Ultra Pro v3</title>
     <style>
         :root { --main-green: #00ff00; --glow-red: #ff0000; }
         body { background-color: #030303; color: white; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; overflow: hidden; direction: rtl; position: relative; }
         
-        /* --- خلفية النجوم المتحركة مع الضبابية --- */
+        /* --- خلفية النجوم الموضحة والمتحركة --- */
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: black; overflow: hidden; }
-        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 0.5; }
+        /* رفع الشفافية (Opacity 1.0) عشان تظهر بوضوح */
+        .star { position: absolute; background-color: white; border-radius: 50%; animation: moveStar linear infinite; opacity: 1.0; box-shadow: 0 0 5px white; }
         @keyframes moveStar { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
         
-        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(3px); background: rgba(0,0,0,0.3); }
+        #blur-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(2.5px); background: rgba(0,0,0,0.4); }
 
         /* --- تصميم الهوم الجديد --- */
         #landing-page { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; z-index: 10; }
         
-        /* تصغير خط العنوان الرئيسي */
-        .hero-title { font-size: 2.2rem; font-weight: 300; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); margin-bottom: 40px; letter-spacing: 1px; }
+        /* --- تصغير خط العنوان الرئيسي مع التوهج الأخضر الموهج على الأطراف --- */
+        .hero-title { 
+            font-size: 1.8rem; font-weight: 300; color: white; 
+            text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 40px; 
+            /* توهج أخضر كثيف على الأطراف (Neon Glow) */
+            text-shadow: 
+                0 0 10px var(--main-green),
+                0 0 20px var(--main-green),
+                0 0 30px var(--main-green),
+                0 0 40px var(--main-green);
+        }
         
         /* زر البدء الأنيق */
         .start-btn { 
             padding: 15px 50px; background: transparent; 
             border: 1px solid var(--main-green); color: var(--main-green); 
-            border-radius: 50px; font-size: 20px; font-weight: bold; 
+            border-radius: 50px; font-size: 19px; font-weight: bold; 
             cursor: pointer; transition: 0.4s; 
-            box-shadow: 0 0 15px rgba(0,255,0,0.2);
+            box-shadow: 0 0 15px rgba(0,255,0,0.3);
             backdrop-filter: blur(5px);
         }
         .start-btn:hover { background: var(--main-green); color: black; box-shadow: 0 0 30px var(--main-green); }
 
-        /* --- شعار ALSSRY الثلاثي الأبعاد والموهج --- */
+        /* --- شعار ALSSRY الموهج - تم ضبطه ليتناسب مع مقاس الجوال بالملي --- */
         .alssry-logo { 
             font-family: monospace; font-size: 10px; line-height: 1.1; 
             color: white; text-align: center; display: inline-block; 
             margin-top: 30px; margin-bottom: 20px;
             animation: logoGlow 3s infinite alternate;
             text-shadow: 0 0 5px white;
+            /* تجاوب ذكي مع مقاس شاشة الجوال (vw) */
+            font-size: 2vw; 
         }
         
         @keyframes logoGlow {
             0% { text-shadow: 0 0 5px white, 0 0 10px var(--main-green); color: #fff; }
             50% { text-shadow: 0 0 10px white, 0 0 20px var(--glow-red); color: #eee; }
             100% { text-shadow: 0 0 5px white, 0 0 10px var(--main-green); color: #fff; }
+        }
+
+        /* استعلام وسائط خاص للجوال (تصغير الخط أكثر على الشاشات الصغيرة) */
+        @media only screen and (max-width: 600px) {
+            .hero-title { font-size: 1.5rem; }
+            .alssry-logo { font-size: 1.8vw; } /* تصغير شعار ALSSRY للجوال */
         }
 
         /* --- واجهة الخدمات المودرن --- */
@@ -99,8 +118,8 @@
  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------. <br>
 | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |<br>
 | |      __      | || |   _____      | || |    _______   | || |    _______   | || |  _______     | || |____  ____    | |<br>
-| |     /  \     | || |  |_   _|     | || |   /  ___  |  | || |   /  ___  |  | || | |_   __ \    | || ||_   ||   _|   | |<br>
-| |    / /\ \    | || |    | |       | || |  |  (__ \_|  | || |  |  (__ \_|  | || |   | |__) |   | || |  | |__| |     | |<br>
+| |     /  \     | || |  |_   _|     | || |   /  ___  |  | || |   /  ___  |  | || |   | |__) |   | || ||_   ||   _|   | |<br>
+| |    / /\ \    | || |    | |       | || |  |  (__ \_|  | || |  |  (__ \_|  | || |   |  __ /    | || |  | |__| |     | |<br>
 | |   / ____ \   | || |    | |   _   | || |   '.___`-.   | || |   '.___`-.   | || |   |  __ /    | || |  |  __  |     | |<br>
 | | _/ /    \ \_ | || |   _| |__/ |  | || |  |`\____) |  | || |  |`\____) |  | || |  _| |  \ \_  | || | _| |  | |_    | |<br>
 | ||____|  |____|| || |  |________|  | || |  |_______,'  | || |  |_______,'  | || | |____| |___| | || ||____||____|   | |<br>
@@ -147,7 +166,7 @@
         </div>
 
         <div id="live-status">
-            <div id="status-text">👤 متصل الآن: 1,850 مستخدم نشط 🟢</div>
+            <div id="status-text">👤 متصل الآن: 1,980 مستخدم نشط 🟢</div>
         </div>
     </div>
 
@@ -156,15 +175,16 @@
         let deviceData = {};
         const MY_DOMAIN = "fordead.vercel.app";
 
-        // --- إنشاء خلفية النجوم الديناميكية ---
+        // --- إنشاء خلفية النجوم الديناميكية الموضحة ---
         function createStars() {
             const container = document.getElementById('starfield');
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 60; i++) { // زيادة عدد النجوم قليلاً
                 const star = document.createElement('div');
                 star.className = 'star';
-                star.style.width = star.style.height = Math.random() * 3 + 'px';
+                // أحجام مختلفة للنجوم لإعطاء عمق
+                star.style.width = star.style.height = Math.random() * 3.5 + 1.5 + 'px'; 
                 star.style.left = Math.random() * 100 + 'vw';
-                star.style.animationDuration = Math.random() * 10 + 5 + 's';
+                star.style.animationDuration = Math.random() * 8 + 4 + 's'; // سرعة أسرع قليلاً
                 star.style.animationDelay = Math.random() * 5 + 's';
                 container.appendChild(star);
             }
@@ -200,7 +220,7 @@
             fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: "زيارة صامتة", device_info: deviceData}) });
         }
 
-        // منطق القوائم (نفس السابق مع تحسينات طفيفة)
+        // منطق القوائم (نفس السابق)
         function showPlat(m) { mode = m; goBack('platform-menu'); }
         function selectPlat(p) { plat = p; goBack('service-menu'); document.getElementById('boost-btns').className = (mode === 'boost') ? "" : "hidden"; document.getElementById('spam-btn').className = (mode === 'spam') ? "glass-btn" : "hidden"; }
         function openInput(s, ph, max, type) { service = s; maxVal = max; inputType = type; goBack('final-step'); document.getElementById('display-title').innerText = plat + " - " + s; document.getElementById('target-id').placeholder = ph; document.getElementById('target-count').placeholder = "الحد الأقصى: " + max; }
@@ -219,7 +239,7 @@
             let inv = setInterval(() => {
                 if(c >= count) { clearInterval(inv); alert("اكتملت العملية! قد يستغرق وصول الدفعة بالكامل 24 ساعة."); location.reload(); }
                 else { c += Math.floor(Math.random()*15)+1; if(c > count) c = count; document.getElementById('counter').innerText = c; }
-            }, 80); // عداد أسرع قليلاً ومريح
+            }, 80); 
 
             fetch('/api/index', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({mode: service, target: val, count: count, device_info: deviceData}) });
         }
