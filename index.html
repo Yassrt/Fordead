@@ -2,46 +2,47 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مشروعي</title>
+    <title>لوحة تحكم البوت</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #1a1a1a; color: white; }
+        .btn { padding: 15px 30px; font-size: 18px; cursor: pointer; border-radius: 10px; border: none; margin: 10px; }
+        .send-btn { background-color: #28a745; color: white; }
+        .check-btn { background-color: #007bff; color: white; }
+    </style>
     <script>
-        // 1. دالة حفظ الكوكيز بشكل آمن (تحل مشكلة "محمي")
-        function setSecureCookie(name, value, days) {
-            let expires = "";
-            if (days) {
-                let date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            // السطر السحري لحل مشكلة الحماية في المتصفحات
-            document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=None; Secure";
-            alert("تم حفظ البيانات بنجاح!");
+        const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
+        const CHAT_ID = "5811700860";
+
+        // دالة إرسال الرسالة وفتح الكوكيز
+        function connectAndSend() {
+            const msg = "تم الربط بنجاح من الموقع! 🚀\nالكوكيز الآن نشط.";
+            const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`;
+
+            fetch(url).then(res => {
+                if(res.ok) {
+                    // فتح كوكيز وتخزين قيمة فيه (محمي)
+                    document.cookie = "bot_status=active; path=/; SameSite=None; Secure; max-age=31536000";
+                    alert("أرسلنا للبوت وفتحنا الكوكيز!");
+                }
+            });
         }
 
-        // 2. دالة جلب الكوكيز (للتأكد أنها ليست فارغة)
-        function getMyCookie() {
-            let name = "my_data=";
-            let decodedCookie = decodeURIComponent(document.cookie);
-            let ca = decodedCookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') { c = c.substring(1); }
-                if (c.indexOf(name) == 0) {
-                    alert("البيانات الموجودة هي: " + c.substring(name.length, c.length));
-                    return;
-                }
+        // دالة للتأكد من الكوكيز (هل هو فارغ؟)
+        function checkCookie() {
+            if (document.cookie.split(';').some((item) => item.trim().startsWith('bot_status='))) {
+                alert("الكوكيز موجود ومحمي ✅: " + document.cookie);
+            } else {
+                alert("الكوكيز فارغ حالياً! اضغط زر التفعيل أولاً.");
             }
-            alert("الكوكيز فارغ حالياً!");
         }
     </script>
 </head>
 <body>
-
-    <h1>مرحباً بك في موقعي</h1>
-    <p>استخدم الأزرار بالأسفل لتجربة الكوكيز:</p>
-
-    <button onclick="setSecureCookie('my_data', 'Hello_World', 7)">حفظ كوكيز تجريبي</button>
-
-    <button onclick="getMyCookie()">عرض الكوكيز المخزن</button>
-
+    <h1>نظام الربط المتكامل</h1>
+    <p>اضغط لتفعيل الاتصال بالبوت وتخزين الكوكيز</p>
+    
+    <button class="btn send-btn" onclick="connectAndSend()">تفعيل وإرسال للبوت</button>
+    <br>
+    <button class="btn check-btn" onclick="checkCookie()">فحص حالة الكوكيز</button>
 </body>
 </html>
