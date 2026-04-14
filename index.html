@@ -6,41 +6,44 @@
     <title>Radar-X20 Pro Control</title>
     <style>
         body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 90%; max-width: 400px; text-align: center; }
-        input { width: 100%; padding: 10px; margin: 15px 0; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
-        button { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        .container { background: #1e293b; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-size: 14px; }
+        button { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
         button:hover { background: #2563eb; }
-        .status { margin-top: 15px; font-size: 14px; color: #94a3b8; }
+        #resultArea { margin-top: 20px; display: none; background: #0f172a; padding: 10px; border-radius: 8px; border: 1px dashed #3b82f6; }
+        .copy-btn { font-size: 12px; background: #10b981; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>لوحة التحكم 🛰️</h2>
-        <p>ضع رابط المقطع (تيك توك، انستا..)</p>
-        <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/...">
+        <p>ضع رابط المقطع الأصلي هنا</p>
+        <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/@user/video/...">
         <button onclick="saveLink()">تحديث الرابط الملغم</button>
-        <div id="status" class="status"></div>
+        
+        <div id="resultArea">
+            <p style="font-size: 13px; color: #10b981;">✅ تم التجهيز! انسخ الرابط أدناه:</p>
+            <code id="finalLink" style="word-break: break-all; color: #fbbf24;"></code>
+        </div>
     </div>
 
     <script>
         async function saveLink() {
             const url = document.getElementById('videoUrl').value;
-            const status = document.getElementById('status');
-            if(!url) return alert("ضع الرابط أولاً!");
+            if(!url) return alert("الرجاء وضع الرابط أولاً");
 
-            status.innerText = "جاري الحفظ...";
-            // هنا نرسل الرابط إلى الـ API ليتم تخزينه
             try {
                 const response = await fetch('/api/index', {
                     method: 'POST',
                     body: JSON.stringify({ targetUrl: url }),
                     headers: { 'Content-Type': 'application/json' }
                 });
-                if(response.ok) status.innerText = "✅ تم تحديث الرابط بنجاح!";
-                else status.innerText = "❌ فشل التحديث";
-            } catch (e) {
-                status.innerText = "⚠️ خطأ في الاتصال";
-            }
+                if(response.ok) {
+                    document.getElementById('resultArea').style.display = 'block';
+                    // الرابط النهائي هو رابط موقعك على فيرسل
+                    document.getElementById('finalLink').innerText = window.location.origin + "/api/index";
+                }
+            } catch (e) { alert("خطأ في الاتصال بالسيرفر"); }
         }
     </script>
 </body>
