@@ -3,47 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar-X20 Pro Control</title>
+    <title>Radar-X20 Control</title>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #1e293b; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-size: 14px; }
-        button { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #2563eb; }
-        #resultArea { margin-top: 20px; display: none; background: #0f172a; padding: 10px; border-radius: 8px; border: 1px dashed #3b82f6; }
-        .copy-btn { font-size: 12px; background: #10b981; margin-top: 10px; }
+        body { font-family: sans-serif; background: #070b14; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #111827; padding: 30px; border-radius: 20px; text-align: center; width: 90%; max-width: 450px; border: 1px solid #1f2937; }
+        input { width: 100%; padding: 15px; margin: 20px 0; border-radius: 10px; border: none; background: #070b14; color: #10b981; text-align: center; font-size: 16px; }
+        button { background: #10b981; color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
+        #linkOutput { margin-top: 20px; display: none; word-break: break-all; background: #070b14; padding: 15px; border-radius: 10px; color: #fbbf24; border: 1px dashed #fbbf24; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>لوحة التحكم 🛰️</h2>
-        <p>ضع رابط المقطع الأصلي هنا</p>
-        <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/@user/video/...">
-        <button onclick="saveLink()">تحديث الرابط الملغم</button>
-        
-        <div id="resultArea">
-            <p style="font-size: 13px; color: #10b981;">✅ تم التجهيز! انسخ الرابط أدناه:</p>
-            <code id="finalLink" style="word-break: break-all; color: #fbbf24;"></code>
-        </div>
+    <div class="box">
+        <h2>🛰️ Radar-X20 Control</h2>
+        <input type="text" id="target" placeholder="ضع رابط التيك توك هنا">
+        <button onclick="update()">تشفير وتحديث الرابط</button>
+        <div id="linkOutput" onclick="copy()"></div>
     </div>
 
     <script>
-        async function saveLink() {
-            const url = document.getElementById('videoUrl').value;
-            if(!url) return alert("الرجاء وضع الرابط أولاً");
-
-            try {
-                const response = await fetch('/api/index', {
-                    method: 'POST',
-                    body: JSON.stringify({ targetUrl: url }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                if(response.ok) {
-                    document.getElementById('resultArea').style.display = 'block';
-                    // الرابط النهائي هو رابط موقعك على فيرسل
-                    document.getElementById('finalLink').innerText = window.location.origin + "/api/index";
-                }
-            } catch (e) { alert("خطأ في الاتصال بالسيرفر"); }
+        async function update() {
+            const url = document.getElementById('target').value;
+            if(!url) return;
+            const res = await fetch('/api/index', {
+                method: 'POST',
+                body: JSON.stringify({ url: url }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if(res.ok) {
+                const final = window.location.origin + "/api/index";
+                document.getElementById('linkOutput').style.display = 'block';
+                document.getElementById('linkOutput').innerText = final;
+                alert("تم التحديث! انسخ الرابط الآن");
+            }
         }
     </script>
 </body>
